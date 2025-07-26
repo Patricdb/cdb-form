@@ -39,10 +39,10 @@ if (!empty($existing_empleado)) {
 
         <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>">
 
-        <label for="nombre">Nombre:</label>
+        <label for="nombre"><?php esc_html_e('Nombre:', 'cdb-form'); ?></label>
         <input type="text" id="nombre" name="nombre" value="<?php echo esc_attr($empleado_nombre); ?>" required>
 
-        <label for="disponible">Disponible:</label>
+        <label for="disponible"><?php esc_html_e('Disponible:', 'cdb-form'); ?></label>
         <select id="disponible" name="disponible">
             <option value="1" <?php selected($empleado_disponible, '1'); ?>>Sí</option>
             <option value="0" <?php selected($empleado_disponible, '0'); ?>>No</option>
@@ -108,30 +108,3 @@ if (!empty($existing_empleado)) {
     }
 </style>
 
-<script>
-jQuery(document).ready(function($) {
-    $('#cdb-form-empleado').on('submit', function(e) {
-        e.preventDefault();
-
-        var formData = {
-            action: 'cdb_form_empleado_submit',
-            security: $('#security').val(),
-            empleado_id: $('input[name="empleado_id"]').val(),
-            nombre: $('#nombre').val(),
-            disponible: $('#disponible').val()
-        };
-
-        $.post('<?php echo admin_url('admin-ajax.php'); ?>', formData, function(response) {
-            if (response.success) {
-                alert(response.message || 'Perfil de empleado actualizado con éxito.');
-                location.reload();
-            } else {
-                alert(response.message || 'Hubo un error inesperado.');
-            }
-        }, 'json')
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            alert('Error en la solicitud: ' + textStatus);
-        });
-    });
-});
-</script>
