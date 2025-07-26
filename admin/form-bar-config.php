@@ -1,0 +1,1 @@
+# Configuración del formulario de Bares en el admin
