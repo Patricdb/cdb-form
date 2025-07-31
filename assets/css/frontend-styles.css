@@ -30,3 +30,16 @@
     background: #333;
 }
 
+.cdb-form-message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.cdb-form-message.success {
+    color: green;
+}
+
+.cdb-form-message.error {
+    color: red;
+}
+

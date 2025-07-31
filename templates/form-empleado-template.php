@@ -49,6 +49,7 @@ if (!empty($existing_empleado)) {
         </select>
 
         <button type="submit"><?php echo esc_html($button_text); ?></button>
+        <div class="cdb-form-message" style="display:none;"></div>
     </form>
 </div>
 
