@@ -26,8 +26,12 @@ add_action( 'admin_menu', 'cdb_form_register_admin_menu' );
 function cdb_form_settings_page() {
     // Load existing settings
     $settings = get_option( 'cdb_form_settings', array(
-        'experience_enabled' => 0,
-        'employee_enabled'   => 0,
+        'experience_enabled'     => 0,
+        'employee_enabled'       => 0,
+        'experiencia_bg_color'   => '#FAF8EE',
+        'experiencia_border_color' => '#cdb888',
+        'empleado_bg_color'      => '#fafafa',
+        'empleado_border_color'  => '#ddd',
     ) );
 
     // Handle form submission
@@ -36,6 +40,18 @@ function cdb_form_settings_page() {
 
         $settings['experience_enabled'] = isset( $_POST['experience_enabled'] ) ? 1 : 0;
         $settings['employee_enabled']   = isset( $_POST['employee_enabled'] ) ? 1 : 0;
+
+        update_option( 'cdb_form_settings', $settings );
+        echo '<div class="updated"><p>' . __( 'Ajustes guardados.', 'cdb-form' ) . '</p></div>';
+    }
+
+    if ( isset( $_POST['cdb_form_save_design'] ) ) {
+        check_admin_referer( 'cdb_form_save_design' );
+
+        $settings['experiencia_bg_color']   = sanitize_hex_color( $_POST['experiencia_bg_color'] );
+        $settings['experiencia_border_color'] = sanitize_hex_color( $_POST['experiencia_border_color'] );
+        $settings['empleado_bg_color']      = sanitize_hex_color( $_POST['empleado_bg_color'] );
+        $settings['empleado_border_color']  = sanitize_hex_color( $_POST['empleado_border_color'] );
 
         update_option( 'cdb_form_settings', $settings );
         echo '<div class="updated"><p>' . __( 'Ajustes guardados.', 'cdb-form' ) . '</p></div>';
@@ -51,6 +67,9 @@ function cdb_form_settings_page() {
             </a>
             <a href="?page=cdb_form&tab=access" class="nav-tab <?php echo $active_tab === 'access' ? 'nav-tab-active' : ''; ?>">
                 <?php esc_html_e( 'Acceso', 'cdb-form' ); ?>
+            </a>
+            <a href="?page=cdb_form&tab=design" class="nav-tab <?php echo $active_tab === 'design' ? 'nav-tab-active' : ''; ?>">
+                <?php esc_html_e( 'Diseño', 'cdb-form' ); ?>
             </a>
         </h2>
         <?php if ( $active_tab === 'general' ) : ?>
@@ -81,6 +100,56 @@ function cdb_form_settings_page() {
                     </tbody>
                 </table>
                 <input type="hidden" name="cdb_form_save_settings" value="1" />
+                <?php submit_button(); ?>
+            </form>
+        <?php elseif ( $active_tab === 'design' ) : ?>
+            <form method="post" action="">
+                <?php wp_nonce_field( 'cdb_form_save_design' ); ?>
+                <table class="form-table" role="presentation">
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <label for="experiencia_bg_color">
+                                    <?php esc_html_e( 'Color de fondo del formulario de experiencia', 'cdb-form' ); ?>
+                                </label>
+                            </th>
+                            <td>
+                                <input type="color" name="experiencia_bg_color" id="experiencia_bg_color" value="<?php echo esc_attr( $settings['experiencia_bg_color'] ); ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <label for="experiencia_border_color">
+                                    <?php esc_html_e( 'Color de borde del formulario de experiencia', 'cdb-form' ); ?>
+                                </label>
+                            </th>
+                            <td>
+                                <input type="color" name="experiencia_border_color" id="experiencia_border_color" value="<?php echo esc_attr( $settings['experiencia_border_color'] ); ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <label for="empleado_bg_color">
+                                    <?php esc_html_e( 'Color de fondo del formulario de empleado', 'cdb-form' ); ?>
+                                </label>
+                            </th>
+                            <td>
+                                <input type="color" name="empleado_bg_color" id="empleado_bg_color" value="<?php echo esc_attr( $settings['empleado_bg_color'] ); ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <label for="empleado_border_color">
+                                    <?php esc_html_e( 'Color de borde del formulario de empleado', 'cdb-form' ); ?>
+                                </label>
+                            </th>
+                            <td>
+                                <input type="color" name="empleado_border_color" id="empleado_border_color" value="<?php echo esc_attr( $settings['empleado_border_color'] ); ?>" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="cdb_form_save_design" value="1" />
                 <?php submit_button(); ?>
             </form>
         <?php elseif ( $active_tab === 'access' ) : ?>
