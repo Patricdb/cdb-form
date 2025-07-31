@@ -61,15 +61,37 @@ jQuery(document).ready(function($) {
             disponible: $('#disponible').val()
         };
 
+        var messageDiv = $(this).find('.cdb-form-message');
+        messageDiv.hide();
+
         $.post(cdb_form_ajax.ajaxurl, formData, function(response) {
             if (response.success) {
-                alert(response.message || 'Perfil de empleado actualizado con éxito.');
-                location.reload();
+                messageDiv
+                    .removeClass('error')
+                    .addClass('success')
+                    .text(response.data.message || '✅ Empleado creado correctamente.')
+                    .show();
             } else {
-                alert(response.message || 'Hubo un error inesperado.');
+                messageDiv
+                    .removeClass('success')
+                    .addClass('error')
+                    .text(response.data.message || '❌ No se ha podido crear el empleado. Inténtalo de nuevo.')
+                    .show();
             }
-        }, 'json').fail(function(jqXHR, textStatus) {
-            alert('Error en la solicitud: ' + textStatus);
+
+            setTimeout(function() {
+                messageDiv.fadeOut();
+            }, 5000);
+        }, 'json').fail(function() {
+            messageDiv
+                .removeClass('success')
+                .addClass('error')
+                .text('❌ No se ha podido crear el empleado. Inténtalo de nuevo.')
+                .show();
+
+            setTimeout(function() {
+                messageDiv.fadeOut();
+            }, 5000);
         });
     });
 });
