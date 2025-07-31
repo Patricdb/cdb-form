@@ -182,7 +182,18 @@ function cdb_form_empleado_submit() {
         ];
 
         try {
+            if (defined('WP_DEBUG') && WP_DEBUG === true) {
+                error_log('[cdb-form] Datos para wp_insert_post: ' . print_r($post_data, true));
+            }
+
             $empleado_id = wp_insert_post($post_data);
+
+            if (defined('WP_DEBUG') && WP_DEBUG === true) {
+                error_log('[cdb-form] Resultado wp_insert_post: ' . print_r($empleado_id, true));
+                if (is_wp_error($empleado_id)) {
+                    error_log('[cdb-form] WP_Error: ' . $empleado_id->get_error_message());
+                }
+            }
 
             if (is_wp_error($empleado_id) || $empleado_id === 0) {
                 if (defined('WP_DEBUG') && WP_DEBUG === true) {
