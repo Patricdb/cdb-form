@@ -149,13 +149,18 @@ function cdb_form_empleado_submit() {
     $posicion_id = isset($_POST['posicion_id']) ? intval($_POST['posicion_id']) : 0;
     $anio        = date('Y');
 
-    // Validar campo obligatorio.
-    if (empty($nombre)) {
-        wp_send_json_error(['message' => 'El nombre es obligatorio.']);
+    // Validar nombre y disponibilidad.
+    if (empty($nombre) || (!isset($_POST['disponible']) || $_POST['disponible'] === '')) {
+        if (defined('WP_DEBUG') && WP_DEBUG === true) {
+            error_log('[cdb-form] Validaci\xC3\xB3n fallida: nombre o disponibilidad vac\xC3\xADos');
+        }
+        wp_send_json_error(['message' => 'El nombre y la disponibilidad son obligatorios.']);
         wp_die();
     }
 
-    error_log("DEBUG: Procesando perfil de empleado: Nombre: $nombre, Disponible: $disponible, Bar ID: $bar_id, Posición ID: $posicion_id, Año: $anio");
+    if (defined('WP_DEBUG') && WP_DEBUG === true) {
+        error_log("DEBUG: Procesando perfil de empleado: Nombre: $nombre, Disponible: $disponible, Bar ID: $bar_id, Posición ID: $posicion_id, Año: $anio");
+    }
 
     // CREAR PERFIL DE EMPLEADO SI NO EXISTE.
     if ($empleado_id === 0) {
@@ -175,17 +180,31 @@ function cdb_form_empleado_submit() {
             'post_status' => 'publish',
             'post_author' => $current_user->ID
         ];
-        $empleado_id = wp_insert_post($post_data);
-        if ($empleado_id) {
+
+        try {
+            $empleado_id = wp_insert_post($post_data);
+
+            if (is_wp_error($empleado_id) || $empleado_id === 0) {
+                if (defined('WP_DEBUG') && WP_DEBUG === true) {
+                    $detail = is_wp_error($empleado_id) ? $empleado_id->get_error_message() : '0';
+                    error_log('[cdb-form] Error al crear el post de empleado: ' . $detail);
+                }
+                wp_send_json_error(['message' => 'Error al crear el perfil.']);
+            }
+
             update_post_meta($empleado_id, 'disponible', $disponible);
             update_post_meta($empleado_id, 'bar_id', $bar_id);
             update_post_meta($empleado_id, 'posicion_id', $posicion_id);
             update_post_meta($empleado_id, 'anio', $anio);
 
-            error_log("DEBUG: Perfil de empleado creado correctamente con ID: $empleado_id");
+            if (defined('WP_DEBUG') && WP_DEBUG === true) {
+                error_log("DEBUG: Perfil de empleado creado correctamente con ID: $empleado_id");
+            }
             wp_send_json_success(['message' => 'Perfil de empleado creado correctamente.', 'empleado_id' => $empleado_id]);
-        } else {
-            error_log("ERROR: No se pudo crear el perfil de empleado.");
+        } catch (Exception $e) {
+            if (defined('WP_DEBUG') && WP_DEBUG === true) {
+                error_log('[cdb-form] Error desconocido al crear empleado');
+            }
             wp_send_json_error(['message' => 'Error al crear el perfil.']);
         }
     }
@@ -204,7 +223,9 @@ function cdb_form_empleado_submit() {
         wp_update_post(['ID' => $empleado_id, 'post_title' => $nombre]);
         update_post_meta($empleado_id, 'disponible', $disponible);
 
-        error_log("DEBUG: Perfil de empleado actualizado correctamente con ID: $empleado_id");
+        if (defined('WP_DEBUG') && WP_DEBUG === true) {
+            error_log("DEBUG: Perfil de empleado actualizado correctamente con ID: $empleado_id");
+        }
         wp_send_json_success(['message' => 'Perfil de empleado actualizado correctamente.']);
     }
 }
