@@ -53,12 +53,17 @@ jQuery(document).ready(function($) {
     $('#cdb-form-empleado').on('submit', function(e) {
         e.preventDefault();
 
+        var empleadoId = $('input[name="empleado_id"]').val();
+        var nombre      = $('#nombre').val();
+        var disponible  = $('#disponible').val();
+
         var formData = {
             action: 'cdb_form_empleado_submit',
-            security: $('#security').val(),
-            empleado_id: $('input[name="empleado_id"]').val(),
-            nombre: $('#nombre').val(),
-            disponible: $('#disponible').val()
+            nonce: cdb_form_ajax.nonce,
+            security: cdb_form_ajax.nonce,
+            empleado_id: empleadoId,
+            nombre: nombre,
+            disponible: disponible
         };
 
         var messageDiv = $(this).find('.cdb-form-message');
