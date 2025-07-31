@@ -49,9 +49,22 @@ function cdb_form_empleado() {
     $empleado_id = $empleado[0]->ID;
     $disponible  = get_post_meta($empleado_id, 'disponible', true);
 
+    // Obtener los ajustes de diseño
+    $settings = get_option( 'cdb_form_settings', array() );
+    $bg_color = isset( $settings['empleado_bg_color'] ) ? $settings['empleado_bg_color'] : '';
+    $border_color = isset( $settings['empleado_border_color'] ) ? $settings['empleado_border_color'] : '';
+    $style_attr = '';
+    if ( $bg_color ) {
+        $style_attr .= 'background-color: ' . esc_attr( $bg_color ) . ';';
+    }
+    if ( $border_color ) {
+        $style_attr .= ' border: 1px solid ' . esc_attr( $border_color ) . ';';
+    }
+
     // Generar el formulario con AJAX.
     ob_start();
     ?>
+    <div<?php echo $style_attr ? ' style="' . $style_attr . '"' : ''; ?>>
     <form id="cdb-update-disponibilidad" method="post">
         <label for="disponible"><strong>¿Estás disponible?</strong></label>
         <select name="disponible" id="disponible">
@@ -63,6 +76,7 @@ function cdb_form_empleado() {
         <button type="submit">Actualizar</button>
     </form>
     <p id="cdb-response-message" style="color: green;"></p>
+    </div>
 
     <script>
     jQuery(document).ready(function($) {

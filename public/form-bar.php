@@ -32,9 +32,22 @@ function cdb_form_bar() {
     $bar_id = $bar[0]->ID;
     $estado_actual = get_post_meta( $bar_id, 'estado', true );
 
+    // Obtener los ajustes de diseño
+    $settings = get_option( 'cdb_form_settings', array() );
+    $bg_color = isset( $settings['experiencia_bg_color'] ) ? $settings['experiencia_bg_color'] : '';
+    $border_color = isset( $settings['experiencia_border_color'] ) ? $settings['experiencia_border_color'] : '';
+    $style_attr = '';
+    if ( $bg_color ) {
+        $style_attr .= 'background-color: ' . esc_attr( $bg_color ) . ';';
+    }
+    if ( $border_color ) {
+        $style_attr .= ' border: 1px solid ' . esc_attr( $border_color ) . ';';
+    }
+
     // Generar el formulario con AJAX.
     ob_start();
     ?>
+    <div<?php echo $style_attr ? ' style="' . $style_attr . '"' : ''; ?>>
     <form id="cdb-update-estado-bar" method="post">
         <label for="estado">Estado del Bar:</label>
         <select name="estado" id="estado">
@@ -50,6 +63,7 @@ function cdb_form_bar() {
         <button type="submit">Actualizar</button>
     </form>
     <p id="cdb-response-message-bar" style="color: green;"></p>
+    </div>
     <?php
     return ob_get_clean();
 }
