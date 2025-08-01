@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 .cdb-btn-filtrar:hover{background:#444}
 .cdb-busqueda-table{width:100%;border-collapse:collapse}
 .cdb-busqueda-table th,.cdb-busqueda-table td{padding:6px;border-bottom:1px solid #ccc;text-align:left}
+#cdb-busqueda-spinner{display:none;margin-top:10px}
 </style>
 <div id="cdb-busqueda-empleados">
     <div class="cdb-busqueda-filtros">
@@ -21,8 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
         <input type="hidden" id="cdb-bar-id" />
         <input type="text" id="cdb-anio" placeholder="<?php esc_attr_e('Año','cdb-form'); ?>" />
         <button id="cdb-filtrar" class="cdb-btn-filtrar" type="button"><?php esc_html_e('Filtrar','cdb-form'); ?></button>
+        <button id="cdb-limpiar" class="cdb-btn-filtrar" type="button"><?php esc_html_e('Limpiar','cdb-form'); ?></button>
     </div>
     <div id="cdb-busqueda-empleados-resultados">
         <?php include CDB_FORM_PATH . 'templates/busqueda-empleados-table.php'; ?>
     </div>
+    <div id="cdb-busqueda-spinner"><?php esc_html_e('Cargando...','cdb-form'); ?></div>
 </div>

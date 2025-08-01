@@ -62,59 +62,157 @@ jQuery(document).ready(function($) {
     });
     // Buscador avanzado de empleados con AJAX
     function cdbBuscarEmpleados() {
-        var data = {
+        var spinner = document.getElementById('cdb-busqueda-spinner');
+        if (spinner) spinner.style.display = 'block';
+
+        var params = {
             action: 'cdb_buscar_empleados',
             nonce: cdb_form_ajax.nonce,
-            nombre: jQuery('#cdb-nombre').val(),
-            posicion_id: jQuery('#cdb-posicion-id').val(),
-            bar_id: jQuery('#cdb-bar-id').val(),
-            anio: jQuery('#cdb-anio').val()
+            nombre: document.getElementById('cdb-nombre').value,
+            posicion_id: document.getElementById('cdb-posicion-id').value,
+            bar_id: document.getElementById('cdb-bar-id').value,
+            anio: document.getElementById('cdb-anio').value
         };
-        jQuery.getJSON(cdb_form_ajax.ajaxurl, data, function(resp){
+
+        jQuery.getJSON(cdb_form_ajax.ajaxurl, params, function(resp){
             if(resp.success){
                 jQuery('#cdb-busqueda-empleados-resultados').html(resp.data.html);
             }
+            if (spinner) spinner.style.display = 'none';
         });
     }
 
 
     // Ejecuta la búsqueda solo cuando el usuario pulsa el botón "Filtrar"
     jQuery('#cdb-filtrar').on('click', function(){
+        if (validarFiltros()) {
+            cdbBuscarEmpleados();
+        }
+    });
+
+    jQuery('#cdb-limpiar').on('click', function(){
+        document.getElementById('cdb-nombre').value = '';
+        document.getElementById('cdb-posicion').value = '';
+        document.getElementById('cdb-bar').value = '';
+        document.getElementById('cdb-anio').value = '';
+        document.getElementById('cdb-posicion-id').value = '';
+        document.getElementById('cdb-bar-id').value = '';
+        document.getElementById('cdb-nombre').dataset.valid = '';
+        document.getElementById('cdb-posicion').dataset.valid = '';
+        document.getElementById('cdb-bar').dataset.valid = '';
+        document.getElementById('cdb-anio').dataset.valid = '';
         cdbBuscarEmpleados();
     });
 
-    // Autocompletados
-    // Si se añaden más filtros, replicar esta llamada cambiando el parámetro
-    // "tipo" para que el backend devuelva las sugerencias correspondientes.
-    jQuery('#cdb-nombre').autocomplete({
-        source: function(request, response){
-            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'nombre', term:request.term}, response);
-        },
-        minLength:2
+    // ----- Awesomplete Autocompletado -----
+    function obtenerSugerencias(tipo, termino, callback){
+        jQuery.getJSON(cdb_form_ajax.ajaxurl, {
+            action: 'cdb_sugerencias',
+            nonce: cdb_form_ajax.nonce,
+            tipo: tipo,
+            term: termino
+        }, callback);
+    }
+
+    var nombreInput   = document.getElementById('cdb-nombre');
+    var posInput      = document.getElementById('cdb-posicion');
+    var posIdInput    = document.getElementById('cdb-posicion-id');
+    var barInput      = document.getElementById('cdb-bar');
+    var barIdInput    = document.getElementById('cdb-bar-id');
+    var anioInput     = document.getElementById('cdb-anio');
+
+    var posSugs = [], barSugs = [];
+
+    var awNombre  = new Awesomplete(nombreInput, { minChars:1, autoFirst:true });
+    nombreInput.addEventListener('input', function(){
+        nombreInput.dataset.valid = '';
+        obtenerSugerencias('nombre', this.value, function(res){
+            awNombre.list = res.map(function(r){ return r.label; });
+        });
+    });
+    nombreInput.addEventListener('awesomplete-selectcomplete', function(){
+        nombreInput.dataset.valid = '1';
     });
 
-    jQuery('#cdb-posicion').autocomplete({
-        source: function(request, response){
-            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'posicion', term:request.term}, response);
-        },
-        minLength:2,
-        select: function(e,ui){ jQuery('#cdb-posicion-id').val(ui.item.id); }
-    }).on('keyup', function(){ jQuery('#cdb-posicion-id').val(''); });
-
-    jQuery('#cdb-bar').autocomplete({
-        source: function(request, response){
-            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'bar', term:request.term}, response);
-        },
-        minLength:2,
-        select: function(e,ui){ jQuery('#cdb-bar-id').val(ui.item.id); }
-    }).on('keyup', function(){ jQuery('#cdb-bar-id').val(''); });
-
-    jQuery('#cdb-anio').autocomplete({
-        source: function(request, response){
-            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'anio', term:request.term}, response);
-        },
-        minLength:1
+    var awPos = new Awesomplete(posInput, { minChars:1, autoFirst:true });
+    posInput.addEventListener('input', function(){
+        posInput.dataset.valid = '';
+        posIdInput.value = '';
+        obtenerSugerencias('posicion', this.value, function(res){
+            posSugs = res;
+            awPos.list = res.map(function(r){ return r.label; });
+        });
     });
+    posInput.addEventListener('awesomplete-selectcomplete', function(){
+        var val = posInput.value;
+        var obj = posSugs.find(function(i){ return i.label === val; });
+        if(obj){
+            posIdInput.value = obj.id;
+            posInput.dataset.valid = '1';
+        }
+    });
+
+    var awBar = new Awesomplete(barInput, { minChars:1, autoFirst:true });
+    barInput.addEventListener('input', function(){
+        barInput.dataset.valid = '';
+        barIdInput.value = '';
+        obtenerSugerencias('bar', this.value, function(res){
+            barSugs = res;
+            awBar.list = res.map(function(r){ return r.label; });
+        });
+    });
+    barInput.addEventListener('awesomplete-selectcomplete', function(){
+        var val = barInput.value;
+        var obj = barSugs.find(function(i){ return i.label === val; });
+        if(obj){
+            barIdInput.value = obj.id;
+            barInput.dataset.valid = '1';
+        }
+    });
+
+    var awAnio = new Awesomplete(anioInput, { minChars:1, autoFirst:true });
+    anioInput.addEventListener('input', function(){
+        anioInput.dataset.valid = '';
+        obtenerSugerencias('anio', this.value, function(res){
+            awAnio.list = res.map(function(r){ return r.label; });
+        });
+    });
+    anioInput.addEventListener('awesomplete-selectcomplete', function(){
+        anioInput.dataset.valid = '1';
+    });
+
+    [nombreInput, posInput, barInput, anioInput].forEach(function(el){
+        el.addEventListener('keydown', function(e){
+            if(e.key === 'Enter'){
+                e.preventDefault();
+                document.getElementById('cdb-filtrar').click();
+            }
+        });
+    });
+
+    function validarFiltros(){
+        if(anioInput.value && !/^[0-9]{4}$/.test(anioInput.value)){
+            alert('El año debe tener 4 cifras');
+            return false;
+        }
+        if(nombreInput.value && !nombreInput.dataset.valid){
+            alert('Selecciona un nombre válido');
+            return false;
+        }
+        if(posInput.value && !posInput.dataset.valid){
+            alert('Selecciona una posición válida');
+            return false;
+        }
+        if(barInput.value && !barInput.dataset.valid){
+            alert('Selecciona un bar válido');
+            return false;
+        }
+        if(anioInput.value && !anioInput.dataset.valid){
+            alert('Selecciona un año válido');
+            return false;
+        }
+        return true;
+    }
 
     // Carga inicial
     cdbBuscarEmpleados();
