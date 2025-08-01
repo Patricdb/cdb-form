@@ -509,9 +509,9 @@ function cdb_busqueda_sugerencias_ajax() {
                 $results[] = array( 'label' => $y, 'value' => $y );
             }
             break;
-        case 'reputacion':
+        case 'puntuacion_total':
             global $wpdb;
-            $vals = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'reputacion' AND meta_value LIKE %s ORDER BY meta_value+0 DESC LIMIT 10", $term . '%' ) );
+            $vals = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'cdb_puntuacion_total' AND meta_value LIKE %s ORDER BY meta_value+0 DESC LIMIT 10", $term . '%' ) );
             foreach ( $vals as $v ) {
                 $results[] = array( 'label' => $v, 'value' => $v );
             }
