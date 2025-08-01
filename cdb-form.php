@@ -137,6 +137,7 @@ function cdb_form_enqueue_scripts_conditionally() {
             array(),
             '1.1.5'
         );
+        wp_add_inline_script('awesomplete', 'document.dispatchEvent(new Event("awesomplete-loaded"));');
 
         // Encolar el script principal después de Awesomplete
         wp_enqueue_script( 'cdb-form-frontend-script' );
