@@ -389,6 +389,36 @@ function cdb_buscar_empleados_ajax() {
 add_action( 'wp_ajax_cdb_buscar_empleados', 'cdb_buscar_empleados_ajax' );
 
 /**
+ * Devuelve resultados HTML para el buscador avanzado de bares.
+ */
+function cdb_buscar_bares_ajax() {
+    if ( ! is_user_logged_in() ) {
+        error_log( 'cdb_buscar_bares_ajax: usuario no autenticado' );
+        wp_send_json_error( array( 'message' => __( 'Debe iniciar sesión.', 'cdb-form' ) ), 403 );
+    }
+    if ( ! check_ajax_referer( 'cdb_form_nonce', 'nonce', false ) ) {
+        error_log( 'cdb_buscar_bares_ajax: nonce incorrecto' );
+        wp_send_json_error( array( 'message' => __( 'Nonce incorrecto', 'cdb-form' ) ) );
+    }
+
+    $args = array(
+        'nombre'     => isset( $_GET['nombre'] ) ? sanitize_text_field( $_GET['nombre'] ) : '',
+        'zona_id'    => isset( $_GET['zona_id'] ) ? intval( $_GET['zona_id'] ) : 0,
+        'apertura'   => isset( $_GET['apertura'] ) ? intval( $_GET['apertura'] ) : 0,
+        'reputacion' => isset( $_GET['reputacion'] ) ? sanitize_text_field( $_GET['reputacion'] ) : '',
+    );
+
+    $bares = cdb_busqueda_bares_get_datos( $args );
+
+    ob_start();
+    include CDB_FORM_PATH . 'templates/busqueda-bares-table.php';
+    $html = ob_get_clean();
+
+    wp_send_json_success( array( 'html' => $html ) );
+}
+add_action( 'wp_ajax_cdb_buscar_bares', 'cdb_buscar_bares_ajax' );
+
+/**
  * Proporciona sugerencias de autocompletado.
  */
 function cdb_busqueda_sugerencias_ajax() {
@@ -457,6 +487,34 @@ function cdb_busqueda_sugerencias_ajax() {
             $years = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT anio FROM {$tabla_exp} WHERE anio LIKE %s ORDER BY anio DESC LIMIT 10", $term . '%' ) );
             foreach ( $years as $y ) {
                 $results[] = array( 'label' => $y, 'value' => $y );
+            }
+            break;
+        case 'zona':
+            $ids = get_posts( array(
+                'post_type'   => 'zona',
+                'post_status' => 'publish',
+                's'           => $term,
+                'numberposts' => 10,
+                'orderby'     => 'title',
+                'order'       => 'ASC',
+                'fields'      => 'ids'
+            ) );
+            foreach ( $ids as $id ) {
+                $results[] = array( 'label' => get_the_title( $id ), 'value' => get_the_title( $id ), 'id' => $id );
+            }
+            break;
+        case 'apertura':
+            global $wpdb;
+            $years = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_cdb_bar_apertura' AND meta_value LIKE %s ORDER BY meta_value DESC LIMIT 10", $term . '%' ) );
+            foreach ( $years as $y ) {
+                $results[] = array( 'label' => $y, 'value' => $y );
+            }
+            break;
+        case 'reputacion':
+            global $wpdb;
+            $vals = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'reputacion' AND meta_value LIKE %s ORDER BY meta_value+0 DESC LIMIT 10", $term . '%' ) );
+            foreach ( $vals as $v ) {
+                $results[] = array( 'label' => $v, 'value' => $v );
             }
             break;
     }

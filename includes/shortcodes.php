@@ -1064,3 +1064,124 @@ function cdb_busqueda_empleados_shortcode( $atts = array() ) {
     return ob_get_clean();
 }
 add_shortcode( 'cdb_busqueda_empleados', 'cdb_busqueda_empleados_shortcode' );
+
+/*---------------------------------------------------------------
+ * 9. SHORTCODE [cdb_busqueda_bares]
+ *---------------------------------------------------------------
+ * Buscador avanzado de bares con autocompletado y filtros por zona,
+ * año de apertura y reputación. Se ordena por reputación y año de
+ * apertura (desc) y se limita a 21 resultados.
+ *---------------------------------------------------------------*/
+
+function cdb_busqueda_bares_get_datos( $args = array() ) {
+    global $wpdb;
+
+    $defaults = array(
+        'nombre'     => '',
+        'zona_id'    => 0,
+        'apertura'   => 0,
+        'reputacion' => '',
+        'limite'     => 21,
+    );
+    $args = wp_parse_args( $args, $defaults );
+
+    $query_args = array(
+        'post_type'      => 'bar',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+    );
+    if ( $args['nombre'] !== '' ) {
+        $query_args['s'] = $args['nombre'];
+    }
+
+    $meta_query = array();
+    if ( $args['zona_id'] ) {
+        $meta_query[] = array(
+            'key'   => '_cdb_bar_zona_id',
+            'value' => $args['zona_id'],
+            'compare' => '=',
+        );
+    }
+    if ( $args['apertura'] ) {
+        $meta_query[] = array(
+            'key'   => '_cdb_bar_apertura',
+            'value' => $args['apertura'],
+            'compare' => '=',
+            'type'  => 'NUMERIC',
+        );
+    }
+    if ( $args['reputacion'] !== '' ) {
+        $meta_query[] = array(
+            'key'     => 'reputacion',
+            'value'   => $args['reputacion'],
+            'compare' => '>=',
+            'type'    => 'NUMERIC',
+        );
+    }
+    if ( ! empty( $meta_query ) ) {
+        $query_args['meta_query'] = $meta_query;
+    }
+    $query_args['meta_key'] = 'reputacion';
+    $query_args['orderby']  = 'meta_value_num';
+    $query_args['order']    = 'DESC';
+
+    $query = new WP_Query( $query_args );
+
+    $bares      = array();
+    $tabla_exp  = $wpdb->prefix . 'cdb_experiencia';
+
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            $id        = get_the_ID();
+            $zona_id   = get_post_meta( $id, '_cdb_bar_zona_id', true );
+            $apertura  = get_post_meta( $id, '_cdb_bar_apertura', true );
+            $reput     = get_post_meta( $id, 'reputacion', true );
+
+            $equipos = array();
+            $eq_ids  = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT equipo_id FROM {$tabla_exp} WHERE bar_id = %d AND equipo_id IS NOT NULL", $id ) );
+            if ( $eq_ids ) {
+                foreach ( $eq_ids as $eq_id ) {
+                    $equipos[] = array( 'id' => intval( $eq_id ), 'nombre' => get_the_title( $eq_id ) );
+                }
+            }
+
+            $bares[] = array(
+                'id'         => $id,
+                'nombre'     => get_the_title(),
+                'zona'       => $zona_id ? array( 'id' => intval( $zona_id ), 'nombre' => get_the_title( $zona_id ) ) : null,
+                'apertura'   => $apertura ? intval( $apertura ) : '',
+                'reputacion' => $reput !== '' ? $reput : '',
+                'equipos'    => $equipos,
+            );
+        }
+        wp_reset_postdata();
+    }
+
+    usort( $bares, function( $a, $b ) {
+        $repA = floatval( $a['reputacion'] );
+        $repB = floatval( $b['reputacion'] );
+        if ( $repA === $repB ) {
+            return intval( $b['apertura'] ) - intval( $a['apertura'] );
+        }
+        return ( $repA < $repB ) ? 1 : -1;
+    } );
+
+    return array_slice( $bares, 0, intval( $args['limite'] ) );
+}
+
+function cdb_busqueda_bares_shortcode( $atts = array() ) {
+    $params = shortcode_atts( array(
+        'nombre'     => '',
+        'zona_id'    => 0,
+        'apertura'   => 0,
+        'reputacion' => '',
+    ), $atts, 'cdb_busqueda_bares' );
+
+    $bares = cdb_busqueda_bares_get_datos( $params );
+
+    ob_start();
+    include CDB_FORM_PATH . 'templates/busqueda-bares.php';
+    return ob_get_clean();
+}
+add_shortcode( 'cdb_busqueda_bares', 'cdb_busqueda_bares_shortcode' );
