@@ -60,4 +60,16 @@ jQuery(document).ready(function($) {
             }
         });
     });
+    // Buscador de empleados automático
+    var cdbBusquedaTimer;
+    $("#cdb-busqueda-empleados-form").on("change", "select", function(){
+        $("#cdb-busqueda-empleados-form").submit();
+    });
+    $("#cdb-busqueda-empleados-form input[name="nombre"]").on("keyup", function(){
+        clearTimeout(cdbBusquedaTimer);
+        cdbBusquedaTimer = setTimeout(function(){
+            $("#cdb-busqueda-empleados-form").submit();
+        }, 500);
+    });
 });
+
