@@ -4,16 +4,16 @@
 <table class="cdb-busqueda-table">
     <thead>
         <tr>
+            <th><?php esc_html_e( 'Puntuación', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Nombre', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Zona', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Año', 'cdb-form' ); ?></th>
-            <th><?php esc_html_e( 'Reputación', 'cdb-form' ); ?></th>
-            <th><?php esc_html_e( 'Equipos', 'cdb-form' ); ?></th>
         </tr>
     </thead>
     <tbody>
     <?php foreach ( $bares as $bar ) : ?>
         <tr>
+            <td><?php echo esc_html( $bar['puntuacion'] ); ?></td>
             <td><a href="<?php echo esc_url( get_permalink( $bar['id'] ) ); ?>"><?php echo esc_html( $bar['nombre'] ); ?></a></td>
             <td>
                 <?php if ( ! empty( $bar['zona'] ) ) : ?>
@@ -21,13 +21,6 @@
                 <?php endif; ?>
             </td>
             <td><?php echo esc_html( $bar['apertura'] ); ?></td>
-            <td><?php echo esc_html( $bar['reputacion'] ); ?></td>
-            <td>
-                <?php foreach ( $bar['equipos'] as $i => $eq ) : ?>
-                    <?php if ( $i > 0 ) echo ', '; ?>
-                    <a href="<?php echo esc_url( get_permalink( $eq['id'] ) ); ?>"><?php echo esc_html( $eq['nombre'] ); ?></a>
-                <?php endforeach; ?>
-            </td>
         </tr>
     <?php endforeach; ?>
     </tbody>

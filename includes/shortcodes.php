@@ -1068,20 +1068,20 @@ add_shortcode( 'cdb_busqueda_empleados', 'cdb_busqueda_empleados_shortcode' );
 /*---------------------------------------------------------------
  * 9. SHORTCODE [cdb_busqueda_bares]
  *---------------------------------------------------------------
- * Buscador avanzado de bares con autocompletado y filtros por zona,
- * año de apertura y reputación. Se ordena por reputación y año de
- * apertura (desc) y se limita a 21 resultados.
+ * Buscador de bares por nombre, zona y año de apertura.
+ * Utiliza autocompletado vía AJAX para nombre y zona. Los resultados se
+ * ordenan por la reputación/puntuación del bar (meta 'reputacion') y por
+ * año de apertura de forma descendente. Máximo 21 bares.
  *---------------------------------------------------------------*/
 
 function cdb_busqueda_bares_get_datos( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
-        'nombre'     => '',
-        'zona_id'    => 0,
-        'apertura'   => 0,
-        'reputacion' => '',
-        'limite'     => 21,
+        'nombre'   => '',
+        'zona_id'  => 0,
+        'apertura' => 0,
+        'limite'   => 21,
     );
     $args = wp_parse_args( $args, $defaults );
 
@@ -1110,14 +1110,6 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
             'type'  => 'NUMERIC',
         );
     }
-    if ( $args['reputacion'] !== '' ) {
-        $meta_query[] = array(
-            'key'     => 'reputacion',
-            'value'   => $args['reputacion'],
-            'compare' => '>=',
-            'type'    => 'NUMERIC',
-        );
-    }
     if ( ! empty( $meta_query ) ) {
         $query_args['meta_query'] = $meta_query;
     }
@@ -1127,8 +1119,7 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
 
     $query = new WP_Query( $query_args );
 
-    $bares      = array();
-    $tabla_exp  = $wpdb->prefix . 'cdb_experiencia';
+    $bares     = array();
 
     if ( $query->have_posts() ) {
         while ( $query->have_posts() ) {
@@ -1138,29 +1129,20 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
             $apertura  = get_post_meta( $id, '_cdb_bar_apertura', true );
             $reput     = get_post_meta( $id, 'reputacion', true );
 
-            $equipos = array();
-            $eq_ids  = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT equipo_id FROM {$tabla_exp} WHERE bar_id = %d AND equipo_id IS NOT NULL", $id ) );
-            if ( $eq_ids ) {
-                foreach ( $eq_ids as $eq_id ) {
-                    $equipos[] = array( 'id' => intval( $eq_id ), 'nombre' => get_the_title( $eq_id ) );
-                }
-            }
-
             $bares[] = array(
                 'id'         => $id,
                 'nombre'     => get_the_title(),
                 'zona'       => $zona_id ? array( 'id' => intval( $zona_id ), 'nombre' => get_the_title( $zona_id ) ) : null,
                 'apertura'   => $apertura ? intval( $apertura ) : '',
-                'reputacion' => $reput !== '' ? $reput : '',
-                'equipos'    => $equipos,
+                'puntuacion' => $reput !== '' ? number_format( (float) $reput, 1, '.', '' ) : '0.0',
             );
         }
         wp_reset_postdata();
     }
 
     usort( $bares, function( $a, $b ) {
-        $repA = floatval( $a['reputacion'] );
-        $repB = floatval( $b['reputacion'] );
+        $repA = floatval( $a['puntuacion'] );
+        $repB = floatval( $b['puntuacion'] );
         if ( $repA === $repB ) {
             return intval( $b['apertura'] ) - intval( $a['apertura'] );
         }
@@ -1172,10 +1154,9 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
 
 function cdb_busqueda_bares_shortcode( $atts = array() ) {
     $params = shortcode_atts( array(
-        'nombre'     => '',
-        'zona_id'    => 0,
-        'apertura'   => 0,
-        'reputacion' => '',
+        'nombre'   => '',
+        'zona_id'  => 0,
+        'apertura' => 0,
     ), $atts, 'cdb_busqueda_bares' );
 
     $bares = cdb_busqueda_bares_get_datos( $params );
