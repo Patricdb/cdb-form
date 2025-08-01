@@ -77,13 +77,15 @@ jQuery(document).ready(function($) {
         });
     }
 
-    var cdbBusquedaTimer;
-    jQuery('#cdb-busqueda-empleados input').on('keyup change', function(){
-        clearTimeout(cdbBusquedaTimer);
-        cdbBusquedaTimer = setTimeout(cdbBuscarEmpleados, 500);
+
+    // Ejecuta la búsqueda solo cuando el usuario pulsa el botón "Filtrar"
+    jQuery('#cdb-filtrar').on('click', function(){
+        cdbBuscarEmpleados();
     });
 
     // Autocompletados
+    // Si se añaden más filtros, replicar esta llamada cambiando el parámetro
+    // "tipo" para que el backend devuelva las sugerencias correspondientes.
     jQuery('#cdb-nombre').autocomplete({
         source: function(request, response){
             jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'nombre', term:request.term}, response);

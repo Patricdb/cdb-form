@@ -396,6 +396,9 @@ function cdb_busqueda_sugerencias_ajax() {
     $term = isset( $_GET['term'] ) ? sanitize_text_field( $_GET['term'] ) : '';
 
     $results = array();
+    // Dependiendo del tipo se consultan los posts o la tabla de experiencia.
+    // Para añadir nuevos filtros, basta con agregar otro "case" que devuelva
+    // las opciones pertinentes.
     switch ( $tipo ) {
         case 'nombre':
             $ids = get_posts( array(
