@@ -77,8 +77,14 @@ jQuery(document).ready(function($) {
         jQuery.getJSON(cdb_form_ajax.ajaxurl, params, function(resp){
             if(resp.success){
                 jQuery('#cdb-busqueda-empleados-resultados').html(resp.data.html);
+            } else if (resp.data && resp.data.message) {
+                alert(resp.data.message);
             }
             if (spinner) spinner.style.display = 'none';
+        }).fail(function(jqXHR){
+            if (spinner) spinner.style.display = 'none';
+            alert('Error de comunicación');
+            console.error('cdb_buscar_empleados AJAX fail', jqXHR);
         });
     }
 
@@ -134,7 +140,9 @@ jQuery(document).ready(function($) {
                 nonce: cdb_form_ajax.nonce,
                 tipo: tipo,
                 term: termino
-            }, callback);
+            }, callback).fail(function(jqXHR){
+                console.error('cdb_sugerencias AJAX fail', jqXHR);
+            });
         }
 
         var posSugs = [], barSugs = [];

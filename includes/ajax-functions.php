@@ -362,7 +362,12 @@ add_action( 'wp_ajax_nopriv_cdb_listar_experiencias', 'cdb_listar_experiencias' 
  * Devuelve resultados HTML para el buscador avanzado de empleados.
  */
 function cdb_buscar_empleados_ajax() {
+    if ( ! is_user_logged_in() ) {
+        error_log( 'cdb_buscar_empleados_ajax: usuario no autenticado' );
+        wp_send_json_error( array( 'message' => __( 'Debe iniciar sesión.', 'cdb-form' ) ), 403 );
+    }
     if ( ! check_ajax_referer( 'cdb_form_nonce', 'nonce', false ) ) {
+        error_log( 'cdb_buscar_empleados_ajax: nonce incorrecto' );
         wp_send_json_error( array( 'message' => __( 'Nonce incorrecto', 'cdb-form' ) ) );
     }
 
@@ -382,13 +387,17 @@ function cdb_buscar_empleados_ajax() {
     wp_send_json_success( array( 'html' => $html ) );
 }
 add_action( 'wp_ajax_cdb_buscar_empleados', 'cdb_buscar_empleados_ajax' );
-add_action( 'wp_ajax_nopriv_cdb_buscar_empleados', 'cdb_buscar_empleados_ajax' );
 
 /**
  * Proporciona sugerencias de autocompletado.
  */
 function cdb_busqueda_sugerencias_ajax() {
+    if ( ! is_user_logged_in() ) {
+        error_log( 'cdb_busqueda_sugerencias_ajax: usuario no autenticado' );
+        wp_send_json_error( array( 'message' => __( 'Debe iniciar sesión.', 'cdb-form' ) ), 403 );
+    }
     if ( ! check_ajax_referer( 'cdb_form_nonce', 'nonce', false ) ) {
+        error_log( 'cdb_busqueda_sugerencias_ajax: nonce incorrecto' );
         wp_send_json_error( array( 'message' => __( 'Nonce incorrecto', 'cdb-form' ) ) );
     }
 
@@ -455,4 +464,3 @@ function cdb_busqueda_sugerencias_ajax() {
     wp_send_json( $results );
 }
 add_action( 'wp_ajax_cdb_sugerencias', 'cdb_busqueda_sugerencias_ajax' );
-add_action( 'wp_ajax_nopriv_cdb_sugerencias', 'cdb_busqueda_sugerencias_ajax' );
