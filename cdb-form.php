@@ -105,9 +105,9 @@ add_action('wp_ajax_cdb_refrescar_top_21', 'cdb_refrescar_top_21');
 add_action('wp_ajax_nopriv_cdb_refrescar_top_21', 'cdb_refrescar_top_21');
 
 function cdb_form_enqueue_scripts_conditionally() {
-    // Verificar si se está usando el shortcode [cdb_experiencia], por ejemplo:
+    // Verificar si se usa [cdb_experiencia] o [cdb_busqueda_empleados]
     global $post;
-    if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'cdb_experiencia' ) ) {
+    if ( is_a( $post, 'WP_Post' ) && ( has_shortcode( $post->post_content, 'cdb_experiencia' ) || has_shortcode( $post->post_content, 'cdb_busqueda_empleados' ) ) ) {
         wp_enqueue_script('jquery-ui-autocomplete');
         wp_enqueue_style(
             'cdb-form-jquery-ui-css',
