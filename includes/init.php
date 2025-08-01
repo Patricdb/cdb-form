@@ -21,7 +21,6 @@ require_once CDB_FORM_PATH . 'includes/ajax-functions.php';
 
 // Cargar scripts y estilos para el admin y frontend
 require_once CDB_FORM_PATH . 'admin/enqueue.php';
-require_once CDB_FORM_PATH . 'admin/menu.php';
 require_once CDB_FORM_PATH . 'public/enqueue.php';
 
 // Acción de inicialización del plugin
