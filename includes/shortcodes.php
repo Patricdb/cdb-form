@@ -1075,7 +1075,7 @@ add_shortcode( 'cdb_busqueda_empleados', 'cdb_busqueda_empleados_shortcode' );
  *---------------------------------------------------------------
  * Buscador de bares por nombre, zona y año de apertura.
  * Utiliza autocompletado vía AJAX para nombre y zona. Los resultados se
- * ordenan por la reputación/puntuación del bar (meta 'reputacion') y por
+ * ordenan por la puntuación total del bar (meta 'cdb_puntuacion_total') y por
  * año de apertura de forma descendente. Máximo 21 bares.
  *---------------------------------------------------------------*/
 
@@ -1118,8 +1118,8 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
     if ( ! empty( $meta_query ) ) {
         $query_args['meta_query'] = $meta_query;
     }
-    // La puntuaci\xC3\xB3n del bar se obtiene de su meta 'reputacion'.
-    $query_args['meta_key'] = 'reputacion';
+    // La puntuaci\xC3\xB3n del bar se obtiene de su meta 'cdb_puntuacion_total'.
+    $query_args['meta_key'] = 'cdb_puntuacion_total';
     $query_args['orderby']  = 'meta_value_num';
     $query_args['order']    = 'DESC';
 
@@ -1133,8 +1133,8 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
             $id        = get_the_ID();
             $zona_id   = get_post_meta( $id, '_cdb_bar_zona_id', true );
             $apertura  = get_post_meta( $id, '_cdb_bar_apertura', true );
-            // 'reputacion' almacena la puntuaci\xC3\xB3n total de la gr\xC3\xA1fica del bar
-            $reput     = get_post_meta( $id, 'reputacion', true );
+            // 'cdb_puntuacion_total' almacena la puntuaci\xC3\xB3n total de la gr\xC3\xA1fica del bar
+            $reput     = get_post_meta( $id, 'cdb_puntuacion_total', true );
 
             $bares[] = array(
                 'id'         => $id,
