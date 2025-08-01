@@ -362,8 +362,8 @@ add_action( 'wp_ajax_nopriv_cdb_listar_experiencias', 'cdb_listar_experiencias' 
  * Devuelve resultados HTML para el buscador avanzado de empleados.
  */
 function cdb_buscar_empleados_ajax() {
-    if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'cdb_form_nonce' ) ) {
-        wp_send_json_error( array( 'message' => 'Nonce incorrecto' ) );
+    if ( ! check_ajax_referer( 'cdb_form_nonce', 'nonce', false ) ) {
+        wp_send_json_error( array( 'message' => __( 'Nonce incorrecto', 'cdb-form' ) ) );
     }
 
     $args = array(
@@ -388,8 +388,8 @@ add_action( 'wp_ajax_nopriv_cdb_buscar_empleados', 'cdb_buscar_empleados_ajax' )
  * Proporciona sugerencias de autocompletado.
  */
 function cdb_busqueda_sugerencias_ajax() {
-    if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'cdb_form_nonce' ) ) {
-        wp_send_json( array() );
+    if ( ! check_ajax_referer( 'cdb_form_nonce', 'nonce', false ) ) {
+        wp_send_json_error( array( 'message' => __( 'Nonce incorrecto', 'cdb-form' ) ) );
     }
 
     $tipo = isset( $_GET['tipo'] ) ? sanitize_text_field( $_GET['tipo'] ) : '';
