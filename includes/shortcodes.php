@@ -943,3 +943,162 @@ function cdb_top_bares_instagram_shortcode() {
 }
 add_shortcode('cdb_top_bares_instagram', 'cdb_top_bares_instagram_shortcode');
 
+
+/*---------------------------------------------------------------
+ * 8. SHORTCODE [cdb_busqueda_empleados]
+ *---------------------------------------------------------------
+ * Muestra un listado/buscador avanzado de empleados filtrando por
+ * nombre, equipo, posición, bar, año y disponibilidad.
+ *---------------------------------------------------------------*/
+
+/**
+ * Shortcode [cdb_busqueda_empleados]
+ *
+ * Uso de ejemplo:
+ *   [cdb_busqueda_empleados nombre="Ana" equipo_id="3" bar_id="4" anio="2024" disponible="1"]
+ * También se puede usar mediante parámetros GET, por ejemplo:
+ *   /pagina/?nombre=Ana&equipo_id=3
+ */
+function cdb_busqueda_empleados_shortcode($atts = array()) {
+    global $wpdb;
+
+    // ---------------------------
+    // 1. Captura de parámetros
+    // ---------------------------
+    $atts = shortcode_atts(array(
+        'nombre'      => '',
+        'equipo_id'   => '',
+        'posicion_id' => '',
+        'bar_id'      => '',
+        'anio'        => '',
+        'disponible'  => '',
+    ), $atts, 'cdb_busqueda_empleados');
+
+    // Priorizar atributos sobre parámetros GET
+    $nombre      = $atts['nombre'] !== ''      ? $atts['nombre']      : (isset($_GET['nombre'])      ? sanitize_text_field($_GET['nombre']) : '');
+    $equipo_id   = $atts['equipo_id'] !== ''   ? intval($atts['equipo_id'])   : (isset($_GET['equipo_id'])   ? intval($_GET['equipo_id'])   : 0);
+    $posicion_id = $atts['posicion_id'] !== '' ? intval($atts['posicion_id']) : (isset($_GET['posicion_id']) ? intval($_GET['posicion_id']) : 0);
+    $bar_id      = $atts['bar_id'] !== ''      ? intval($atts['bar_id'])      : (isset($_GET['bar_id'])      ? intval($_GET['bar_id'])      : 0);
+    $anio        = $atts['anio'] !== ''        ? intval($atts['anio'])        : (isset($_GET['anio'])        ? intval($_GET['anio'])        : 0);
+    $disponible  = $atts['disponible'] !== ''  ? $atts['disponible']           : (isset($_GET['disponible'])  ? $_GET['disponible']          : '');
+
+    // ---------------------------
+    // 2. Construcción de la consulta SQL
+    // ---------------------------
+    $tabla_exp = $wpdb->prefix . 'cdb_experiencia';
+    $posts     = $wpdb->posts;
+    $postmeta  = $wpdb->postmeta;
+
+    $sql = "SELECT exp.empleado_id, exp.anio, exp.bar_id, exp.posicion_id, exp.equipo_id,
+                   e.post_title AS empleado_nombre,
+                   bar.post_title AS bar_nombre,
+                   pos.post_title AS posicion_nombre,
+                   eq.post_title AS equipo_nombre,
+                   score.meta_value AS puntuacion_total,
+                   dispo.meta_value AS disponible
+            FROM {$tabla_exp} exp
+            JOIN {$posts} e   ON exp.empleado_id = e.ID AND e.post_type = 'empleado' AND e.post_status = 'publish'
+            LEFT JOIN {$posts} bar ON exp.bar_id = bar.ID AND bar.post_type = 'bar' AND bar.post_status = 'publish'
+            LEFT JOIN {$posts} pos ON exp.posicion_id = pos.ID AND pos.post_type = 'cdb_posiciones' AND pos.post_status = 'publish'
+            LEFT JOIN {$posts} eq  ON exp.equipo_id = eq.ID AND eq.post_type = 'equipo' AND eq.post_status = 'publish'
+            LEFT JOIN {$postmeta} score ON score.post_id = e.ID AND score.meta_key = 'cdb_puntuacion_total'
+            LEFT JOIN {$postmeta} dispo ON dispo.post_id = e.ID AND dispo.meta_key = 'disponible'
+            WHERE 1=1";
+
+    $prepare_params = array();
+
+    if ($nombre !== '') {
+        $like = '%' . $wpdb->esc_like($nombre) . '%';
+        $sql .= " AND e.post_title LIKE %s";
+        $prepare_params[] = $like;
+    }
+    if ($equipo_id) {
+        $sql .= " AND exp.equipo_id = %d";
+        $prepare_params[] = $equipo_id;
+    }
+    if ($posicion_id) {
+        $sql .= " AND exp.posicion_id = %d";
+        $prepare_params[] = $posicion_id;
+    }
+    if ($bar_id) {
+        $sql .= " AND exp.bar_id = %d";
+        $prepare_params[] = $bar_id;
+    }
+    if ($anio) {
+        $sql .= " AND exp.anio = %d";
+        $prepare_params[] = $anio;
+    }
+    if ($disponible !== '') {
+        $sql .= " AND dispo.meta_value = %s";
+        $prepare_params[] = $disponible;
+    }
+
+    $sql .= " ORDER BY exp.anio DESC, CAST(score.meta_value AS DECIMAL(10,2)) DESC";
+
+    // Limitar resultados iniciales para filtrar después
+    $sql .= " LIMIT 100";
+
+    $query = $wpdb->prepare($sql, $prepare_params);
+    $rows  = $wpdb->get_results($query);
+
+    // ---------------------------
+    // 3. Procesamiento de resultados
+    // ---------------------------
+    $empleados = array();
+    if (!empty($rows)) {
+        foreach ($rows as $row) {
+            $eid = intval($row->empleado_id);
+            if (isset($empleados[$eid])) {
+                continue; // Ya tenemos el más reciente por orden
+            }
+            $empleados[$eid] = array(
+                'empleado_id' => $eid,
+                'nombre'      => $row->empleado_nombre,
+                'url'         => get_permalink($eid),
+                'posicion'    => $row->posicion_nombre,
+                'bar'         => $row->bar_nombre,
+                'equipo'      => $row->equipo_nombre,
+                'anio'        => intval($row->anio),
+                'puntuacion'  => $row->puntuacion_total !== null ? number_format((float)$row->puntuacion_total, 1, '.', '') : '0.0',
+                'disponible'  => ($row->disponible === '1') ? __( 'Disponible', 'cdb-form' ) : __( 'No Disponible', 'cdb-form' ),
+            );
+            if (count($empleados) >= 21) {
+                break;
+            }
+        }
+    }
+
+    // ---------------------------
+    // 4. Generación del HTML
+    // ---------------------------
+    ob_start();
+    if (empty($empleados)) {
+        echo '<p>' . esc_html__( 'No se encontraron empleados con esos filtros.', 'cdb-form' ) . '</p>';
+    } else {
+        echo '<table style="width:100%; border-collapse: collapse;">';
+        echo '<thead><tr>';
+        echo '<th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">' . esc_html__( 'Año', 'cdb-form' ) . '</th>';
+        echo '<th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">' . esc_html__( 'Empleado', 'cdb-form' ) . '</th>';
+        echo '<th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">' . esc_html__( 'Posición', 'cdb-form' ) . '</th>';
+        echo '<th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">' . esc_html__( 'Bar', 'cdb-form' ) . '</th>';
+        echo '<th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">' . esc_html__( 'Equipo', 'cdb-form' ) . '</th>';
+        echo '<th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">' . esc_html__( 'Puntuación', 'cdb-form' ) . '</th>';
+        echo '<th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">' . esc_html__( 'Disponibilidad', 'cdb-form' ) . '</th>';
+        echo '</tr></thead><tbody>';
+        foreach ($empleados as $emp) {
+            echo '<tr>';
+            echo '<td style="padding:6px;">' . esc_html($emp['anio']) . '</td>';
+            echo '<td style="padding:6px;"><a href="' . esc_url($emp['url']) . '" style="text-decoration:none;">' . esc_html($emp['nombre']) . '</a></td>';
+            echo '<td style="padding:6px;">' . esc_html($emp['posicion']) . '</td>';
+            echo '<td style="padding:6px;">' . esc_html($emp['bar']) . '</td>';
+            echo '<td style="padding:6px;">' . esc_html($emp['equipo']) . '</td>';
+            echo '<td style="padding:6px;">' . esc_html($emp['puntuacion']) . '</td>';
+            echo '<td style="padding:6px;">' . esc_html($emp['disponible']) . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody></table>';
+    }
+    return ob_get_clean();
+}
+add_shortcode('cdb_busqueda_empleados', 'cdb_busqueda_empleados_shortcode');
+
