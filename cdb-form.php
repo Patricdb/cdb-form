@@ -107,13 +107,33 @@ add_action('wp_ajax_nopriv_cdb_refrescar_top_21', 'cdb_refrescar_top_21');
 function cdb_form_enqueue_scripts_conditionally() {
     // Verificar si se usa [cdb_experiencia] o [cdb_busqueda_empleados]
     global $post;
-    if ( is_a( $post, 'WP_Post' ) && ( has_shortcode( $post->post_content, 'cdb_experiencia' ) || has_shortcode( $post->post_content, 'cdb_busqueda_empleados' ) ) ) {
-        wp_enqueue_script('jquery-ui-autocomplete');
+    if ( ! is_a( $post, 'WP_Post' ) ) {
+        return;
+    }
+
+    if ( has_shortcode( $post->post_content, 'cdb_experiencia' ) ) {
+        wp_enqueue_script( 'jquery-ui-autocomplete' );
         wp_enqueue_style(
             'cdb-form-jquery-ui-css',
             'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
             array(),
             '1.12.1'
+        );
+    }
+
+    if ( has_shortcode( $post->post_content, 'cdb_busqueda_empleados' ) ) {
+        wp_enqueue_script(
+            'awesomplete',
+            'https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js',
+            array(),
+            '1.1.5',
+            true
+        );
+        wp_enqueue_style(
+            'awesomplete',
+            'https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css',
+            array(),
+            '1.1.5'
         );
     }
 }
