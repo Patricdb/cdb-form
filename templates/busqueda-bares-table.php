@@ -11,7 +11,7 @@
         </tr>
     </thead>
     <tbody>
-    <?php foreach ( $bares as $bar ) : ?>
+    <?php foreach ( $bares as $bar ) : // 'puntuacion' proviene del meta 'reputacion' del bar ?>
         <tr>
             <td><?php echo esc_html( $bar['puntuacion'] ); ?></td>
             <td><a href="<?php echo esc_url( get_permalink( $bar['id'] ) ); ?>"><?php echo esc_html( $bar['nombre'] ); ?></a></td>

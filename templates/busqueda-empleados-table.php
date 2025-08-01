@@ -8,6 +8,7 @@
             <th><?php esc_html_e( 'Nombre', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Posiciones', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Bares', 'cdb-form' ); ?></th>
+            <th><?php esc_html_e( 'Año', 'cdb-form' ); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
                     <a href="<?php echo esc_url( get_permalink( $bar['id'] ) ); ?>"><?php echo esc_html( $bar['nombre'] ); ?></a>
                 <?php endforeach; ?>
             </td>
+            <td><?php echo esc_html( $emp['anio'] ); ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
