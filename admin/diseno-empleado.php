@@ -19,8 +19,8 @@ function cdb_form_admin_menu() {
 
     add_submenu_page(
         'cdb-form',
-        __( 'Configuraci\xC3\xB3n Crear Empleado', 'cdb-form' ),
-        __( 'Configuraci\xC3\xB3n Crear Empleado', 'cdb-form' ),
+        __( 'Configuración Crear Empleado', 'cdb-form' ),
+        __( 'Configuración Crear Empleado', 'cdb-form' ),
         'manage_options',
         'cdb-form-disenio-empleado',
         'cdb_form_disenio_empleado_page'
@@ -81,7 +81,7 @@ function cdb_form_disenio_empleado_page() {
     $values = wp_parse_args( get_option( 'cdb_form_disenio_empleado' ), $defaults );
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Configuraci\xC3\xB3n Crear Empleado', 'cdb-form' ); ?></h1>
+        <h1><?php esc_html_e( 'Configuración Crear Empleado', 'cdb-form' ); ?></h1>
         <p><?php esc_html_e( 'Configura los estilos del formulario de empleado mostrado en el frontend. Estos cambios no afectan a otros formularios.', 'cdb-form' ); ?></p>
         <form method="post">
             <?php wp_nonce_field( 'cdb_form_disenio_empleado_save', 'cdb_form_disenio_empleado_nonce' ); ?>
@@ -115,21 +115,21 @@ function cdb_form_disenio_empleado_page() {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="button_bg"><?php esc_html_e( 'Color de fondo del bot\xC3\xB3n', 'cdb-form' ); ?></label></th>
+                    <th scope="row"><label for="button_bg"><?php esc_html_e( 'Color de fondo del botón', 'cdb-form' ); ?></label></th>
                     <td>
                         <input type="color" id="button_bg" class="cdb-color-input" name="button_bg" value="<?php echo esc_attr( $values['button_bg'] ); ?>" />
                         <input type="text" class="cdb-color-value" id="button_bg_value" value="<?php echo esc_attr( $values['button_bg'] ); ?>" readonly />
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="button_text_color"><?php esc_html_e( 'Color de texto del bot\xC3\xB3n', 'cdb-form' ); ?></label></th>
+                    <th scope="row"><label for="button_text_color"><?php esc_html_e( 'Color de texto del botón', 'cdb-form' ); ?></label></th>
                     <td>
                         <input type="color" id="button_text_color" class="cdb-color-input" name="button_text_color" value="<?php echo esc_attr( $values['button_text_color'] ); ?>" />
                         <input type="text" class="cdb-color-value" id="button_text_color_value" value="<?php echo esc_attr( $values['button_text_color'] ); ?>" readonly />
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="font_size"><?php esc_html_e( 'Tama\xC3\xB1o de fuente de campos y etiquetas (px)', 'cdb-form' ); ?></label></th>
+                    <th scope="row"><label for="font_size"><?php esc_html_e( 'Tamaño de fuente de campos y etiquetas (px)', 'cdb-form' ); ?></label></th>
                     <td><input type="number" id="font_size" name="font_size" value="<?php echo esc_attr( $values['font_size'] ); ?>" /></td>
                 </tr>
                 <tr>
@@ -141,7 +141,7 @@ function cdb_form_disenio_empleado_page() {
                     <td><input type="number" id="field_spacing" name="field_spacing" value="<?php echo esc_attr( $values['field_spacing'] ); ?>" /></td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="message_color"><?php esc_html_e( 'Color de mensajes de \xC3\xA9xito y error', 'cdb-form' ); ?></label></th>
+                    <th scope="row"><label for="message_color"><?php esc_html_e( 'Color de mensajes de éxito y error', 'cdb-form' ); ?></label></th>
                     <td>
                         <input type="color" id="message_color" class="cdb-color-input" name="message_color" value="<?php echo esc_attr( $values['message_color'] ); ?>" />
                         <input type="text" class="cdb-color-value" id="message_color_value" value="<?php echo esc_attr( $values['message_color'] ); ?>" readonly />

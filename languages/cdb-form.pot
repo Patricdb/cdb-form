@@ -388,5 +388,5 @@ msgid "Disponible"
 msgstr ""
 
 #: admin/diseno-empleado.php:22 admin/diseno-empleado.php:23 admin/diseno-empleado.php:84
-msgid "Configuraci\xC3\xB3n Crear Empleado"
+msgid "Configuración Crear Empleado"
 msgstr ""
