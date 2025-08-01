@@ -110,6 +110,7 @@ function cdb_form_enqueue_scripts_conditionally() {
     if ( ! is_a( $post, 'WP_Post' ) ) {
         return;
     }
+    $needs_main = false;
 
     if ( has_shortcode( $post->post_content, 'cdb_experiencia' ) ) {
         wp_enqueue_script( 'jquery-ui-autocomplete' );
@@ -119,6 +120,7 @@ function cdb_form_enqueue_scripts_conditionally() {
             array(),
             '1.12.1'
         );
+        $needs_main = true;
     }
 
     if ( has_shortcode( $post->post_content, 'cdb_busqueda_empleados' ) ) {
@@ -135,9 +137,17 @@ function cdb_form_enqueue_scripts_conditionally() {
             array(),
             '1.1.5'
         );
+
+        // Encolar el script principal después de Awesomplete
+        wp_enqueue_script( 'cdb-form-frontend-script' );
+        $needs_main = false;
+    }
+
+    if ( $needs_main ) {
+        wp_enqueue_script( 'cdb-form-frontend-script' );
     }
 }
-add_action('wp_enqueue_scripts', 'cdb_form_enqueue_scripts_conditionally');
+add_action( 'wp_enqueue_scripts', 'cdb_form_enqueue_scripts_conditionally' );
 
 
 
