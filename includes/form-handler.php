@@ -27,20 +27,20 @@ if (!function_exists('cdb_actualizar_experiencia_score')) {
 function cdb_guardar_experiencia() {
     // 1. Verificar nonce para seguridad.
     if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'cdb_form_nonce')) {
-        wp_send_json_error(['message' => 'Error de seguridad.']);
+        wp_send_json_error(['message' => __('Error de seguridad.', 'cdb-form')]);
         wp_die();
     }
 
     // 2. Obtener el usuario actual.
     $current_user = wp_get_current_user();
     if (!$current_user->exists()) {
-        wp_send_json_error(['message' => 'Debes iniciar sesión para completar este formulario.']);
+        wp_send_json_error(['message' => __('Debes iniciar sesión para completar este formulario.', 'cdb-form')]);
         wp_die();
     }
 
     // 3. Validar que los campos obligatorios se hayan enviado.
     if (!isset($_POST['bar_id'], $_POST['posicion_id'], $_POST['anio'])) {
-        wp_send_json_error(['message' => 'Todos los campos son obligatorios.']);
+        wp_send_json_error(['message' => __('Todos los campos son obligatorios.', 'cdb-form')]);
         wp_die();
     }
 
@@ -55,7 +55,7 @@ function cdb_guardar_experiencia() {
     // 5. Verificar que el usuario está editando su propio perfil.
     $post = get_post($empleado_id);
     if (!$post || $post->post_author != $current_user->ID) {
-        wp_send_json_error(['message' => 'No tienes permisos para editar este perfil.']);
+        wp_send_json_error(['message' => __('No tienes permisos para editar este perfil.', 'cdb-form')]);
         wp_die();
     }
 
@@ -78,7 +78,7 @@ function cdb_guardar_experiencia() {
     // 7. Verificar si ocurrió algún error durante la inserción.
     if ($wpdb->last_error) {
         error_log("[ERROR] Fallo al insertar experiencia: " . $wpdb->last_error);
-        wp_send_json_error(['message' => 'Error al registrar la experiencia.']);
+        wp_send_json_error(['message' => __('Error al registrar la experiencia.', 'cdb-form')]);
         wp_die();
     }
 
@@ -113,11 +113,11 @@ function cdb_guardar_experiencia() {
 
         // 10. Enviar respuesta JSON indicando éxito y solicitando la recarga de la página.
         wp_send_json_success([
-            'message' => 'Experiencia registrada correctamente.',
+            'message' => __( 'Experiencia registrada correctamente.', 'cdb-form' ),
             'reload'  => true // Instrucción para que el JS recargue la página.
         ]);
     } else {
-        wp_send_json_error(['message' => 'No se pudo guardar la experiencia.']);
+        wp_send_json_error(['message' => __( 'No se pudo guardar la experiencia.', 'cdb-form' )]);
     }
 
     wp_die();
@@ -137,7 +137,7 @@ function cdb_form_empleado_submit() {
 
     $current_user = wp_get_current_user();
     if (!$current_user->exists()) {
-        wp_send_json_error(['message' => 'Debes iniciar sesión para completar este formulario.']);
+        wp_send_json_error(['message' => __('Debes iniciar sesión para completar este formulario.', 'cdb-form')]);
         wp_die();
     }
 
@@ -151,7 +151,7 @@ function cdb_form_empleado_submit() {
 
     // Validar campo obligatorio.
     if (empty($nombre)) {
-        wp_send_json_error(['message' => 'El nombre es obligatorio.']);
+        wp_send_json_error(['message' => __('El nombre es obligatorio.', 'cdb-form')]);
         wp_die();
     }
 
@@ -165,7 +165,7 @@ function cdb_form_empleado_submit() {
             'posts_per_page' => 1
         ]);
         if (!empty($existing_empleado)) {
-            wp_send_json_error(['message' => 'Ya tienes un perfil de empleado. No puedes crear más de uno.']);
+            wp_send_json_error(['message' => __('Ya tienes un perfil de empleado. No puedes crear más de uno.', 'cdb-form')]);
             wp_die();
         }
 
@@ -196,21 +196,21 @@ function cdb_form_empleado_submit() {
             update_post_meta($empleado_id, 'anio', $anio);
 
             error_log("DEBUG: Perfil de empleado creado correctamente con ID: $empleado_id");
-            wp_send_json_success(['message' => 'Perfil de empleado creado correctamente.', 'empleado_id' => $empleado_id]);
+            wp_send_json_success(['message' => __('Perfil de empleado creado correctamente.', 'cdb-form'), 'empleado_id' => $empleado_id]);
         } else {
             error_log("ERROR: No se pudo crear el perfil de empleado.");
-            wp_send_json_error(['message' => 'Error al crear el perfil.']);
+            wp_send_json_error(['message' => __('Error al crear el perfil.', 'cdb-form')]);
         }
     }
     // ACTUALIZAR PERFIL DE EMPLEADO EXISTENTE.
     else {
         $empleado_post = get_post($empleado_id);
         if (!$empleado_post || $empleado_post->post_type !== 'empleado') {
-            wp_send_json_error(['message' => 'Empleado no válido.']);
+            wp_send_json_error(['message' => __('Empleado no válido.', 'cdb-form')]);
             wp_die();
         }
         if ($empleado_post->post_author != $current_user->ID) {
-            wp_send_json_error(['message' => 'No tienes permisos para editar este empleado.']);
+            wp_send_json_error(['message' => __('No tienes permisos para editar este empleado.', 'cdb-form')]);
             wp_die();
         }
 
@@ -218,7 +218,7 @@ function cdb_form_empleado_submit() {
         update_post_meta($empleado_id, 'disponible', $disponible);
 
         error_log("DEBUG: Perfil de empleado actualizado correctamente con ID: $empleado_id");
-        wp_send_json_success(['message' => 'Perfil de empleado actualizado correctamente.']);
+        wp_send_json_success(['message' => __('Perfil de empleado actualizado correctamente.', 'cdb-form')]);
     }
 }
 

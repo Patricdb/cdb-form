@@ -40,12 +40,12 @@ function cdb_mostrar_disponibilidad_empleado($content) {
 
         // Si el valor es vacío o no está definido, mostrar "No Disponible"
         if ($disponible === "" || $disponible === null) {
-            $disponible_texto = 'No Disponible';
+            $disponible_texto = __( 'No Disponible', 'cdb-form' );
         } else {
-            $disponible_texto = ($disponible == 1) ? 'Disponible' : 'No Disponible';
+            $disponible_texto = ($disponible == 1) ? __( 'Disponible', 'cdb-form' ) : __( 'No Disponible', 'cdb-form' );
         }
 
-        $info_disponibilidad = "<p><strong>Estado:</strong> $disponible_texto</p>";
+        $info_disponibilidad = '<p><strong>' . esc_html__( 'Estado:', 'cdb-form' ) . '</strong> ' . $disponible_texto . '</p>';
 
         return $info_disponibilidad . $content;
     }

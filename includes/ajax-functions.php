@@ -66,13 +66,13 @@ function cdb_actualizar_experiencia_score( $empleado_id ) {
 if ( ! function_exists( 'cdb_actualizar_disponibilidad' ) ) {
     function cdb_actualizar_disponibilidad() {
         if ( ! is_user_logged_in() ) {
-            wp_send_json_error( array( 'message' => 'No tienes permisos para realizar esta acción.' ) );
+            wp_send_json_error( array( 'message' => __( 'No tienes permisos para realizar esta acción.', 'cdb-form' ) ) );
         }
         if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'cdb_form_nonce' ) ) {
-            wp_send_json_error( array( 'message' => 'Error de seguridad.' ) );
+            wp_send_json_error( array( 'message' => __( 'Error de seguridad.', 'cdb-form' ) ) );
         }
         if ( ! isset( $_POST['empleado_id'] ) || ! isset( $_POST['disponible'] ) ) {
-            wp_send_json_error( array( 'message' => 'Datos inválidos.' ) );
+            wp_send_json_error( array( 'message' => __( 'Datos inválidos.', 'cdb-form' ) ) );
         }
         
         $empleado_id  = intval( $_POST['empleado_id'] );
@@ -81,14 +81,14 @@ if ( ! function_exists( 'cdb_actualizar_disponibilidad' ) ) {
         $empleado     = get_post( $empleado_id );
         
         if ( ! $empleado || $empleado->post_author != $current_user->ID ) {
-            wp_send_json_error( array( 'message' => 'No tienes permisos para editar este empleado.' ) );
+            wp_send_json_error( array( 'message' => __( 'No tienes permisos para editar este empleado.', 'cdb-form' ) ) );
         }
         
         $resultado = update_post_meta( $empleado_id, 'disponible', $disponible );
         if ( $resultado !== false ) {
-            wp_send_json_success( array( 'message' => 'Disponibilidad actualizada correctamente.' ) );
+            wp_send_json_success( array( 'message' => __( 'Disponibilidad actualizada correctamente.', 'cdb-form' ) ) );
         } else {
-            wp_send_json_error( array( 'message' => 'Error al actualizar la disponibilidad.' ) );
+            wp_send_json_error( array( 'message' => __( 'Error al actualizar la disponibilidad.', 'cdb-form' ) ) );
         }
         wp_die();
     }
@@ -103,13 +103,13 @@ add_action( 'wp_ajax_cdb_actualizar_disponibilidad', 'cdb_actualizar_disponibili
 if ( ! function_exists( 'cdb_actualizar_estado_bar' ) ) {
     function cdb_actualizar_estado_bar() {
         if ( ! is_user_logged_in() ) {
-            wp_send_json_error( array( 'message' => 'No tienes permisos para realizar esta acción.' ) );
+            wp_send_json_error( array( 'message' => __( 'No tienes permisos para realizar esta acción.', 'cdb-form' ) ) );
         }
         if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'cdb_form_nonce' ) ) {
-            wp_send_json_error( array( 'message' => 'Error de seguridad.' ) );
+            wp_send_json_error( array( 'message' => __( 'Error de seguridad.', 'cdb-form' ) ) );
         }
         if ( ! isset( $_POST['bar_id'] ) || ! isset( $_POST['estado'] ) ) {
-            wp_send_json_error( array( 'message' => 'Datos inválidos.' ) );
+            wp_send_json_error( array( 'message' => __( 'Datos inválidos.', 'cdb-form' ) ) );
         }
         
         $bar_id       = intval( $_POST['bar_id'] );
@@ -118,14 +118,14 @@ if ( ! function_exists( 'cdb_actualizar_estado_bar' ) ) {
         $bar          = get_post( $bar_id );
         
         if ( ! $bar || $bar->post_author != $current_user->ID ) {
-            wp_send_json_error( array( 'message' => 'No tienes permisos para editar este bar.' ) );
+            wp_send_json_error( array( 'message' => __( 'No tienes permisos para editar este bar.', 'cdb-form' ) ) );
         }
         
         $resultado = update_post_meta( $bar_id, 'estado', $estado );
         if ( $resultado !== false ) {
-            wp_send_json_success( array( 'message' => 'Estado del bar actualizado correctamente.' ) );
+            wp_send_json_success( array( 'message' => __( 'Estado del bar actualizado correctamente.', 'cdb-form' ) ) );
         } else {
-            wp_send_json_error( array( 'message' => 'Error al actualizar el estado del bar.' ) );
+            wp_send_json_error( array( 'message' => __( 'Error al actualizar el estado del bar.', 'cdb-form' ) ) );
         }
         wp_die();
     }
@@ -140,7 +140,7 @@ add_action( 'wp_ajax_cdb_actualizar_estado_bar', 'cdb_actualizar_estado_bar' );
 if ( ! function_exists( 'cdb_obtener_anios_bar' ) ) {
     function cdb_obtener_anios_bar() {
         if ( ! isset( $_GET['bar_id'] ) ) {
-            wp_send_json_error( array( 'message' => 'Bar ID no proporcionado.' ) );
+            wp_send_json_error( array( 'message' => __( 'Bar ID no proporcionado.', 'cdb-form' ) ) );
         }
         
         $bar_id         = intval( $_GET['bar_id'] );
@@ -148,7 +148,7 @@ if ( ! function_exists( 'cdb_obtener_anios_bar' ) ) {
         $fecha_cierre   = get_post_meta( $bar_id, '_cdb_bar_cierre', true );
         
         if ( ! $fecha_apertura ) {
-            wp_send_json_error( array( 'message' => 'No se encontraron fechas para este bar.' ) );
+            wp_send_json_error( array( 'message' => __( 'No se encontraron fechas para este bar.', 'cdb-form' ) ) );
         }
         
         $fecha_apertura = intval( $fecha_apertura );
@@ -173,10 +173,10 @@ add_action( 'wp_ajax_cdb_obtener_anios_bar', 'cdb_obtener_anios_bar' );
 if ( ! function_exists( 'cdb_guardar_experiencia' ) ) {
     function cdb_guardar_experiencia() {
         if ( ! is_user_logged_in() ) {
-            wp_send_json_error( array( 'message' => 'No tienes permisos.' ) );
+            wp_send_json_error( array( 'message' => __( 'No tienes permisos.', 'cdb-form' ) ) );
         }
         if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'cdb_form_nonce' ) ) {
-            wp_send_json_error( array( 'message' => 'Error de seguridad.' ) );
+            wp_send_json_error( array( 'message' => __( 'Error de seguridad.', 'cdb-form' ) ) );
         }
         
         $empleado_id = intval( $_POST['empleado_id'] );
@@ -231,9 +231,9 @@ if ( ! function_exists( 'cdb_guardar_experiencia' ) ) {
             
             // Actualizar el meta "cdb_experiencia_score" del empleado.
             cdb_actualizar_experiencia_score( $empleado_id );
-            wp_send_json_success( array( 'message' => 'Experiencia guardada correctamente.', 'experiencia_total' => $experiencia_total ) );
+            wp_send_json_success( array( 'message' => __( 'Experiencia guardada correctamente.', 'cdb-form' ), 'experiencia_total' => $experiencia_total ) );
         } else {
-            wp_send_json_error( array( 'message' => 'No se pudo guardar la experiencia.' ) );
+            wp_send_json_error( array( 'message' => __( 'No se pudo guardar la experiencia.', 'cdb-form' ) ) );
         }
         wp_die();
     }
@@ -250,13 +250,13 @@ add_action( 'wp_ajax_nopriv_cdb_guardar_experiencia', 'cdb_guardar_experiencia' 
 if ( ! function_exists( 'cdb_borrar_experiencia' ) ) {
     function cdb_borrar_experiencia() {
         if ( ! is_user_logged_in() ) {
-            wp_send_json_error( array('message' => 'No tienes permisos (no logueado).') );
+            wp_send_json_error( array('message' => __( 'No tienes permisos (no logueado).', 'cdb-form' ) ) );
         }
         if ( ! isset($_POST['security']) || ! wp_verify_nonce($_POST['security'], 'cdb_form_nonce') ) {
-            wp_send_json_error( array('message' => 'Error de seguridad (nonce).') );
+            wp_send_json_error( array('message' => __( 'Error de seguridad (nonce).', 'cdb-form' ) ) );
         }
         if ( ! isset($_POST['exp_id']) ) {
-            wp_send_json_error( array('message' => 'ID de experiencia no proporcionado.') );
+            wp_send_json_error( array('message' => __( 'ID de experiencia no proporcionado.', 'cdb-form' ) ) );
         }
         $exp_id = intval($_POST['exp_id']);
         global $wpdb;
@@ -268,7 +268,7 @@ if ( ! function_exists( 'cdb_borrar_experiencia' ) ) {
             $wpdb->prepare("SELECT empleado_id FROM {$tabla_exp} WHERE id = %d", $exp_id)
         );
         if ( ! $fila || $fila->empleado_id != $empleado_id ) {
-            wp_send_json_error( array('message' => 'No tienes permiso para eliminar esa experiencia.') );
+            wp_send_json_error( array('message' => __( 'No tienes permiso para eliminar esa experiencia.', 'cdb-form' ) ) );
         }
         
         // Borrar el registro.
@@ -280,9 +280,9 @@ if ( ! function_exists( 'cdb_borrar_experiencia' ) ) {
         if ( $borrado ) {
             // Actualizar el meta "cdb_experiencia_score".
             cdb_actualizar_experiencia_score( $empleado_id );
-            wp_send_json_success( array( 'message' => 'Experiencia eliminada correctamente.' ) );
+            wp_send_json_success( array( 'message' => __( 'Experiencia eliminada correctamente.', 'cdb-form' ) ) );
         } else {
-            wp_send_json_error( array( 'message' => 'No se pudo eliminar la experiencia.' ) );
+            wp_send_json_error( array( 'message' => __( 'No se pudo eliminar la experiencia.', 'cdb-form' ) ) );
         }
         wp_die();
     }
@@ -297,7 +297,7 @@ add_action('wp_ajax_cdb_borrar_experiencia', 'cdb_borrar_experiencia');
 if ( ! function_exists( 'cdb_listar_experiencias' ) ) {
     function cdb_listar_experiencias() {
         if ( ! is_user_logged_in() ) {
-            wp_die( 'Debes iniciar sesión para ver la experiencia.', 403 );
+            wp_die( __( 'Debes iniciar sesión para ver la experiencia.', 'cdb-form' ), 403 );
         }
         global $wpdb;
         $empleado_id = isset( $_GET['empleado_id'] ) ? intval( $_GET['empleado_id'] ) : 0;
@@ -339,7 +339,7 @@ if ( ! function_exists( 'cdb_listar_experiencias' ) ) {
                         <td>
                             <!-- Botón para borrar experiencia -->
                             <button class="cdb-btn-borrar" data-exp-id="<?php echo esc_attr($exp->exp_id); ?>">
-                                Borrar
+                                <?php esc_html_e( 'Borrar', 'cdb-form' ); ?>
                             </button>
                         </td>
                     </tr>
@@ -347,7 +347,7 @@ if ( ! function_exists( 'cdb_listar_experiencias' ) ) {
                 </tbody>
             </table>
         <?php else : ?>
-            <p>No tienes experiencia registrada aún.</p>
+            <p><?php esc_html_e( 'No tienes experiencia registrada aún.', 'cdb-form' ); ?></p>
         <?php
         endif;
         $html = ob_get_clean();

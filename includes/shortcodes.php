@@ -87,11 +87,11 @@ function cdb_calcular_puntuacion_experiencia_dinamica($empleado_id) {
  */
 function cdb_bienvenida_usuario_shortcode() {
     if (!is_user_logged_in()) {
-        return '<p style="color: red;">Debes iniciar sesión para acceder a esta página.</p>';
+        return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
     }
     $current_user = wp_get_current_user();
-    $output  = '<h1>¡Hola, ' . esc_html($current_user->display_name) . '!</h1>';
-    $output .= '<p>Grácias por colaborar con el Proyecto CdB!</p>';
+    $output  = '<h1>' . sprintf( esc_html__( '¡Hola, %s!', 'cdb-form' ), esc_html($current_user->display_name) ) . '</h1>';
+    $output .= '<p>' . esc_html__( 'Grácias por colaborar con el Proyecto CdB!', 'cdb-form' ) . '</p>';
 
     // Cargar la sección de empleado si el usuario tiene ese rol.
     if (in_array('empleado', (array) $current_user->roles)) {
@@ -133,18 +133,18 @@ function cdb_bienvenida_empleado_shortcode() {
         $empleado_url     = get_permalink($empleado_id);
         $disponible       = get_post_meta($empleado_id, 'disponible', true);
 
-        $output .= '<p><strong>Tu empleado:</strong> <a href="' . esc_url($empleado_url) . '">' . esc_html($empleado_nombre) . '</a></p>';
+        $output .= '<p><strong>' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</strong> <a href="' . esc_url($empleado_url) . '">' . esc_html($empleado_nombre) . '</a></p>';
 
         // Formulario para actualizar disponibilidad.
         $output .= '<form id="cdb-update-disponibilidad" method="post">
-                        <label for="disponible">Actualizar Disponibilidad:</label>
+                        <label for="disponible">' . esc_html__( 'Actualizar Disponibilidad:', 'cdb-form' ) . '</label>
                         <select id="disponible" name="disponible">
-                            <option value="1" ' . selected($disponible, 1, false) . '>Sí</option>
-                            <option value="0" ' . selected($disponible, 0, false) . '>No</option>
+                            <option value="1" ' . selected($disponible, 1, false) . '>' . esc_html__( 'Sí', 'cdb-form' ) . '</option>
+                            <option value="0" ' . selected($disponible, 0, false) . '>' . esc_html__( 'No', 'cdb-form' ) . '</option>
                         </select>
                         <input type="hidden" name="empleado_id" value="' . esc_attr($empleado_id) . '">
                         <input type="hidden" name="security" value="' . wp_create_nonce('cdb_form_nonce') . '">
-                        <button type="submit">Actualizar</button>
+                        <button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>
                     </form>';
 
         // Obtener la puntuación gráfica y la de experiencia
@@ -158,13 +158,13 @@ function cdb_bienvenida_empleado_shortcode() {
             $puntuacion_total_final = round($puntuacion_total_final, 1); // Redondeamos a 1 decimal (opcional)
             $output .= cdb_generar_barra_progreso_simple($puntuacion_total_final);
         } else {
-            $output .= '<p>Puntuación Gráfica no disponible.</p>';
+            $output .= '<p>' . esc_html__( 'Puntuación Gráfica no disponible.', 'cdb-form' ) . '</p>';
         }
 
         // Mostrar la Puntuación de Experiencia.
-        $output .= '<p><strong>Puntuación de Experiencia:</strong> ' . esc_html($puntuacion_experiencia) . '</p>';
+        $output .= '<p><strong>' . esc_html__( 'Puntuación de Experiencia:', 'cdb-form' ) . '</strong> ' . esc_html($puntuacion_experiencia) . '</p>';
     } else {
-        $output .= '<p style="color: red;">No tienes ningún perfil de empleado asignado.</p>';
+        $output .= '<p style="color: red;">' . esc_html__( 'No tienes ningún perfil de empleado asignado.', 'cdb-form' ) . '</p>';
         $output .= do_shortcode('[cdb_form_empleado]');
     }
     return $output;
@@ -263,7 +263,7 @@ function cdb_generar_barra_progreso_simple($puntuacion_total) {
  */
 function cdb_experiencia_shortcode() {
     if (!is_user_logged_in()) {
-        return '<p style="color: red;">Debes iniciar sesión para acceder a esta página.</p>';
+        return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
     }
     $current_user = wp_get_current_user();
     if (!in_array('empleado', (array) $current_user->roles)) {
@@ -271,7 +271,7 @@ function cdb_experiencia_shortcode() {
     }
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
-        return '<p style="color: red;">No tienes un perfil de empleado registrado.</p>';
+        return '<p style="color: red;">' . esc_html__( 'No tienes un perfil de empleado registrado.', 'cdb-form' ) . '</p>';
     }
     ob_start();
     include CDB_FORM_PATH . 'templates/form-experiencia-template.php';
@@ -325,7 +325,7 @@ add_shortcode('cdb_form_bar', 'cdb_form_bar_shortcode');
  */
 function cdb_mostrar_puntuacion_total() {
     if (!is_user_logged_in()) {
-        return '<p>Error: Debes iniciar sesión para ver tu puntuación.</p>';
+        return '<p>' . esc_html__( 'Error: Debes iniciar sesión para ver tu puntuación.', 'cdb-form' ) . '</p>';
     }
     $current_user = wp_get_current_user();
     if (!in_array('empleado', (array) $current_user->roles)) {
@@ -333,13 +333,13 @@ function cdb_mostrar_puntuacion_total() {
     }
     $empleado_id = cdb_obtener_empleado_id($current_user->ID);
     if (!$empleado_id) {
-        return '<p>No se encontró un empleado asociado a este usuario.</p>';
+        return '<p>' . esc_html__( 'No se encontró un empleado asociado a este usuario.', 'cdb-form' ) . '</p>';
     }
     $puntuacion_total = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
     if (!$puntuacion_total) {
-        return '<p>Puntuación Gráfica no disponible.</p>';
+        return '<p>' . esc_html__( 'Puntuación Gráfica no disponible.', 'cdb-form' ) . '</p>';
     }
-    return '<p><strong>Puntuación Gráfica:</strong> ' . esc_html($puntuacion_total) . '</p>';
+    return '<p><strong>' . esc_html__( 'Puntuación Gráfica:', 'cdb-form' ) . '</strong> ' . esc_html($puntuacion_total) . '</p>';
 }
 add_shortcode('cdb_puntuacion_total', 'cdb_mostrar_puntuacion_total');
 
@@ -386,7 +386,7 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
 
     // 5) Si no hay empleados, avisar
     if (!$query->have_posts()) {
-        return '<p>No se encontraron empleados.</p>';
+        return '<p>' . esc_html__( 'No se encontraron empleados.', 'cdb-form' ) . '</p>';
     }
 
     // 6) Generar la tabla
@@ -486,7 +486,7 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
 
     // 5) Si no hay empleados, salimos.
     if (!$query->have_posts()) {
-        return '<p>No se encontraron empleados con puntuación total.</p>';
+        return '<p>' . esc_html__( 'No se encontraron empleados con puntuación total.', 'cdb-form' ) . '</p>';
     }
 
     // 6) Cabecera de la tabla
