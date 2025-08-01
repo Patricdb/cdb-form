@@ -1,1 +1,0 @@
-# Instrucciones básicas del plugin

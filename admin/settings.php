@@ -1,1 +1,0 @@
-# Opciones del plugin en el panel de administración
