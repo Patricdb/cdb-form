@@ -175,7 +175,20 @@ function cdb_form_empleado_submit() {
             'post_status' => 'publish',
             'post_author' => $current_user->ID
         ];
+
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('[DEBUG] wp_insert_post data: ' . print_r($post_data, true));
+        }
+
         $empleado_id = wp_insert_post($post_data);
+
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            if (is_wp_error($empleado_id)) {
+                error_log('[DEBUG] wp_insert_post error: ' . $empleado_id->get_error_message());
+            } else {
+                error_log('[DEBUG] wp_insert_post result ID: ' . $empleado_id);
+            }
+        }
         if ($empleado_id) {
             update_post_meta($empleado_id, 'disponible', $disponible);
             update_post_meta($empleado_id, 'bar_id', $bar_id);
