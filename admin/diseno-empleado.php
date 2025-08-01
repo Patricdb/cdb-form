@@ -45,16 +45,22 @@ function cdb_form_disenio_empleado_page() {
 
     // Defaults
     $defaults = array(
-        'background_color'    => '#fafafa',
-        'border_color'        => '#ddd',
-        'text_color'          => '#000000',
-        'button_bg'           => '#000000',
-        'button_text_color'   => '#ffffff',
-        'font_size'           => 14,
-        'padding'             => 20,
-        'field_spacing'       => 10,
-        'message_color'       => '#008000',
-        'container_background_color' => '#ffffff',
+        'background_color'          => '#fafafa',
+        'border_color'              => '#ddd',
+        'text_color'                => '#000000',
+        'button_bg'                 => '#000000',
+        'button_text_color'         => '#ffffff',
+        'font_size'                 => 14,
+        'padding'                   => 20,
+        'field_spacing'             => 10,
+        'success_message_color'     => '#008000',
+        'error_message_color'       => '#FF0000',
+        'container_background_color'=> '#ffffff',
+        'margin_top'                => 0,
+        'margin_right'              => 0,
+        'margin_bottom'             => 0,
+        'margin_left'               => 0,
+        'alignment'                 => 'center',
     );
 
     // Handle save
@@ -62,16 +68,22 @@ function cdb_form_disenio_empleado_page() {
          check_admin_referer( 'cdb_form_disenio_empleado_save', 'cdb_form_disenio_empleado_nonce' ) ) {
 
         $options = array(
-            'background_color'  => sanitize_hex_color( $_POST['background_color'] ),
-            'border_color'      => sanitize_hex_color( $_POST['border_color'] ),
-            'text_color'        => sanitize_hex_color( $_POST['text_color'] ),
-            'button_bg'         => sanitize_hex_color( $_POST['button_bg'] ),
-            'button_text_color' => sanitize_hex_color( $_POST['button_text_color'] ),
-            'font_size'         => intval( $_POST['font_size'] ),
-            'padding'           => intval( $_POST['padding'] ),
-            'field_spacing'     => intval( $_POST['field_spacing'] ),
-            'container_background_color' => sanitize_hex_color( $_POST['container_background_color'] ),
-            'message_color'     => sanitize_hex_color( $_POST['message_color'] ),
+            'background_color'          => sanitize_hex_color( $_POST['background_color'] ),
+            'border_color'              => sanitize_hex_color( $_POST['border_color'] ),
+            'text_color'                => sanitize_hex_color( $_POST['text_color'] ),
+            'button_bg'                 => sanitize_hex_color( $_POST['button_bg'] ),
+            'button_text_color'         => sanitize_hex_color( $_POST['button_text_color'] ),
+            'font_size'                 => intval( $_POST['font_size'] ),
+            'padding'                   => intval( $_POST['padding'] ),
+            'field_spacing'             => intval( $_POST['field_spacing'] ),
+            'container_background_color'=> sanitize_hex_color( $_POST['container_background_color'] ),
+            'success_message_color'     => sanitize_hex_color( $_POST['success_message_color'] ),
+            'error_message_color'       => sanitize_hex_color( $_POST['error_message_color'] ),
+            'margin_top'                => intval( $_POST['margin_top'] ),
+            'margin_right'              => intval( $_POST['margin_right'] ),
+            'margin_bottom'             => intval( $_POST['margin_bottom'] ),
+            'margin_left'               => intval( $_POST['margin_left'] ),
+            'alignment'                 => sanitize_text_field( $_POST['alignment'] ),
         );
 
         update_option( 'cdb_form_disenio_empleado', $options );
@@ -141,10 +153,36 @@ function cdb_form_disenio_empleado_page() {
                     <td><input type="number" id="field_spacing" name="field_spacing" value="<?php echo esc_attr( $values['field_spacing'] ); ?>" /></td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="message_color"><?php esc_html_e( 'Color de mensajes de éxito y error', 'cdb-form' ); ?></label></th>
+                    <th scope="row"><label for="success_message_color"><?php esc_html_e( 'Color de mensajes de éxito', 'cdb-form' ); ?></label></th>
                     <td>
-                        <input type="color" id="message_color" class="cdb-color-input" name="message_color" value="<?php echo esc_attr( $values['message_color'] ); ?>" />
-                        <input type="text" class="cdb-color-value" id="message_color_value" value="<?php echo esc_attr( $values['message_color'] ); ?>" readonly />
+                        <input type="color" id="success_message_color" class="cdb-color-input" name="success_message_color" value="<?php echo esc_attr( $values['success_message_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="success_message_color_value" value="<?php echo esc_attr( $values['success_message_color'] ); ?>" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="error_message_color"><?php esc_html_e( 'Color de mensajes de error', 'cdb-form' ); ?></label></th>
+                    <td>
+                        <input type="color" id="error_message_color" class="cdb-color-input" name="error_message_color" value="<?php echo esc_attr( $values['error_message_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="error_message_color_value" value="<?php echo esc_attr( $values['error_message_color'] ); ?>" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php esc_html_e( 'Márgenes del contenedor (px)', 'cdb-form' ); ?></th>
+                    <td>
+                        <label><?php esc_html_e( 'Superior', 'cdb-form' ); ?> <input type="number" name="margin_top" value="<?php echo esc_attr( $values['margin_top'] ); ?>" class="small-text" /></label>
+                        <label><?php esc_html_e( 'Derecho', 'cdb-form' ); ?> <input type="number" name="margin_right" value="<?php echo esc_attr( $values['margin_right'] ); ?>" class="small-text" /></label>
+                        <label><?php esc_html_e( 'Inferior', 'cdb-form' ); ?> <input type="number" name="margin_bottom" value="<?php echo esc_attr( $values['margin_bottom'] ); ?>" class="small-text" /></label>
+                        <label><?php esc_html_e( 'Izquierdo', 'cdb-form' ); ?> <input type="number" name="margin_left" value="<?php echo esc_attr( $values['margin_left'] ); ?>" class="small-text" /></label>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="alignment"><?php esc_html_e( 'Alineación del contenedor', 'cdb-form' ); ?></label></th>
+                    <td>
+                        <select name="alignment" id="alignment">
+                            <option value="left" <?php selected( $values['alignment'], 'left' ); ?>><?php esc_html_e( 'Izquierda', 'cdb-form' ); ?></option>
+                            <option value="center" <?php selected( $values['alignment'], 'center' ); ?>><?php esc_html_e( 'Centro', 'cdb-form' ); ?></option>
+                            <option value="right" <?php selected( $values['alignment'], 'right' ); ?>><?php esc_html_e( 'Derecha', 'cdb-form' ); ?></option>
+                        </select>
                     </td>
                 </tr>
             </table>
