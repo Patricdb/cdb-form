@@ -19,8 +19,8 @@ function cdb_form_admin_menu() {
 
     add_submenu_page(
         'cdb-form',
-        __( 'Dise\xC3\xB1o Crear Empleado', 'cdb-form' ),
-        __( 'Dise\xC3\xB1o Crear Empleado', 'cdb-form' ),
+        __( 'Configuraci\xC3\xB3n Crear Empleado', 'cdb-form' ),
+        __( 'Configuraci\xC3\xB3n Crear Empleado', 'cdb-form' ),
         'manage_options',
         'cdb-form-disenio-empleado',
         'cdb_form_disenio_empleado_page'
@@ -81,34 +81,52 @@ function cdb_form_disenio_empleado_page() {
     $values = wp_parse_args( get_option( 'cdb_form_disenio_empleado' ), $defaults );
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Dise\xC3\xB1o Crear Empleado', 'cdb-form' ); ?></h1>
+        <h1><?php esc_html_e( 'Configuraci\xC3\xB3n Crear Empleado', 'cdb-form' ); ?></h1>
         <p><?php esc_html_e( 'Configura los estilos del formulario de empleado mostrado en el frontend. Estos cambios no afectan a otros formularios.', 'cdb-form' ); ?></p>
         <form method="post">
             <?php wp_nonce_field( 'cdb_form_disenio_empleado_save', 'cdb_form_disenio_empleado_nonce' ); ?>
             <table class="form-table" role="presentation">
                 <tr>
                     <th scope="row"><label for="container_background_color"><?php esc_html_e( 'Color de fondo del contenedor', 'cdb-form' ); ?></label></th>
-                    <td><input type="text" id="container_background_color" class="cdb-color-field" name="container_background_color" value="<?php echo esc_attr( $values['container_background_color'] ); ?>" /></td>
+                    <td>
+                        <input type="color" id="container_background_color" class="cdb-color-input" name="container_background_color" value="<?php echo esc_attr( $values['container_background_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="container_background_color_value" value="<?php echo esc_attr( $values['container_background_color'] ); ?>" readonly />
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="background_color"><?php esc_html_e( 'Color de fondo del formulario', 'cdb-form' ); ?></label></th>
-                    <td><input type="text" id="background_color" class="cdb-color-field" name="background_color" value="<?php echo esc_attr( $values['background_color'] ); ?>" /></td>
+                    <td>
+                        <input type="color" id="background_color" class="cdb-color-input" name="background_color" value="<?php echo esc_attr( $values['background_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="background_color_value" value="<?php echo esc_attr( $values['background_color'] ); ?>" readonly />
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="border_color"><?php esc_html_e( 'Color del borde del formulario', 'cdb-form' ); ?></label></th>
-                    <td><input type="text" id="border_color" class="cdb-color-field" name="border_color" value="<?php echo esc_attr( $values['border_color'] ); ?>" /></td>
+                    <td>
+                        <input type="color" id="border_color" class="cdb-color-input" name="border_color" value="<?php echo esc_attr( $values['border_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="border_color_value" value="<?php echo esc_attr( $values['border_color'] ); ?>" readonly />
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="text_color"><?php esc_html_e( 'Color de texto de campos y etiquetas', 'cdb-form' ); ?></label></th>
-                    <td><input type="text" id="text_color" class="cdb-color-field" name="text_color" value="<?php echo esc_attr( $values['text_color'] ); ?>" /></td>
+                    <td>
+                        <input type="color" id="text_color" class="cdb-color-input" name="text_color" value="<?php echo esc_attr( $values['text_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="text_color_value" value="<?php echo esc_attr( $values['text_color'] ); ?>" readonly />
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="button_bg"><?php esc_html_e( 'Color de fondo del bot\xC3\xB3n', 'cdb-form' ); ?></label></th>
-                    <td><input type="text" id="button_bg" class="cdb-color-field" name="button_bg" value="<?php echo esc_attr( $values['button_bg'] ); ?>" /></td>
+                    <td>
+                        <input type="color" id="button_bg" class="cdb-color-input" name="button_bg" value="<?php echo esc_attr( $values['button_bg'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="button_bg_value" value="<?php echo esc_attr( $values['button_bg'] ); ?>" readonly />
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="button_text_color"><?php esc_html_e( 'Color de texto del bot\xC3\xB3n', 'cdb-form' ); ?></label></th>
-                    <td><input type="text" id="button_text_color" class="cdb-color-field" name="button_text_color" value="<?php echo esc_attr( $values['button_text_color'] ); ?>" /></td>
+                    <td>
+                        <input type="color" id="button_text_color" class="cdb-color-input" name="button_text_color" value="<?php echo esc_attr( $values['button_text_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="button_text_color_value" value="<?php echo esc_attr( $values['button_text_color'] ); ?>" readonly />
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="font_size"><?php esc_html_e( 'Tama\xC3\xB1o de fuente de campos y etiquetas (px)', 'cdb-form' ); ?></label></th>
@@ -124,7 +142,10 @@ function cdb_form_disenio_empleado_page() {
                 </tr>
                 <tr>
                     <th scope="row"><label for="message_color"><?php esc_html_e( 'Color de mensajes de \xC3\xA9xito y error', 'cdb-form' ); ?></label></th>
-                    <td><input type="text" id="message_color" class="cdb-color-field" name="message_color" value="<?php echo esc_attr( $values['message_color'] ); ?>" /></td>
+                    <td>
+                        <input type="color" id="message_color" class="cdb-color-input" name="message_color" value="<?php echo esc_attr( $values['message_color'] ); ?>" />
+                        <input type="text" class="cdb-color-value" id="message_color_value" value="<?php echo esc_attr( $values['message_color'] ); ?>" readonly />
+                    </td>
                 </tr>
             </table>
             <?php submit_button(); ?>
@@ -132,7 +153,9 @@ function cdb_form_disenio_empleado_page() {
     </div>
     <script>
     jQuery(function($){
-        $('.cdb-color-field').wpColorPicker();
+        $('.cdb-color-input').on('input change', function(){
+            $('#' + this.id + '_value').val( $(this).val() );
+        });
     });
     </script>
     <?php
