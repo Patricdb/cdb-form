@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 // Verificar si el usuario está conectado
 $current_user = wp_get_current_user();
 if (!$current_user->exists()) {
-    echo '<p>' . esc_html__( 'Debes iniciar sesión para gestionar tu empleado.', 'cdb-form' ) . '</p>';
+    echo '<p>Debes iniciar sesión para gestionar tu empleado.</p>';
     return;
 }
 
@@ -23,12 +23,12 @@ if (!empty($existing_empleado)) {
     $empleado_id         = $existing_empleado[0]->ID;
     $empleado_nombre     = get_the_title($empleado_id);
     $empleado_disponible = get_post_meta($empleado_id, 'disponible', true) ?: '1';
-    $button_text         = esc_html__( 'Actualizar Empleado', 'cdb-form' );
+    $button_text         = 'Actualizar Empleado';
 } else {
     $empleado_id         = 0;
     $empleado_nombre     = '';
     $empleado_disponible = '1';
-    $button_text         = esc_html__( 'Crear Empleado', 'cdb-form' );
+    $button_text         = 'Crear Empleado';
 }
 ?>
 
@@ -39,17 +39,16 @@ if (!empty($existing_empleado)) {
 
         <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>">
 
-        <label for="nombre"><?php esc_html_e('Nombre:', 'cdb-form'); ?></label>
+        <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" value="<?php echo esc_attr($empleado_nombre); ?>" required>
 
-        <label for="disponible"><?php esc_html_e('Disponible:', 'cdb-form'); ?></label>
+        <label for="disponible">Disponible:</label>
         <select id="disponible" name="disponible">
             <option value="1" <?php selected($empleado_disponible, '1'); ?>>Sí</option>
             <option value="0" <?php selected($empleado_disponible, '0'); ?>>No</option>
         </select>
 
         <button type="submit"><?php echo esc_html($button_text); ?></button>
-        <div class="cdb-form-message" style="display:none;"></div>
     </form>
 </div>
 
@@ -109,3 +108,30 @@ if (!empty($existing_empleado)) {
     }
 </style>
 
+<script>
+jQuery(document).ready(function($) {
+    $('#cdb-form-empleado').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = {
+            action: 'cdb_form_empleado_submit',
+            security: $('#security').val(),
+            empleado_id: $('input[name="empleado_id"]').val(),
+            nombre: $('#nombre').val(),
+            disponible: $('#disponible').val()
+        };
+
+        $.post('<?php echo admin_url('admin-ajax.php'); ?>', formData, function(response) {
+            if (response.success) {
+                alert(response.message || 'Perfil de empleado actualizado con éxito.');
+                location.reload();
+            } else {
+                alert(response.message || 'Hubo un error inesperado.');
+            }
+        }, 'json')
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            alert('Error en la solicitud: ' + textStatus);
+        });
+    });
+});
+</script>

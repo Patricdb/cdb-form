@@ -7,14 +7,14 @@ if (!defined('ABSPATH')) {
 // Verificar si el usuario está conectado.
 $current_user = wp_get_current_user();
 if (!$current_user->exists()) {
-    echo '<p>' . __("Debes iniciar sesión para gestionar tu empleado.", 'cdb-form') .'</p>';
+    echo '<p>Debes iniciar sesión para gestionar tu empleado.</p>';
     return;
 }
 
 // Obtener la ID del empleado asociado al usuario actual mediante la función específica.
 $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
 if (!$empleado_id) {
-    echo '<p>' . __("No tienes un perfil de empleado registrado. Para registrar experiencia, primero debes crear tu perfil de empleado.", 'cdb-form') .'</p>';
+    echo '<p>No tienes un perfil de empleado registrado. Para registrar experiencia, primero debes crear tu perfil de empleado.</p>';
     echo do_shortcode('[cdb_form_empleado]');
     return;
 }
@@ -190,7 +190,7 @@ error_log("[DEBUG] Bar ID: {$bar_id_actual} - Apertura: {$fecha_apertura} - Cier
             </tbody>
         </table>
     <?php else : ?>
-        <p><?php esc_html_e( 'No tienes experiencia registrada aún.', 'cdb-form' ); ?></p>
+        <p>No tienes experiencia registrada aún.</p>
     <?php endif; ?>
 </div>
 

@@ -1,7 +1,1 @@
 # Registro de cambios y versiones
-
-## 1.0.1
-- Unificación de funciones AJAX de experiencia.
-- Mejora de validaciones al obtener los años del bar.
-- Separación de scripts JavaScript en `assets/js/frontend-scripts.js`.
-- Actualización de documentación.

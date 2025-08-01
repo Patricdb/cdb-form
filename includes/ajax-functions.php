@@ -142,34 +142,104 @@ if ( ! function_exists( 'cdb_obtener_anios_bar' ) ) {
         if ( ! isset( $_GET['bar_id'] ) ) {
             wp_send_json_error( array( 'message' => 'Bar ID no proporcionado.' ) );
         }
-
-        $bar_id = intval( $_GET['bar_id'] );
-        if ( ! $bar_id ) {
-            wp_send_json_error( array( 'message' => 'ID de bar inválido.' ) );
-        }
-
+        
+        $bar_id         = intval( $_GET['bar_id'] );
         $fecha_apertura = get_post_meta( $bar_id, '_cdb_bar_apertura', true );
         $fecha_cierre   = get_post_meta( $bar_id, '_cdb_bar_cierre', true );
-
+        
         if ( ! $fecha_apertura ) {
             wp_send_json_error( array( 'message' => 'No se encontraron fechas para este bar.' ) );
         }
-
+        
         $fecha_apertura = intval( $fecha_apertura );
-        $fecha_cierre   = $fecha_cierre !== '' ? intval( $fecha_cierre ) : '';
-
-        if ( $fecha_cierre && $fecha_cierre < $fecha_apertura ) {
-            wp_send_json_error( array( 'message' => 'La fecha de cierre es anterior a la de apertura.' ) );
-        }
-
+        $fecha_cierre = $fecha_cierre ? intval( $fecha_cierre ) : '';
+        
         wp_send_json_success( array(
             'fecha_apertura' => $fecha_apertura,
-            'fecha_cierre'   => $fecha_cierre,
+            'fecha_cierre'   => $fecha_cierre
         ) );
         wp_die();
     }
 }
 add_action( 'wp_ajax_cdb_obtener_anios_bar', 'cdb_obtener_anios_bar' );
+
+/**
+ * Guarda una experiencia laboral.
+ *
+ * Se esperan los parámetros POST 'empleado_id', 'bar_id', 'anio' y 'posicion_id'.
+ * Tras la inserción, se vincula con el equipo correspondiente, se integra la puntuación de la zona
+ * (sumándola a la puntuación de la posición) y se actualiza el meta "cdb_experiencia_score".
+ */
+if ( ! function_exists( 'cdb_guardar_experiencia' ) ) {
+    function cdb_guardar_experiencia() {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( array( 'message' => 'No tienes permisos.' ) );
+        }
+        if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'cdb_form_nonce' ) ) {
+            wp_send_json_error( array( 'message' => 'Error de seguridad.' ) );
+        }
+        
+        $empleado_id = intval( $_POST['empleado_id'] );
+        $bar_id      = intval( $_POST['bar_id'] );
+        $anio        = intval( $_POST['anio'] );
+        $posicion_id = intval( $_POST['posicion_id'] );
+        
+        global $wpdb;
+        $tabla_exp = $wpdb->prefix . 'cdb_experiencia';
+        
+        $resultado_insert = $wpdb->insert(
+            $tabla_exp,
+            array(
+                'empleado_id' => $empleado_id,
+                'bar_id'      => $bar_id,
+                'anio'        => $anio,
+                'posicion_id' => $posicion_id,
+            ),
+            array( '%d', '%d', '%d', '%d' )
+        );
+        
+        if ( $resultado_insert ) {
+            // Vincular con el equipo (bar + año) si es posible.
+            if ( function_exists('cdb_get_or_create_equipo') ) {
+                $equipo_id = cdb_get_or_create_equipo( $bar_id, $anio );
+                update_post_meta( $empleado_id, '_cdb_empleado_equipo', $equipo_id );
+                update_post_meta( $empleado_id, '_cdb_empleado_year', $anio );
+                update_post_meta( $empleado_id, '_cdb_empleado_bar', $bar_id );
+            }
+            
+            /**
+             * Integración de la puntuación de la zona:
+             * - Se obtiene la puntuación de la posición asociada (ya almacenada en _cdb_posiciones_score).
+             * - Se obtiene la puntuación de la zona asignada al Bar.
+             * - Se suman ambas para obtener la puntuación total de la experiencia.
+             */
+            $puntuacion_posicion = get_post_meta( $posicion_id, '_cdb_posiciones_score', true );
+            $puntuacion_posicion = intval( $puntuacion_posicion );
+            
+            $puntuacion_zona = 0;
+            if ( $bar_id ) {
+                $zona_id = get_post_meta( $bar_id, '_cdb_bar_zona_id', true );
+                if ( $zona_id ) {
+                    $puntuacion_zona = get_post_meta( $zona_id, 'puntuacion_zona', true );
+                    $puntuacion_zona = intval( $puntuacion_zona );
+                }
+            }
+            $experiencia_total = $puntuacion_posicion + $puntuacion_zona;
+            
+            // Se podría guardar este valor en un meta field propio de la experiencia si fuera necesario.
+            // update_post_meta( $experiencia_id, '_cdb_experiencia_total', $experiencia_total );
+            
+            // Actualizar el meta "cdb_experiencia_score" del empleado.
+            cdb_actualizar_experiencia_score( $empleado_id );
+            wp_send_json_success( array( 'message' => 'Experiencia guardada correctamente.', 'experiencia_total' => $experiencia_total ) );
+        } else {
+            wp_send_json_error( array( 'message' => 'No se pudo guardar la experiencia.' ) );
+        }
+        wp_die();
+    }
+}
+add_action( 'wp_ajax_cdb_guardar_experiencia', 'cdb_guardar_experiencia' );
+add_action( 'wp_ajax_nopriv_cdb_guardar_experiencia', 'cdb_guardar_experiencia' );
 
 /**
  * Borra una experiencia laboral.

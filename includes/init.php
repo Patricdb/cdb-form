@@ -25,13 +25,7 @@ require_once CDB_FORM_PATH . 'public/enqueue.php';
 
 // Acción de inicialización del plugin
 function cdb_form_init() {
-    // Cargar las traducciones del plugin
-    load_plugin_textdomain(
-        'cdb-form',
-        false,
-        dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages'
-    );
-    // Aquí se pueden añadir más acciones de inicialización en el futuro
+    // Aquí se pueden añadir acciones de inicialización si son necesarias en el futuro
 }
 add_action( 'plugins_loaded', 'cdb_form_init' );
 
