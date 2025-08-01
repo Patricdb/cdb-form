@@ -357,3 +357,99 @@ if ( ! function_exists( 'cdb_listar_experiencias' ) ) {
 }
 add_action( 'wp_ajax_cdb_listar_experiencias', 'cdb_listar_experiencias' );
 add_action( 'wp_ajax_nopriv_cdb_listar_experiencias', 'cdb_listar_experiencias' );
+
+/**
+ * Devuelve resultados HTML para el buscador avanzado de empleados.
+ */
+function cdb_buscar_empleados_ajax() {
+    if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'cdb_form_nonce' ) ) {
+        wp_send_json_error( array( 'message' => 'Nonce incorrecto' ) );
+    }
+
+    $args = array(
+        'nombre'      => isset( $_GET['nombre'] ) ? sanitize_text_field( $_GET['nombre'] ) : '',
+        'posicion_id' => isset( $_GET['posicion_id'] ) ? intval( $_GET['posicion_id'] ) : 0,
+        'bar_id'      => isset( $_GET['bar_id'] ) ? intval( $_GET['bar_id'] ) : 0,
+        'anio'        => isset( $_GET['anio'] ) ? intval( $_GET['anio'] ) : 0,
+    );
+
+    $empleados = cdb_busqueda_empleados_get_datos( $args );
+
+    ob_start();
+    include CDB_FORM_PATH . 'templates/busqueda-empleados-table.php';
+    $html = ob_get_clean();
+
+    wp_send_json_success( array( 'html' => $html ) );
+}
+add_action( 'wp_ajax_cdb_buscar_empleados', 'cdb_buscar_empleados_ajax' );
+add_action( 'wp_ajax_nopriv_cdb_buscar_empleados', 'cdb_buscar_empleados_ajax' );
+
+/**
+ * Proporciona sugerencias de autocompletado.
+ */
+function cdb_busqueda_sugerencias_ajax() {
+    if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'cdb_form_nonce' ) ) {
+        wp_send_json( array() );
+    }
+
+    $tipo = isset( $_GET['tipo'] ) ? sanitize_text_field( $_GET['tipo'] ) : '';
+    $term = isset( $_GET['term'] ) ? sanitize_text_field( $_GET['term'] ) : '';
+
+    $results = array();
+    switch ( $tipo ) {
+        case 'nombre':
+            $ids = get_posts( array(
+                'post_type'   => 'empleado',
+                'post_status' => 'publish',
+                's'           => $term,
+                'numberposts' => 10,
+                'orderby'     => 'title',
+                'order'       => 'ASC',
+                'fields'      => 'ids'
+            ) );
+            foreach ( $ids as $id ) {
+                $results[] = array( 'label' => get_the_title( $id ), 'value' => get_the_title( $id ) );
+            }
+            break;
+        case 'posicion':
+            $ids = get_posts( array(
+                'post_type'   => 'cdb_posiciones',
+                'post_status' => 'publish',
+                's'           => $term,
+                'numberposts' => 10,
+                'orderby'     => 'title',
+                'order'       => 'ASC',
+                'fields'      => 'ids'
+            ) );
+            foreach ( $ids as $id ) {
+                $results[] = array( 'label' => get_the_title( $id ), 'value' => get_the_title( $id ), 'id' => $id );
+            }
+            break;
+        case 'bar':
+            $ids = get_posts( array(
+                'post_type'   => 'bar',
+                'post_status' => 'publish',
+                's'           => $term,
+                'numberposts' => 10,
+                'orderby'     => 'title',
+                'order'       => 'ASC',
+                'fields'      => 'ids'
+            ) );
+            foreach ( $ids as $id ) {
+                $results[] = array( 'label' => get_the_title( $id ), 'value' => get_the_title( $id ), 'id' => $id );
+            }
+            break;
+        case 'anio':
+            global $wpdb;
+            $tabla_exp = $wpdb->prefix . 'cdb_experiencia';
+            $years = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT anio FROM {$tabla_exp} WHERE anio LIKE %s ORDER BY anio DESC LIMIT 10", $term . '%' ) );
+            foreach ( $years as $y ) {
+                $results[] = array( 'label' => $y, 'value' => $y );
+            }
+            break;
+    }
+
+    wp_send_json( $results );
+}
+add_action( 'wp_ajax_cdb_sugerencias', 'cdb_busqueda_sugerencias_ajax' );
+add_action( 'wp_ajax_nopriv_cdb_sugerencias', 'cdb_busqueda_sugerencias_ajax' );

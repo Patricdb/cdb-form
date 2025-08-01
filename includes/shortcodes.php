@@ -947,8 +947,9 @@ add_shortcode('cdb_top_bares_instagram', 'cdb_top_bares_instagram_shortcode');
 /*---------------------------------------------------------------
  * 8. SHORTCODE [cdb_busqueda_empleados]
  *---------------------------------------------------------------
- * Muestra un listado/buscador avanzado de empleados filtrando por
- * nombre, equipo, posición, bar, año y disponibilidad.
+ * Muestra un buscador avanzado de empleados con autocompletado
+ * para nombre, posición, bar y año. Los resultados se ordenan
+ * siempre por puntuación descendente.
  *---------------------------------------------------------------*/
 
 /**
@@ -960,149 +961,103 @@ add_shortcode('cdb_top_bares_instagram', 'cdb_top_bares_instagram_shortcode');
  *   /pagina/?nombre=Ana&equipo_id=3
  */
 
-function cdb_busqueda_empleados_shortcode( $atts = array() ) {
+function cdb_busqueda_empleados_get_datos( $args = array() ) {
     global $wpdb;
 
-    // 1. Captura de parámetros combinando atributos y GET.
-    $atts = shortcode_atts( array(
+    $defaults = array(
         'nombre'      => '',
-        'equipo_id'   => '',
-        'posicion_id' => '',
-        'bar_id'      => '',
-        'anio'        => '',
-        'disponible'  => '',
-    ), $atts, 'cdb_busqueda_empleados' );
+        'posicion_id' => 0,
+        'bar_id'      => 0,
+        'anio'        => 0,
+        'limite'      => 21,
+    );
+    $args = wp_parse_args( $args, $defaults );
 
-    $nombre      = $atts['nombre']      !== '' ? $atts['nombre']      : ( isset( $_GET['nombre'] )      ? sanitize_text_field( $_GET['nombre'] ) : '' );
-    $equipo_id   = $atts['equipo_id']   !== '' ? intval( $atts['equipo_id'] )   : ( isset( $_GET['equipo_id'] )   ? intval( $_GET['equipo_id'] )   : 0 );
-    $posicion_id = $atts['posicion_id'] !== '' ? intval( $atts['posicion_id'] ) : ( isset( $_GET['posicion_id'] ) ? intval( $_GET['posicion_id'] ) : 0 );
-    $bar_id      = $atts['bar_id']      !== '' ? intval( $atts['bar_id'] )      : ( isset( $_GET['bar_id'] )      ? intval( $_GET['bar_id'] )      : 0 );
-    $anio        = $atts['anio']        !== '' ? intval( $atts['anio'] )        : ( isset( $_GET['anio'] )        ? intval( $_GET['anio'] )        : 0 );
-    $disponible  = $atts['disponible']  !== '' ? $atts['disponible']           : ( isset( $_GET['disponible'] )  ? $_GET['disponible']          : '' );
-
-    // 2. Consulta base a la tabla de experiencia con joins para obtener datos relacionados.
     $tabla_exp = $wpdb->prefix . 'cdb_experiencia';
-    $posts    = $wpdb->posts;
-    $postmeta = $wpdb->postmeta;
+    $posts     = $wpdb->posts;
+    $postmeta  = $wpdb->postmeta;
 
-    $sql = "SELECT exp.empleado_id, exp.anio, exp.bar_id, exp.posicion_id, exp.equipo_id,
-                   e.post_title  AS empleado_nombre,
-                   bar.post_title AS bar_nombre,
-                   pos.post_title AS posicion_nombre,
-                   eq.post_title  AS equipo_nombre,
-                   score.meta_value AS puntuacion_total,
-                   dispo.meta_value AS disponible
+    $sql = "SELECT exp.empleado_id,
+                   e.post_title AS empleado_nombre,
+                   GROUP_CONCAT(DISTINCT bar.ID)  AS bares_ids,
+                   GROUP_CONCAT(DISTINCT bar.post_title SEPARATOR '||') AS bares_nombres,
+                   GROUP_CONCAT(DISTINCT pos.ID)  AS posiciones_ids,
+                   GROUP_CONCAT(DISTINCT pos.post_title SEPARATOR '||') AS posiciones_nombres,
+                   score.meta_value AS puntuacion_total
             FROM {$tabla_exp} exp
-            JOIN {$posts} e   ON exp.empleado_id = e.ID AND e.post_type = 'empleado' AND e.post_status = 'publish'
+            JOIN {$posts} e ON exp.empleado_id = e.ID AND e.post_type = 'empleado' AND e.post_status = 'publish'
             LEFT JOIN {$posts} bar ON exp.bar_id = bar.ID AND bar.post_type = 'bar' AND bar.post_status = 'publish'
             LEFT JOIN {$posts} pos ON exp.posicion_id = pos.ID AND pos.post_type = 'cdb_posiciones' AND pos.post_status = 'publish'
-            LEFT JOIN {$posts} eq  ON exp.equipo_id = eq.ID AND eq.post_type = 'equipo' AND eq.post_status = 'publish'
             LEFT JOIN {$postmeta} score ON score.post_id = e.ID AND score.meta_key = 'cdb_puntuacion_total'
-            LEFT JOIN {$postmeta} dispo ON dispo.post_id = e.ID AND dispo.meta_key = 'disponible'
             WHERE 1=1";
 
     $prepare = array();
-    if ( $nombre !== '' ) {
-        $like = '%' . $wpdb->esc_like( $nombre ) . '%';
+    if ( $args['nombre'] !== '' ) {
         $sql .= " AND e.post_title LIKE %s";
-        $prepare[] = $like;
+        $prepare[] = '%' . $wpdb->esc_like( $args['nombre'] ) . '%';
     }
-    if ( $equipo_id ) {
-        $sql .= " AND exp.equipo_id = %d";
-        $prepare[] = $equipo_id;
-    }
-    if ( $posicion_id ) {
+    if ( $args['posicion_id'] ) {
         $sql .= " AND exp.posicion_id = %d";
-        $prepare[] = $posicion_id;
+        $prepare[] = intval( $args['posicion_id'] );
     }
-    if ( $bar_id ) {
+    if ( $args['bar_id'] ) {
         $sql .= " AND exp.bar_id = %d";
-        $prepare[] = $bar_id;
+        $prepare[] = intval( $args['bar_id'] );
     }
-    if ( $anio ) {
+    if ( $args['anio'] ) {
         $sql .= " AND exp.anio = %d";
-        $prepare[] = $anio;
-    }
-    if ( $disponible !== '' ) {
-        $sql .= " AND dispo.meta_value = %s";
-        $prepare[] = $disponible;
+        $prepare[] = intval( $args['anio'] );
     }
 
-    $sql .= " ORDER BY exp.anio DESC";
-    $sql .= " LIMIT 200";
+    $sql .= " GROUP BY exp.empleado_id";
+    $sql .= " ORDER BY score.meta_value+0 DESC";
+    $sql .= " LIMIT %d";
+    $prepare[] = intval( $args['limite'] );
 
     $query = $wpdb->prepare( $sql, $prepare );
     $rows  = $wpdb->get_results( $query );
 
-    $empleados_raw = array();
+    $empleados = array();
     if ( ! empty( $rows ) ) {
         foreach ( $rows as $r ) {
-            $eid = intval( $r->empleado_id );
-            if ( ! isset( $empleados_raw[ $eid ] ) || intval( $r->anio ) > $empleados_raw[ $eid ]['anio'] ) {
-                $empleados_raw[ $eid ] = array(
-                    'empleado_id'   => $eid,
-                    'nombre'        => $r->empleado_nombre,
-                    'url'           => get_permalink( $eid ),
-                    'posicion'      => $r->posicion_nombre,
-                    'bar'           => $r->bar_nombre,
-                    'equipo'        => $r->equipo_nombre,
-                    'anio'          => intval( $r->anio ),
-                    'puntuacion'    => $r->puntuacion_total !== null ? number_format( (float) $r->puntuacion_total, 1, '.', '' ) : '0.0',
-                    'puntuacion_num'=> $r->puntuacion_total !== null ? floatval( $r->puntuacion_total ) : 0,
-                    'disponible'    => ( $r->disponible === '1' ) ? __( 'Disponible', 'cdb-form' ) : __( 'No Disponible', 'cdb-form' ),
-                );
+            $bares_ids = $r->bares_ids ? explode( ',', $r->bares_ids ) : array();
+            $bares_n   = $r->bares_nombres ? explode( '||', $r->bares_nombres ) : array();
+            $bares     = array();
+            foreach ( $bares_ids as $i => $id ) {
+                $bares[] = array( 'id' => intval( $id ), 'nombre' => $bares_n[ $i ] ?? '' );
             }
+
+            $pos_ids = $r->posiciones_ids ? explode( ',', $r->posiciones_ids ) : array();
+            $pos_n   = $r->posiciones_nombres ? explode( '||', $r->posiciones_nombres ) : array();
+            $posiciones = array();
+            foreach ( $pos_ids as $i => $id ) {
+                $posiciones[] = array( 'id' => intval( $id ), 'nombre' => $pos_n[ $i ] ?? '' );
+            }
+
+            $puntuacion = $r->puntuacion_total !== null ? number_format( (float) $r->puntuacion_total, 1, '.', '' ) : '0.0';
+
+            $empleados[] = array(
+                'id'         => intval( $r->empleado_id ),
+                'nombre'     => $r->empleado_nombre,
+                'puntuacion' => $puntuacion,
+                'bares'      => $bares,
+                'posiciones' => $posiciones,
+            );
         }
     }
 
-    $empleados = array_values( $empleados_raw );
-    usort( $empleados, function( $a, $b ) {
-        if ( $b['puntuacion_num'] == $a['puntuacion_num'] ) {
-            return $b['anio'] - $a['anio'];
-        }
-        return $b['puntuacion_num'] <=> $a['puntuacion_num'];
-    } );
+    return $empleados;
+}
 
-    $opciones_bar = array();
-    $bars = get_posts( array(
-        'post_type'   => 'bar',
-        'post_status' => 'publish',
-        'numberposts' => -1,
-        'orderby'     => 'title',
-        'order'       => 'ASC',
-        'fields'      => 'ids'
-    ) );
-    foreach ( $bars as $bid ) {
-        $opciones_bar[ $bid ] = get_the_title( $bid );
-    }
+function cdb_busqueda_empleados_shortcode( $atts = array() ) {
+    $params = shortcode_atts( array(
+        'nombre'      => '',
+        'posicion_id' => 0,
+        'bar_id'      => 0,
+        'anio'        => 0,
+    ), $atts, 'cdb_busqueda_empleados' );
 
-    $opciones_equipo = array();
-    $equipos = get_posts( array(
-        'post_type'   => 'equipo',
-        'post_status' => 'publish',
-        'numberposts' => -1,
-        'orderby'     => 'title',
-        'order'       => 'ASC',
-        'fields'      => 'ids'
-    ) );
-    foreach ( $equipos as $eqid ) {
-        $opciones_equipo[ $eqid ] = get_the_title( $eqid );
-    }
-
-    $opciones_posicion = array();
-    $posiciones = get_posts( array(
-        'post_type'   => 'cdb_posiciones',
-        'post_status' => 'publish',
-        'numberposts' => -1,
-        'orderby'     => 'title',
-        'order'       => 'ASC',
-        'fields'      => 'ids'
-    ) );
-    foreach ( $posiciones as $pid ) {
-        $opciones_posicion[ $pid ] = get_the_title( $pid );
-    }
-
-    $opciones_anio = $wpdb->get_col( "SELECT DISTINCT anio FROM {$tabla_exp} ORDER BY anio DESC" );
+    $empleados = cdb_busqueda_empleados_get_datos( $params );
 
     ob_start();
     include CDB_FORM_PATH . 'templates/busqueda-empleados.php';

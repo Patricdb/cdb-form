@@ -60,16 +60,61 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    // Buscador de empleados automático
+    // Buscador avanzado de empleados con AJAX
+    function cdbBuscarEmpleados() {
+        var data = {
+            action: 'cdb_buscar_empleados',
+            nonce: cdb_form_ajax.nonce,
+            nombre: jQuery('#cdb-nombre').val(),
+            posicion_id: jQuery('#cdb-posicion-id').val(),
+            bar_id: jQuery('#cdb-bar-id').val(),
+            anio: jQuery('#cdb-anio').val()
+        };
+        jQuery.getJSON(cdb_form_ajax.ajaxurl, data, function(resp){
+            if(resp.success){
+                jQuery('#cdb-busqueda-empleados-resultados').html(resp.data.html);
+            }
+        });
+    }
+
     var cdbBusquedaTimer;
-    $("#cdb-busqueda-empleados-form").on("change", "select", function(){
-        $("#cdb-busqueda-empleados-form").submit();
-    });
-    $("#cdb-busqueda-empleados-form input[name="nombre"]").on("keyup", function(){
+    jQuery('#cdb-busqueda-empleados input').on('keyup change', function(){
         clearTimeout(cdbBusquedaTimer);
-        cdbBusquedaTimer = setTimeout(function(){
-            $("#cdb-busqueda-empleados-form").submit();
-        }, 500);
+        cdbBusquedaTimer = setTimeout(cdbBuscarEmpleados, 500);
     });
+
+    // Autocompletados
+    jQuery('#cdb-nombre').autocomplete({
+        source: function(request, response){
+            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'nombre', term:request.term}, response);
+        },
+        minLength:2
+    });
+
+    jQuery('#cdb-posicion').autocomplete({
+        source: function(request, response){
+            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'posicion', term:request.term}, response);
+        },
+        minLength:2,
+        select: function(e,ui){ jQuery('#cdb-posicion-id').val(ui.item.id); }
+    }).on('keyup', function(){ jQuery('#cdb-posicion-id').val(''); });
+
+    jQuery('#cdb-bar').autocomplete({
+        source: function(request, response){
+            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'bar', term:request.term}, response);
+        },
+        minLength:2,
+        select: function(e,ui){ jQuery('#cdb-bar-id').val(ui.item.id); }
+    }).on('keyup', function(){ jQuery('#cdb-bar-id').val(''); });
+
+    jQuery('#cdb-anio').autocomplete({
+        source: function(request, response){
+            jQuery.getJSON(cdb_form_ajax.ajaxurl, {action:'cdb_sugerencias', nonce:cdb_form_ajax.nonce, tipo:'anio', term:request.term}, response);
+        },
+        minLength:1
+    });
+
+    // Carga inicial
+    cdbBuscarEmpleados();
 });
 
