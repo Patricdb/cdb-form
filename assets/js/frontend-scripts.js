@@ -244,10 +244,174 @@ jQuery(document).ready(function($) {
         return true;
     }
 
-    var initResult = initBusqueda();
+   var initResult = initBusqueda();
     if (initResult === false) {
         document.addEventListener('awesomplete-loaded', initBusqueda, { once: true });
         setTimeout(initBusqueda, 50);
+    }
+
+    // ---- Buscador de bares ----
+    var bNombreInput, zonaInput, zonaIdInput, aperturaInput, repInput;
+    var filtrarBarBtn, limpiarBarBtn;
+
+    function cdbBuscarBares(){
+        var spinner = document.getElementById('cdb-busqueda-bares-spinner');
+        if (spinner) spinner.style.display = 'block';
+
+        var params = {
+            action: 'cdb_buscar_bares',
+            nonce: cdb_form_ajax.nonce,
+            nombre: bNombreInput.value,
+            zona_id: zonaIdInput.value,
+            apertura: aperturaInput.value,
+            reputacion: repInput.value
+        };
+
+        jQuery.getJSON(cdb_form_ajax.ajaxurl, params, function(resp){
+            if(resp.success){
+                jQuery('#cdb-busqueda-bares-resultados').html(resp.data.html);
+            } else if (resp.data && resp.data.message){
+                alert(resp.data.message);
+            }
+            if (spinner) spinner.style.display = 'none';
+        }).fail(function(jqXHR){
+            if (spinner) spinner.style.display = 'none';
+            alert('Error de comunicación');
+            console.error('cdb_buscar_bares AJAX fail', jqXHR);
+        });
+    }
+
+    function initBusquedaBares(){
+        bNombreInput   = document.getElementById('cdb-bar-nombre');
+        zonaInput      = document.getElementById('cdb-zona');
+        zonaIdInput    = document.getElementById('cdb-zona-id');
+        aperturaInput  = document.getElementById('cdb-apertura');
+        repInput       = document.getElementById('cdb-reputacion');
+        filtrarBarBtn  = document.getElementById('cdb-bar-filtrar');
+        limpiarBarBtn  = document.getElementById('cdb-bar-limpiar');
+
+        if (!bNombreInput || !zonaInput || !aperturaInput) {
+            return; // search form not present
+        }
+
+        if (!window.Awesomplete) {
+            return false;
+        }
+
+        if (filtrarBarBtn) {
+            filtrarBarBtn.addEventListener('click', function(){
+                if (validarFiltrosBares()) {
+                    cdbBuscarBares();
+                }
+            });
+        }
+
+        if (limpiarBarBtn) {
+            limpiarBarBtn.addEventListener('click', function(){
+                bNombreInput.value = '';
+                zonaInput.value = '';
+                aperturaInput.value = '';
+                repInput.value = '';
+                zonaIdInput.value = '';
+                bNombreInput.dataset.valid = '';
+                zonaInput.dataset.valid = '';
+                aperturaInput.dataset.valid = '';
+                repInput.dataset.valid = '';
+                cdbBuscarBares();
+            });
+        }
+
+        function obtenerSugs(t, term, cb){
+            jQuery.getJSON(cdb_form_ajax.ajaxurl, {
+                action: 'cdb_sugerencias',
+                nonce: cdb_form_ajax.nonce,
+                tipo: t,
+                term: term
+            }, cb).fail(function(jqXHR){
+                console.error('cdb_sugerencias AJAX fail', jqXHR);
+            });
+        }
+
+        var zonaS = [], barS = [], repS = [];
+
+        var awBarNombre = new Awesomplete(bNombreInput, {minChars:1, autoFirst:true});
+        bNombreInput.addEventListener('input', function(){
+            bNombreInput.dataset.valid = '';
+            obtenerSugs('bar', this.value, function(res){ barS = res; awBarNombre.list = res.map(function(r){ return r.label; }); });
+        });
+        bNombreInput.addEventListener('awesomplete-selectcomplete', function(){
+            bNombreInput.dataset.valid = '1';
+        });
+
+        var awZona = new Awesomplete(zonaInput, {minChars:1, autoFirst:true});
+        zonaInput.addEventListener('input', function(){
+            zonaInput.dataset.valid = '';
+            zonaIdInput.value = '';
+            obtenerSugs('zona', this.value, function(res){ zonaS = res; awZona.list = res.map(function(r){ return r.label; }); });
+        });
+        zonaInput.addEventListener('awesomplete-selectcomplete', function(){
+            var val = zonaInput.value;
+            var obj = zonaS.find(function(i){ return i.label === val; });
+            if(obj){ zonaIdInput.value = obj.id; zonaInput.dataset.valid = '1'; }
+        });
+
+        var awApertura = new Awesomplete(aperturaInput, {minChars:1, autoFirst:true});
+        aperturaInput.addEventListener('input', function(){
+            aperturaInput.dataset.valid = '';
+            obtenerSugs('apertura', this.value, function(res){ awApertura.list = res.map(function(r){ return r.label; }); });
+        });
+        aperturaInput.addEventListener('awesomplete-selectcomplete', function(){ aperturaInput.dataset.valid = '1'; });
+
+        var awRep = new Awesomplete(repInput, {minChars:1, autoFirst:true});
+        repInput.addEventListener('input', function(){
+            repInput.dataset.valid = '';
+            obtenerSugs('reputacion', this.value, function(res){ repS = res; awRep.list = res.map(function(r){ return r.label; }); });
+        });
+        repInput.addEventListener('awesomplete-selectcomplete', function(){
+            var val = repInput.value;
+            var obj = repS.find(function(i){ return i.label === val; });
+            if(obj){ repInput.dataset.valid = '1'; }
+        });
+
+        [bNombreInput, zonaInput, aperturaInput, repInput].forEach(function(el){
+            el.addEventListener('keydown', function(e){
+                if(e.key === 'Enter'){ e.preventDefault(); if(filtrarBarBtn) filtrarBarBtn.click(); }
+            });
+        });
+
+        function validarFiltrosBares(){
+            if(aperturaInput.value && !/^[0-9]{4}$/.test(aperturaInput.value)){
+                alert('El año debe tener 4 cifras');
+                return false;
+            }
+            if(bNombreInput.value && !bNombreInput.dataset.valid){
+                alert('Selecciona un bar válido');
+                return false;
+            }
+            if(zonaInput.value && !zonaInput.dataset.valid){
+                alert('Selecciona una zona válida');
+                return false;
+            }
+            if(aperturaInput.value && !aperturaInput.dataset.valid){
+                alert('Selecciona un año válido');
+                return false;
+            }
+            if(repInput.value && !repInput.dataset.valid && !/^[0-9]+(\.[0-9]+)?$/.test(repInput.value)){
+                alert('Reputación inválida');
+                return false;
+            }
+            return true;
+        }
+
+        cdbBuscarBares();
+
+        return true;
+    }
+
+    var initBars = initBusquedaBares();
+    if (initBars === false) {
+        document.addEventListener('awesomplete-loaded', initBusquedaBares, { once: true });
+        setTimeout(initBusquedaBares, 50);
     }
 });
 

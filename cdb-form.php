@@ -123,7 +123,7 @@ function cdb_form_enqueue_scripts_conditionally() {
         $needs_main = true;
     }
 
-    if ( has_shortcode( $post->post_content, 'cdb_busqueda_empleados' ) ) {
+    if ( has_shortcode( $post->post_content, 'cdb_busqueda_empleados' ) || has_shortcode( $post->post_content, 'cdb_busqueda_bares' ) ) {
         wp_enqueue_script(
             'awesomplete',
             'https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js',
