@@ -5,18 +5,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Add admin menu for employee form design settings.
+ * Add main admin menu and submenus.
  */
-function cdb_form_disenio_empleado_menu() {
+function cdb_form_admin_menu() {
     add_menu_page(
-        __( 'Dise\xC3\xB1o de Empleado', 'cdb-form' ),
-        __( 'Dise\xC3\xB1o de Empleado', 'cdb-form' ),
+        __( 'CdB Form', 'cdb-form' ),
+        __( 'CdB Form', 'cdb-form' ),
+        'manage_options',
+        'cdb-form',
+        'cdb_form_admin_page',
+        'dashicons-forms'
+    );
+
+    add_submenu_page(
+        'cdb-form',
+        __( 'Dise\xC3\xB1o Crear Empleado', 'cdb-form' ),
+        __( 'Dise\xC3\xB1o Crear Empleado', 'cdb-form' ),
         'manage_options',
         'cdb-form-disenio-empleado',
         'cdb_form_disenio_empleado_page'
     );
 }
-add_action( 'admin_menu', 'cdb_form_disenio_empleado_menu' );
+add_action( 'admin_menu', 'cdb_form_admin_menu' );
+
+/**
+ * Callback for the main CdB Form page.
+ */
+function cdb_form_admin_page() {
+    echo '<div class="wrap"><h1>' . esc_html__( 'CdB Form', 'cdb-form' ) . '</h1></div>';
+}
 
 /**
  * Render admin page and handle form submission.
@@ -37,6 +54,7 @@ function cdb_form_disenio_empleado_page() {
         'padding'             => 20,
         'field_spacing'       => 10,
         'message_color'       => '#008000',
+        'container_background_color' => '#ffffff',
     );
 
     // Handle save
@@ -52,6 +70,7 @@ function cdb_form_disenio_empleado_page() {
             'font_size'         => intval( $_POST['font_size'] ),
             'padding'           => intval( $_POST['padding'] ),
             'field_spacing'     => intval( $_POST['field_spacing'] ),
+            'container_background_color' => sanitize_hex_color( $_POST['container_background_color'] ),
             'message_color'     => sanitize_hex_color( $_POST['message_color'] ),
         );
 
@@ -62,11 +81,15 @@ function cdb_form_disenio_empleado_page() {
     $values = wp_parse_args( get_option( 'cdb_form_disenio_empleado' ), $defaults );
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Dise\xC3\xB1o de Empleado', 'cdb-form' ); ?></h1>
+        <h1><?php esc_html_e( 'Dise\xC3\xB1o Crear Empleado', 'cdb-form' ); ?></h1>
         <p><?php esc_html_e( 'Configura los estilos del formulario de empleado mostrado en el frontend. Estos cambios no afectan a otros formularios.', 'cdb-form' ); ?></p>
         <form method="post">
             <?php wp_nonce_field( 'cdb_form_disenio_empleado_save', 'cdb_form_disenio_empleado_nonce' ); ?>
             <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row"><label for="container_background_color"><?php esc_html_e( 'Color de fondo del contenedor', 'cdb-form' ); ?></label></th>
+                    <td><input type="text" id="container_background_color" class="cdb-color-field" name="container_background_color" value="<?php echo esc_attr( $values['container_background_color'] ); ?>" /></td>
+                </tr>
                 <tr>
                     <th scope="row"><label for="background_color"><?php esc_html_e( 'Color de fondo del formulario', 'cdb-form' ); ?></label></th>
                     <td><input type="text" id="background_color" class="cdb-color-field" name="background_color" value="<?php echo esc_attr( $values['background_color'] ); ?>" /></td>

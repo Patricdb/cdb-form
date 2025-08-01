@@ -42,6 +42,7 @@ $cdb_font_size        = isset($disenio['font_size']) ? intval($disenio['font_siz
 $cdb_padding          = isset($disenio['padding']) ? intval($disenio['padding']) : 20;
 $cdb_field_spacing    = isset($disenio['field_spacing']) ? intval($disenio['field_spacing']) : 10;
 $cdb_message_color    = isset($disenio['message_color']) ? $disenio['message_color'] : '#008000';
+$cdb_container_background = isset($disenio['container_background_color']) ? $disenio['container_background_color'] : '#ffffff';
 ?>
 
 <div class="cdb-empleado-container">
@@ -69,7 +70,7 @@ $cdb_message_color    = isset($disenio['message_color']) ? $disenio['message_col
         padding: <?php echo esc_attr($cdb_padding); ?>px;
         border: 1px solid #ddd;
         border-radius: 8px;
-        background-color: #fff;
+        background-color: <?php echo esc_attr($cdb_container_background); ?>;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         max-width: 600px;
         margin: 0 auto;

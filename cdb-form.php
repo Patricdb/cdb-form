@@ -2,7 +2,7 @@
 /**
  * Plugin Name: CdB Form
  * Description: Plugin para gestionar formularios de los tipos de contenido empleado y bar.
- * Version: 1.8.0
+ * Version: 1.8.1
  * Author: CdB_
  * Author URI: https://proyectocdb.es
  * Text Domain: cdb-form
