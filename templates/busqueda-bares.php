@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
         <input type="text" id="cdb-zona" placeholder="<?php esc_attr_e('Zona','cdb-form'); ?>" />
         <input type="hidden" id="cdb-zona-id" />
         <input type="text" id="cdb-apertura" placeholder="<?php esc_attr_e('Año','cdb-form'); ?>" />
-        <input type="text" id="cdb-reputacion" placeholder="<?php esc_attr_e('Reputación','cdb-form'); ?>" />
         <button id="cdb-bar-filtrar" class="cdb-btn-filtrar" type="button"><?php esc_html_e('Filtrar','cdb-form'); ?></button>
         <button id="cdb-bar-limpiar" class="cdb-btn-filtrar" type="button"><?php esc_html_e('Limpiar','cdb-form'); ?></button>
     </div>

@@ -244,14 +244,15 @@ jQuery(document).ready(function($) {
         return true;
     }
 
-   var initResult = initBusqueda();
+    var initResult = initBusqueda();
     if (initResult === false) {
         document.addEventListener('awesomplete-loaded', initBusqueda, { once: true });
         setTimeout(initBusqueda, 50);
+        setTimeout(function(){ if(!window.Awesomplete){ console.error('Awesomplete failed to load'); } }, 5000);
     }
 
     // ---- Buscador de bares ----
-    var bNombreInput, zonaInput, zonaIdInput, aperturaInput, repInput;
+    var bNombreInput, zonaInput, zonaIdInput, aperturaInput;
     var filtrarBarBtn, limpiarBarBtn;
 
     function cdbBuscarBares(){
@@ -263,8 +264,7 @@ jQuery(document).ready(function($) {
             nonce: cdb_form_ajax.nonce,
             nombre: bNombreInput.value,
             zona_id: zonaIdInput.value,
-            apertura: aperturaInput.value,
-            reputacion: repInput.value
+            apertura: aperturaInput.value
         };
 
         jQuery.getJSON(cdb_form_ajax.ajaxurl, params, function(resp){
@@ -286,7 +286,6 @@ jQuery(document).ready(function($) {
         zonaInput      = document.getElementById('cdb-zona');
         zonaIdInput    = document.getElementById('cdb-zona-id');
         aperturaInput  = document.getElementById('cdb-apertura');
-        repInput       = document.getElementById('cdb-reputacion');
         filtrarBarBtn  = document.getElementById('cdb-bar-filtrar');
         limpiarBarBtn  = document.getElementById('cdb-bar-limpiar');
 
@@ -311,13 +310,10 @@ jQuery(document).ready(function($) {
                 bNombreInput.value = '';
                 zonaInput.value = '';
                 aperturaInput.value = '';
-                repInput.value = '';
                 zonaIdInput.value = '';
                 bNombreInput.dataset.valid = '';
                 zonaInput.dataset.valid = '';
-                aperturaInput.dataset.valid = '';
-                repInput.dataset.valid = '';
-                cdbBuscarBares();
+            cdbBuscarBares();
             });
         }
 
@@ -332,7 +328,7 @@ jQuery(document).ready(function($) {
             });
         }
 
-        var zonaS = [], barS = [], repS = [];
+        var zonaS = [], barS = [];
 
         var awBarNombre = new Awesomplete(bNombreInput, {minChars:1, autoFirst:true});
         bNombreInput.addEventListener('input', function(){
@@ -355,25 +351,7 @@ jQuery(document).ready(function($) {
             if(obj){ zonaIdInput.value = obj.id; zonaInput.dataset.valid = '1'; }
         });
 
-        var awApertura = new Awesomplete(aperturaInput, {minChars:1, autoFirst:true});
-        aperturaInput.addEventListener('input', function(){
-            aperturaInput.dataset.valid = '';
-            obtenerSugs('apertura', this.value, function(res){ awApertura.list = res.map(function(r){ return r.label; }); });
-        });
-        aperturaInput.addEventListener('awesomplete-selectcomplete', function(){ aperturaInput.dataset.valid = '1'; });
-
-        var awRep = new Awesomplete(repInput, {minChars:1, autoFirst:true});
-        repInput.addEventListener('input', function(){
-            repInput.dataset.valid = '';
-            obtenerSugs('reputacion', this.value, function(res){ repS = res; awRep.list = res.map(function(r){ return r.label; }); });
-        });
-        repInput.addEventListener('awesomplete-selectcomplete', function(){
-            var val = repInput.value;
-            var obj = repS.find(function(i){ return i.label === val; });
-            if(obj){ repInput.dataset.valid = '1'; }
-        });
-
-        [bNombreInput, zonaInput, aperturaInput, repInput].forEach(function(el){
+        [bNombreInput, zonaInput, aperturaInput].forEach(function(el){
             el.addEventListener('keydown', function(e){
                 if(e.key === 'Enter'){ e.preventDefault(); if(filtrarBarBtn) filtrarBarBtn.click(); }
             });
@@ -392,14 +370,6 @@ jQuery(document).ready(function($) {
                 alert('Selecciona una zona válida');
                 return false;
             }
-            if(aperturaInput.value && !aperturaInput.dataset.valid){
-                alert('Selecciona un año válido');
-                return false;
-            }
-            if(repInput.value && !repInput.dataset.valid && !/^[0-9]+(\.[0-9]+)?$/.test(repInput.value)){
-                alert('Reputación inválida');
-                return false;
-            }
             return true;
         }
 
@@ -412,6 +382,7 @@ jQuery(document).ready(function($) {
     if (initBars === false) {
         document.addEventListener('awesomplete-loaded', initBusquedaBares, { once: true });
         setTimeout(initBusquedaBares, 50);
+        setTimeout(function(){ if(!window.Awesomplete){ console.error('Awesomplete failed to load for buscador de bares'); } }, 5000);
     }
 });
 

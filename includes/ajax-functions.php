@@ -402,10 +402,9 @@ function cdb_buscar_bares_ajax() {
     }
 
     $args = array(
-        'nombre'     => isset( $_GET['nombre'] ) ? sanitize_text_field( $_GET['nombre'] ) : '',
-        'zona_id'    => isset( $_GET['zona_id'] ) ? intval( $_GET['zona_id'] ) : 0,
-        'apertura'   => isset( $_GET['apertura'] ) ? intval( $_GET['apertura'] ) : 0,
-        'reputacion' => isset( $_GET['reputacion'] ) ? sanitize_text_field( $_GET['reputacion'] ) : '',
+        'nombre'   => isset( $_GET['nombre'] ) ? sanitize_text_field( $_GET['nombre'] ) : '',
+        'zona_id'  => isset( $_GET['zona_id'] ) ? intval( $_GET['zona_id'] ) : 0,
+        'apertura' => isset( $_GET['apertura'] ) ? intval( $_GET['apertura'] ) : 0,
     );
 
     $bares = cdb_busqueda_bares_get_datos( $args );
