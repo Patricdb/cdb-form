@@ -1,0 +1,388 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-01 10:38+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: templates/form-experiencia-template.php:10
+#: templates/form-empleado-template.php:10
+msgid "Debes iniciar sesión para gestionar tu empleado."
+msgstr ""
+
+#: templates/form-experiencia-template.php:17
+msgid ""
+"No tienes un perfil de empleado registrado. Para registrar experiencia, "
+"primero debes crear tu perfil de empleado."
+msgstr ""
+
+#: templates/form-experiencia-template.php:193 includes/ajax-functions.php:350
+msgid "No tienes experiencia registrada aún."
+msgstr ""
+
+#: templates/form-experiencia-template.php:199
+msgid "Actualizar Experiencia Laboral"
+msgstr ""
+
+#: templates/form-empleado-template.php:26
+msgid "Actualizar Empleado"
+msgstr ""
+
+#: templates/form-empleado-template.php:31
+msgid "Crear Empleado"
+msgstr ""
+
+#: templates/form-empleado-template.php:42
+msgid "Nombre:"
+msgstr ""
+
+#: templates/form-empleado-template.php:45
+msgid "Disponible:"
+msgstr ""
+
+#: templates/form-empleado-template.php:47 public/form-empleado.php:58
+#: includes/shortcodes.php:142
+msgid "Sí"
+msgstr ""
+
+#: templates/form-empleado-template.php:48 public/form-empleado.php:59
+#: includes/shortcodes.php:143
+msgid "No"
+msgstr ""
+
+#: templates/form-bar-template.php:29
+msgid "Nombre del Bar:"
+msgstr ""
+
+#: templates/form-bar-template.php:32 includes/init.php:48
+msgid "Estado:"
+msgstr ""
+
+#: templates/form-bar-template.php:34 public/form-bar.php:41
+msgid "Abierto todo el año"
+msgstr ""
+
+#: templates/form-bar-template.php:35 public/form-bar.php:42
+msgid "Abierto temporalmente"
+msgstr ""
+
+#: templates/form-bar-template.php:36 public/form-bar.php:43
+msgid "Cerrado temporalmente"
+msgstr ""
+
+#: templates/form-bar-template.php:37 public/form-bar.php:44
+msgid "Cerrado permanente"
+msgstr ""
+
+#: templates/form-bar-template.php:38 public/form-bar.php:45
+msgid "Traspaso"
+msgstr ""
+
+#: templates/form-bar-template.php:39 public/form-bar.php:46
+msgid "Desconocido"
+msgstr ""
+
+#: templates/form-bar-template.php:42 public/form-bar.php:50
+#: public/form-empleado.php:63 includes/shortcodes.php:147
+msgid "Actualizar"
+msgstr ""
+
+#: public/form-bar.php:15
+msgid "Debes iniciar sesión para actualizar el estado de tu bar."
+msgstr ""
+
+#: public/form-bar.php:29
+msgid "No tienes un bar registrado. Crea uno antes de actualizar su estado."
+msgstr ""
+
+#: public/form-bar.php:39
+msgid "Estado del Bar:"
+msgstr ""
+
+#: public/form-empleado.php:27
+msgid "Debes iniciar sesión para actualizar tu estado."
+msgstr ""
+
+#: public/form-empleado.php:32
+msgid "No tienes permisos para acceder a esta sección."
+msgstr ""
+
+#: public/form-empleado.php:46
+msgid ""
+"No tienes un perfil de empleado. Crea uno antes de actualizar tu "
+"disponibilidad."
+msgstr ""
+
+#: public/form-empleado.php:56
+msgid "¿Estás disponible?"
+msgstr ""
+
+#: test.php:5
+msgid "Debes iniciar sesión."
+msgstr ""
+
+#: includes/post-types.php:22 includes/post-types.php:24
+msgid "Posiciones"
+msgstr ""
+
+#: includes/post-types.php:23 includes/post-types.php:25
+msgid "Posición"
+msgstr ""
+
+#: includes/post-types.php:26
+msgid "Añadir Nueva"
+msgstr ""
+
+#: includes/post-types.php:27
+msgid "Añadir Nueva Posición"
+msgstr ""
+
+#: includes/post-types.php:28
+msgid "Nueva Posición"
+msgstr ""
+
+#: includes/post-types.php:29
+msgid "Editar Posición"
+msgstr ""
+
+#: includes/post-types.php:30
+msgid "Ver Posición"
+msgstr ""
+
+#: includes/post-types.php:31
+msgid "Todas las Posiciones"
+msgstr ""
+
+#: includes/post-types.php:32
+msgid "Buscar Posiciones"
+msgstr ""
+
+#: includes/post-types.php:33
+msgid "No se encontraron posiciones"
+msgstr ""
+
+#: includes/post-types.php:34
+msgid "No se encontraron posiciones en la papelera"
+msgstr ""
+
+#: includes/post-types.php:67
+msgid "Valor de Puntuación"
+msgstr ""
+
+#: includes/post-types.php:90
+msgid "Valor de Puntuación:"
+msgstr ""
+
+#: includes/post-types.php:144
+msgid "Puntuación"
+msgstr ""
+
+#: includes/shortcodes.php:90 includes/shortcodes.php:266
+msgid "Debes iniciar sesión para acceder a esta página."
+msgstr ""
+
+#: includes/shortcodes.php:93
+#, php-format
+msgid "¡Hola, %s!"
+msgstr ""
+
+#: includes/shortcodes.php:94
+msgid "Grácias por colaborar con el Proyecto CdB!"
+msgstr ""
+
+#: includes/shortcodes.php:136
+msgid "Tu empleado:"
+msgstr ""
+
+#: includes/shortcodes.php:140
+msgid "Actualizar Disponibilidad:"
+msgstr ""
+
+#: includes/shortcodes.php:161 includes/shortcodes.php:340
+msgid "Puntuación Gráfica no disponible."
+msgstr ""
+
+#: includes/shortcodes.php:165
+msgid "Puntuación de Experiencia:"
+msgstr ""
+
+#: includes/shortcodes.php:167
+msgid "No tienes ningún perfil de empleado asignado."
+msgstr ""
+
+#: includes/shortcodes.php:274
+msgid "No tienes un perfil de empleado registrado."
+msgstr ""
+
+#: includes/shortcodes.php:328
+msgid "Error: Debes iniciar sesión para ver tu puntuación."
+msgstr ""
+
+#: includes/shortcodes.php:336
+msgid "No se encontró un empleado asociado a este usuario."
+msgstr ""
+
+#: includes/shortcodes.php:342
+msgid "Puntuación Gráfica:"
+msgstr ""
+
+#: includes/shortcodes.php:389
+msgid "No se encontraron empleados."
+msgstr ""
+
+#: includes/shortcodes.php:489
+msgid "No se encontraron empleados con puntuación total."
+msgstr ""
+
+#: includes/form-handler.php:30 includes/ajax-functions.php:72
+#: includes/ajax-functions.php:109 includes/ajax-functions.php:179
+msgid "Error de seguridad."
+msgstr ""
+
+#: includes/form-handler.php:37 includes/form-handler.php:140
+msgid "Debes iniciar sesión para completar este formulario."
+msgstr ""
+
+#: includes/form-handler.php:43
+msgid "Todos los campos son obligatorios."
+msgstr ""
+
+#: includes/form-handler.php:58
+msgid "No tienes permisos para editar este perfil."
+msgstr ""
+
+#: includes/form-handler.php:81
+msgid "Error al registrar la experiencia."
+msgstr ""
+
+#: includes/form-handler.php:116
+msgid "Experiencia registrada correctamente."
+msgstr ""
+
+#: includes/form-handler.php:120 includes/ajax-functions.php:236
+msgid "No se pudo guardar la experiencia."
+msgstr ""
+
+#: includes/form-handler.php:154
+msgid "El nombre es obligatorio."
+msgstr ""
+
+#: includes/form-handler.php:168
+msgid "Ya tienes un perfil de empleado. No puedes crear más de uno."
+msgstr ""
+
+#: includes/form-handler.php:199
+msgid "Perfil de empleado creado correctamente."
+msgstr ""
+
+#: includes/form-handler.php:202
+msgid "Error al crear el perfil."
+msgstr ""
+
+#: includes/form-handler.php:209
+msgid "Empleado no válido."
+msgstr ""
+
+#: includes/form-handler.php:213 includes/ajax-functions.php:84
+msgid "No tienes permisos para editar este empleado."
+msgstr ""
+
+#: includes/form-handler.php:221
+msgid "Perfil de empleado actualizado correctamente."
+msgstr ""
+
+#: includes/ajax-functions.php:69 includes/ajax-functions.php:106
+msgid "No tienes permisos para realizar esta acción."
+msgstr ""
+
+#: includes/ajax-functions.php:75 includes/ajax-functions.php:112
+msgid "Datos inválidos."
+msgstr ""
+
+#: includes/ajax-functions.php:89
+msgid "Disponibilidad actualizada correctamente."
+msgstr ""
+
+#: includes/ajax-functions.php:91
+msgid "Error al actualizar la disponibilidad."
+msgstr ""
+
+#: includes/ajax-functions.php:121
+msgid "No tienes permisos para editar este bar."
+msgstr ""
+
+#: includes/ajax-functions.php:126
+msgid "Estado del bar actualizado correctamente."
+msgstr ""
+
+#: includes/ajax-functions.php:128
+msgid "Error al actualizar el estado del bar."
+msgstr ""
+
+#: includes/ajax-functions.php:143
+msgid "Bar ID no proporcionado."
+msgstr ""
+
+#: includes/ajax-functions.php:151
+msgid "No se encontraron fechas para este bar."
+msgstr ""
+
+#: includes/ajax-functions.php:176
+msgid "No tienes permisos."
+msgstr ""
+
+#: includes/ajax-functions.php:234
+msgid "Experiencia guardada correctamente."
+msgstr ""
+
+#: includes/ajax-functions.php:253
+msgid "No tienes permisos (no logueado)."
+msgstr ""
+
+#: includes/ajax-functions.php:256
+msgid "Error de seguridad (nonce)."
+msgstr ""
+
+#: includes/ajax-functions.php:259
+msgid "ID de experiencia no proporcionado."
+msgstr ""
+
+#: includes/ajax-functions.php:271
+msgid "No tienes permiso para eliminar esa experiencia."
+msgstr ""
+
+#: includes/ajax-functions.php:283
+msgid "Experiencia eliminada correctamente."
+msgstr ""
+
+#: includes/ajax-functions.php:285
+msgid "No se pudo eliminar la experiencia."
+msgstr ""
+
+#: includes/ajax-functions.php:300
+msgid "Debes iniciar sesión para ver la experiencia."
+msgstr ""
+
+#: includes/ajax-functions.php:342
+msgid "Borrar"
+msgstr ""
+
+#: includes/init.php:43 includes/init.php:45
+msgid "No Disponible"
+msgstr ""
+
+#: includes/init.php:45
+msgid "Disponible"
+msgstr ""

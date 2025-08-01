@@ -24,12 +24,12 @@ function cdb_usuario_es_empleado() {
 function cdb_form_empleado() {
     // Comprobar si el usuario está conectado.
     if ( ! is_user_logged_in() ) {
-        return '<p style="color: red;">Debes iniciar sesión para actualizar tu estado.</p>';
+        return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para actualizar tu estado.', 'cdb-form' ) . '</p>';
     }
 
     // Comprobar si el usuario tiene el rol "Empleado".
     if ( ! cdb_usuario_es_empleado() ) {
-        return '<p style="color: red;">No tienes permisos para acceder a esta sección.</p>';
+        return '<p style="color: red;">' . esc_html__( 'No tienes permisos para acceder a esta sección.', 'cdb-form' ) . '</p>';
     }
 
     // Obtener el ID del usuario actual.
@@ -43,7 +43,7 @@ function cdb_form_empleado() {
     ]);
 
     if (empty($empleado)) {
-        return '<p style="color: red;">No tienes un perfil de empleado. Crea uno antes de actualizar tu disponibilidad.</p>';
+        return '<p style="color: red;">' . esc_html__( 'No tienes un perfil de empleado. Crea uno antes de actualizar tu disponibilidad.', 'cdb-form' ) . '</p>';
     }
 
     $empleado_id = $empleado[0]->ID;
@@ -53,14 +53,14 @@ function cdb_form_empleado() {
     ob_start();
     ?>
     <form id="cdb-update-disponibilidad" method="post">
-        <label for="disponible"><strong>¿Estás disponible?</strong></label>
+        <label for="disponible"><strong><?php esc_html_e( '¿Estás disponible?', 'cdb-form' ); ?></strong></label>
         <select name="disponible" id="disponible">
-            <option value="1" <?php selected($disponible, 1); ?>>Sí</option>
-            <option value="0" <?php selected($disponible, 0); ?>>No</option>
+            <option value="1" <?php selected($disponible, 1); ?>><?php esc_html_e( 'Sí', 'cdb-form' ); ?></option>
+            <option value="0" <?php selected($disponible, 0); ?>><?php esc_html_e( 'No', 'cdb-form' ); ?></option>
         </select>
         <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>">
         <input type="hidden" name="security" value="<?php echo wp_create_nonce('cdb_form_nonce'); ?>">
-        <button type="submit">Actualizar</button>
+        <button type="submit"><?php esc_html_e( 'Actualizar', 'cdb-form' ); ?></button>
     </form>
     <p id="cdb-response-message" style="color: green;"></p>
 

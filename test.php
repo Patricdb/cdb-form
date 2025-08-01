@@ -2,7 +2,7 @@
 require_once('../../../wp-load.php'); // Asegurar carga de WordPress
 
 if (!is_user_logged_in()) {
-    die("Debes iniciar sesión.");
+    die( __( 'Debes iniciar sesión.', 'cdb-form' ) );
 }
 
 $current_user = wp_get_current_user();

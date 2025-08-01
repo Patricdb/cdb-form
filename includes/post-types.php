@@ -19,19 +19,19 @@ if (!defined('ABSPATH')) {
  */
 function cdb_register_cpt_posiciones() {
     $labels = array(
-        'name'               => 'Posiciones',
-        'singular_name'      => 'Posición',
-        'menu_name'          => 'Posiciones',
-        'name_admin_bar'     => 'Posición',
-        'add_new'            => 'Añadir Nueva',
-        'add_new_item'       => 'Añadir Nueva Posición',
-        'new_item'           => 'Nueva Posición',
-        'edit_item'          => 'Editar Posición',
-        'view_item'          => 'Ver Posición',
-        'all_items'          => 'Todas las Posiciones',
-        'search_items'       => 'Buscar Posiciones',
-        'not_found'          => 'No se encontraron posiciones',
-        'not_found_in_trash' => 'No se encontraron posiciones en la papelera'
+        'name'               => __( 'Posiciones', 'cdb-form' ),
+        'singular_name'      => __( 'Posición', 'cdb-form' ),
+        'menu_name'          => __( 'Posiciones', 'cdb-form' ),
+        'name_admin_bar'     => __( 'Posición', 'cdb-form' ),
+        'add_new'            => __( 'Añadir Nueva', 'cdb-form' ),
+        'add_new_item'       => __( 'Añadir Nueva Posición', 'cdb-form' ),
+        'new_item'           => __( 'Nueva Posición', 'cdb-form' ),
+        'edit_item'          => __( 'Editar Posición', 'cdb-form' ),
+        'view_item'          => __( 'Ver Posición', 'cdb-form' ),
+        'all_items'          => __( 'Todas las Posiciones', 'cdb-form' ),
+        'search_items'       => __( 'Buscar Posiciones', 'cdb-form' ),
+        'not_found'          => __( 'No se encontraron posiciones', 'cdb-form' ),
+        'not_found_in_trash' => __( 'No se encontraron posiciones en la papelera', 'cdb-form' ),
     );
 
     $args = array(
@@ -64,7 +64,7 @@ add_action('init', 'cdb_register_cpt_posiciones');
 function cdb_add_meta_box_posicion_score() {
     add_meta_box(
         'cdb_posiciones_score',                 // ID del meta box.
-        'Valor de Puntuación',                  // Título que se muestra.
+        __( 'Valor de Puntuación', 'cdb-form' ), // Título que se muestra.
         'cdb_render_posiciones_score_meta_box', // Función que renderiza el contenido.
         'cdb_posiciones',                       // CPT donde se agrega.
         'side',                                 // Ubicación (side, normal, advanced).
@@ -87,7 +87,7 @@ function cdb_render_posiciones_score_meta_box($post) {
     // Obtener el valor actual de la puntuación (si existe).
     $score_value = get_post_meta($post->ID, '_cdb_posiciones_score', true);
     ?>
-    <label for="cdb_posiciones_score_field">Valor de Puntuación:</label>
+    <label for="cdb_posiciones_score_field"><?php esc_html_e( 'Valor de Puntuación:', 'cdb-form' ); ?></label>
     <input 
         type="number" 
         id="cdb_posiciones_score_field" 
@@ -141,7 +141,7 @@ add_action('save_post_cdb_posiciones', 'cdb_save_posiciones_score_meta_box');
  * Agrega una columna personalizada para mostrar la puntuación en la lista de posiciones.
  */
 function cdb_add_posiciones_custom_column($columns) {
-    $columns['cdb_posiciones_score'] = 'Puntuación';
+    $columns['cdb_posiciones_score'] = __( 'Puntuación', 'cdb-form' );
     return $columns;
 }
 add_filter('manage_cdb_posiciones_posts_columns', 'cdb_add_posiciones_custom_column');

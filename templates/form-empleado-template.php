@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 // Verificar si el usuario está conectado
 $current_user = wp_get_current_user();
 if (!$current_user->exists()) {
-    echo '<p>Debes iniciar sesión para gestionar tu empleado.</p>';
+    echo '<p>' . esc_html__( 'Debes iniciar sesión para gestionar tu empleado.', 'cdb-form' ) . '</p>';
     return;
 }
 
@@ -23,12 +23,12 @@ if (!empty($existing_empleado)) {
     $empleado_id         = $existing_empleado[0]->ID;
     $empleado_nombre     = get_the_title($empleado_id);
     $empleado_disponible = get_post_meta($empleado_id, 'disponible', true) ?: '1';
-    $button_text         = 'Actualizar Empleado';
+    $button_text         = __( 'Actualizar Empleado', 'cdb-form' );
 } else {
     $empleado_id         = 0;
     $empleado_nombre     = '';
     $empleado_disponible = '1';
-    $button_text         = 'Crear Empleado';
+    $button_text         = __( 'Crear Empleado', 'cdb-form' );
 }
 ?>
 
@@ -39,13 +39,13 @@ if (!empty($existing_empleado)) {
 
         <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>">
 
-        <label for="nombre">Nombre:</label>
+        <label for="nombre"><?php esc_html_e( 'Nombre:', 'cdb-form' ); ?></label>
         <input type="text" id="nombre" name="nombre" value="<?php echo esc_attr($empleado_nombre); ?>" required>
 
-        <label for="disponible">Disponible:</label>
+        <label for="disponible"><?php esc_html_e( 'Disponible:', 'cdb-form' ); ?></label>
         <select id="disponible" name="disponible">
-            <option value="1" <?php selected($empleado_disponible, '1'); ?>>Sí</option>
-            <option value="0" <?php selected($empleado_disponible, '0'); ?>>No</option>
+            <option value="1" <?php selected($empleado_disponible, '1'); ?>><?php esc_html_e( 'Sí', 'cdb-form' ); ?></option>
+            <option value="0" <?php selected($empleado_disponible, '0'); ?>><?php esc_html_e( 'No', 'cdb-form' ); ?></option>
         </select>
 
         <button type="submit"><?php echo esc_html($button_text); ?></button>

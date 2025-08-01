@@ -38,3 +38,7 @@ Los formularios funcionan mediante llamadas AJAX a `admin-ajax.php` y se validan
 4. Tras procesar la petición, el manejador devuelve una respuesta JSON que permite recargar la página o actualizar el contenido de forma dinámica.
 
 Para más información consulta la carpeta `docs/`.
+
+## Internacionalización
+
+El plugin carga las traducciones desde la carpeta `languages` mediante `load_plugin_textdomain()` al iniciarse. Para generar el archivo `cdb-form.pot` se utilizan las funciones de internacionalización de WordPress en todo el código.

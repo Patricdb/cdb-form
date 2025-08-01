@@ -7,14 +7,14 @@ if (!defined('ABSPATH')) {
 // Verificar si el usuario está conectado.
 $current_user = wp_get_current_user();
 if (!$current_user->exists()) {
-    echo '<p>Debes iniciar sesión para gestionar tu empleado.</p>';
+    echo '<p>' . esc_html__( 'Debes iniciar sesión para gestionar tu empleado.', 'cdb-form' ) . '</p>';
     return;
 }
 
 // Obtener la ID del empleado asociado al usuario actual mediante la función específica.
 $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
 if (!$empleado_id) {
-    echo '<p>No tienes un perfil de empleado registrado. Para registrar experiencia, primero debes crear tu perfil de empleado.</p>';
+    echo '<p>' . esc_html__( 'No tienes un perfil de empleado registrado. Para registrar experiencia, primero debes crear tu perfil de empleado.', 'cdb-form' ) . '</p>';
     echo do_shortcode('[cdb_form_empleado]');
     return;
 }
@@ -190,13 +190,13 @@ error_log("[DEBUG] Bar ID: {$bar_id_actual} - Apertura: {$fecha_apertura} - Cier
             </tbody>
         </table>
     <?php else : ?>
-        <p>No tienes experiencia registrada aún.</p>
+        <p><?php esc_html_e( 'No tienes experiencia registrada aún.', 'cdb-form' ); ?></p>
     <?php endif; ?>
 </div>
 
 <!-- Formulario para agregar/actualizar experiencia -->
 <div class="cdb-experiencia-form">
-    <h2>Actualizar Experiencia Laboral</h2>
+    <h2><?php esc_html_e( 'Actualizar Experiencia Laboral', 'cdb-form' ); ?></h2>
     <form id="cdb_experiencia_form">
         <!-- Acción para el AJAX -->
         <input type="hidden" name="action" value="cdb_guardar_experiencia">
