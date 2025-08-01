@@ -11,10 +11,9 @@ function cdb_form_admin_enqueue( $hook ) {
         return;
     }
 
-    // Cargar el color picker en la página de diseño
+    // No se requieren dependencias adicionales en la página de configuración
     if ( 'toplevel_page_cdb-form-disenio-empleado' === $hook ) {
-        wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_script( 'wp-color-picker' );
+        // Se podrían añadir estilos propios aquí en el futuro
     }
 }
 add_action( 'admin_enqueue_scripts', 'cdb_form_admin_enqueue' );
