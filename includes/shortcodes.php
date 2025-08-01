@@ -977,12 +977,15 @@ function cdb_busqueda_empleados_get_datos( $args = array() ) {
     $posts     = $wpdb->posts;
     $postmeta  = $wpdb->postmeta;
 
+    // La puntuaci\xC3\xB3n total se extrae del meta 'cdb_puntuacion_total' del empleado
+    // y el a\xC3\xB1o corresponde a la experiencia m\xC3\xA1s reciente registrada.
     $sql = "SELECT exp.empleado_id,
                    e.post_title AS empleado_nombre,
                    GROUP_CONCAT(DISTINCT bar.ID)  AS bares_ids,
                    GROUP_CONCAT(DISTINCT bar.post_title SEPARATOR '||') AS bares_nombres,
                    GROUP_CONCAT(DISTINCT pos.ID)  AS posiciones_ids,
                    GROUP_CONCAT(DISTINCT pos.post_title SEPARATOR '||') AS posiciones_nombres,
+                   MAX(exp.anio) AS anio,
                    score.meta_value AS puntuacion_total
             FROM {$tabla_exp} exp
             JOIN {$posts} e ON exp.empleado_id = e.ID AND e.post_type = 'empleado' AND e.post_status = 'publish'
@@ -1035,11 +1038,13 @@ function cdb_busqueda_empleados_get_datos( $args = array() ) {
             }
 
             $puntuacion = $r->puntuacion_total !== null ? number_format( (float) $r->puntuacion_total, 1, '.', '' ) : '0.0';
+            $anio       = $r->anio ? intval( $r->anio ) : 0;
 
             $empleados[] = array(
                 'id'         => intval( $r->empleado_id ),
                 'nombre'     => $r->empleado_nombre,
                 'puntuacion' => $puntuacion,
+                'anio'       => $anio,
                 'bares'      => $bares,
                 'posiciones' => $posiciones,
             );
@@ -1113,6 +1118,7 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
     if ( ! empty( $meta_query ) ) {
         $query_args['meta_query'] = $meta_query;
     }
+    // La puntuaci\xC3\xB3n del bar se obtiene de su meta 'reputacion'.
     $query_args['meta_key'] = 'reputacion';
     $query_args['orderby']  = 'meta_value_num';
     $query_args['order']    = 'DESC';
@@ -1127,6 +1133,7 @@ function cdb_busqueda_bares_get_datos( $args = array() ) {
             $id        = get_the_ID();
             $zona_id   = get_post_meta( $id, '_cdb_bar_zona_id', true );
             $apertura  = get_post_meta( $id, '_cdb_bar_apertura', true );
+            // 'reputacion' almacena la puntuaci\xC3\xB3n total de la gr\xC3\xA1fica del bar
             $reput     = get_post_meta( $id, 'reputacion', true );
 
             $bares[] = array(
