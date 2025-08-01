@@ -93,12 +93,12 @@ function cdb_bienvenida_usuario_shortcode() {
     $output  = '<h1>' . sprintf( esc_html__( '¡Hola, %s!', 'cdb-form' ), esc_html($current_user->display_name) ) . '</h1>';
     $output .= '<p>' . esc_html__( 'Grácias por colaborar con el Proyecto CdB!', 'cdb-form' ) . '</p>';
 
-    // Cargar la sección de empleado si el usuario tiene ese rol.
-    if (in_array('empleado', (array) $current_user->roles)) {
+    // Cargar la sección de empleado si tiene la capacidad necesaria.
+    if (current_user_can('manage_cdb_forms')) {
         $output .= do_shortcode('[cdb_bienvenida_empleado]');
     }
-    // Cargar la sección de empleador si el usuario tiene ese rol.
-    if (in_array('empleador', (array) $current_user->roles)) {
+    // Cargar la sección de empleador si tiene la capacidad necesaria.
+    if (current_user_can('manage_cdb_forms')) {
         $output .= do_shortcode('[cdb_bienvenida_empleador]');
     }
     return $output;
@@ -121,8 +121,8 @@ function cdb_bienvenida_empleado_shortcode() {
         return '';
     }
     $current_user = wp_get_current_user();
-    // Solo procesar si el usuario tiene el rol 'empleado'.
-    if (!in_array('empleado', (array) $current_user->roles)) {
+    // Solo procesar si el usuario tiene la capacidad requerida.
+    if (!current_user_can('manage_cdb_forms')) {
         return '';
     }
     $empleado_id = cdb_obtener_empleado_id($current_user->ID);
@@ -266,7 +266,7 @@ function cdb_experiencia_shortcode() {
         return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
     }
     $current_user = wp_get_current_user();
-    if (!in_array('empleado', (array) $current_user->roles)) {
+    if (!current_user_can('manage_cdb_forms')) {
         return '';
     }
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
@@ -328,7 +328,7 @@ function cdb_mostrar_puntuacion_total() {
         return '<p>' . esc_html__( 'Error: Debes iniciar sesión para ver tu puntuación.', 'cdb-form' ) . '</p>';
     }
     $current_user = wp_get_current_user();
-    if (!in_array('empleado', (array) $current_user->roles)) {
+    if (!current_user_can('manage_cdb_forms')) {
         return '';
     }
     $empleado_id = cdb_obtener_empleado_id($current_user->ID);
