@@ -68,10 +68,10 @@ jQuery(document).ready(function($) {
         var params = {
             action: 'cdb_buscar_empleados',
             nonce: cdb_form_ajax.nonce,
-            nombre: document.getElementById('cdb-nombre').value,
-            posicion_id: document.getElementById('cdb-posicion-id').value,
-            bar_id: document.getElementById('cdb-bar-id').value,
-            anio: document.getElementById('cdb-anio').value
+            nombre: nombreInput.value,
+            posicion_id: posIdInput.value,
+            bar_id: barIdInput.value,
+            anio: anioInput.value
         };
 
         jQuery.getJSON(cdb_form_ajax.ajaxurl, params, function(resp){
@@ -83,26 +83,31 @@ jQuery(document).ready(function($) {
     }
 
 
-    // Ejecuta la búsqueda solo cuando el usuario pulsa el botón "Filtrar"
-    jQuery('#cdb-filtrar').on('click', function(){
-        if (validarFiltros()) {
-            cdbBuscarEmpleados();
-        }
-    });
+    var filtrarBtn = document.getElementById('cdb-filtrar');
+    if (filtrarBtn) {
+        filtrarBtn.addEventListener('click', function(){
+            if (validarFiltros()) {
+                cdbBuscarEmpleados();
+            }
+        });
+    }
 
-    jQuery('#cdb-limpiar').on('click', function(){
-        document.getElementById('cdb-nombre').value = '';
-        document.getElementById('cdb-posicion').value = '';
-        document.getElementById('cdb-bar').value = '';
-        document.getElementById('cdb-anio').value = '';
-        document.getElementById('cdb-posicion-id').value = '';
-        document.getElementById('cdb-bar-id').value = '';
-        document.getElementById('cdb-nombre').dataset.valid = '';
-        document.getElementById('cdb-posicion').dataset.valid = '';
-        document.getElementById('cdb-bar').dataset.valid = '';
-        document.getElementById('cdb-anio').dataset.valid = '';
-        cdbBuscarEmpleados();
-    });
+    var limpiarBtn = document.getElementById('cdb-limpiar');
+    if (limpiarBtn) {
+        limpiarBtn.addEventListener('click', function(){
+            nombreInput.value = '';
+            posInput.value = '';
+            barInput.value = '';
+            anioInput.value = '';
+            posIdInput.value = '';
+            barIdInput.value = '';
+            nombreInput.dataset.valid = '';
+            posInput.dataset.valid = '';
+            barInput.dataset.valid = '';
+            anioInput.dataset.valid = '';
+            cdbBuscarEmpleados();
+        });
+    }
 
     // ----- Awesomplete Autocompletado -----
     function obtenerSugerencias(tipo, termino, callback){
@@ -120,6 +125,10 @@ jQuery(document).ready(function($) {
     var barInput      = document.getElementById('cdb-bar');
     var barIdInput    = document.getElementById('cdb-bar-id');
     var anioInput     = document.getElementById('cdb-anio');
+
+    if (!nombreInput || !posInput || !barInput || !anioInput) {
+        return; // search form not present
+    }
 
     var posSugs = [], barSugs = [];
 
@@ -185,7 +194,7 @@ jQuery(document).ready(function($) {
         el.addEventListener('keydown', function(e){
             if(e.key === 'Enter'){
                 e.preventDefault();
-                document.getElementById('cdb-filtrar').click();
+                if (filtrarBtn) filtrarBtn.click();
             }
         });
     });
