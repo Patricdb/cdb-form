@@ -19,19 +19,6 @@ function cdb_form_add_capabilities() {
     }
 }
 
-/**
- * Registra la capacidad base del plugin al cargar el admin.
- *
- * Asigna 'manage_cdb_forms' al rol 'administrator'.
- */
-function cdb_register_manage_capability() {
-    $role = get_role( 'administrator' );
-    if ( $role && ! $role->has_cap( 'manage_cdb_forms' ) ) {
-        $role->add_cap( 'manage_cdb_forms' );
-    }
-}
-add_action( 'admin_init', 'cdb_register_manage_capability' );
-
 // Función para eliminar capacidades al desactivar el plugin
 function cdb_form_remove_capabilities() {
     $roles = array( 'administrator', 'editor', 'author' );
