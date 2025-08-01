@@ -30,6 +30,18 @@ if (!empty($existing_empleado)) {
     $empleado_disponible = '1';
     $button_text         = __( 'Crear Empleado', 'cdb-form' );
 }
+
+// Opciones de diseño
+$disenio = get_option('cdb_form_disenio_empleado');
+$cdb_background       = isset($disenio['background_color']) ? $disenio['background_color'] : '#fafafa';
+$cdb_border_color     = isset($disenio['border_color']) ? $disenio['border_color'] : '#ddd';
+$cdb_text_color       = isset($disenio['text_color']) ? $disenio['text_color'] : '#000';
+$cdb_button_bg        = isset($disenio['button_bg']) ? $disenio['button_bg'] : 'black';
+$cdb_button_text      = isset($disenio['button_text_color']) ? $disenio['button_text_color'] : 'white';
+$cdb_font_size        = isset($disenio['font_size']) ? intval($disenio['font_size']) : 14;
+$cdb_padding          = isset($disenio['padding']) ? intval($disenio['padding']) : 20;
+$cdb_field_spacing    = isset($disenio['field_spacing']) ? intval($disenio['field_spacing']) : 10;
+$cdb_message_color    = isset($disenio['message_color']) ? $disenio['message_color'] : '#008000';
 ?>
 
 <div class="cdb-empleado-container">
@@ -54,7 +66,7 @@ if (!empty($existing_empleado)) {
 
 <style>
     .cdb-empleado-container {
-        padding: 20px;
+        padding: <?php echo esc_attr($cdb_padding); ?>px;
         border: 1px solid #ddd;
         border-radius: 8px;
         background-color: #fff;
@@ -71,24 +83,28 @@ if (!empty($existing_empleado)) {
     #cdb-form-empleado {
         margin-top: 20px;
         padding: 15px;
-        background: #fafafa;
-        border: 1px solid #ddd;
+        background: <?php echo esc_attr($cdb_background); ?>;
+        border: 1px solid <?php echo esc_attr($cdb_border_color); ?>;
         border-radius: 8px;
     }
 
     #cdb-form-empleado label {
         font-weight: bold;
         display: block;
-        margin-top: 10px;
+        margin-top: <?php echo esc_attr($cdb_field_spacing); ?>px;
+        color: <?php echo esc_attr($cdb_text_color); ?>;
+        font-size: <?php echo esc_attr($cdb_font_size); ?>px;
     }
 
     #cdb-form-empleado input,
     #cdb-form-empleado select {
         width: 100%;
         padding: 8px;
-        margin-top: 5px;
+        margin-bottom: <?php echo esc_attr($cdb_field_spacing); ?>px;
         border: 1px solid #ccc;
         border-radius: 4px;
+        color: <?php echo esc_attr($cdb_text_color); ?>;
+        font-size: <?php echo esc_attr($cdb_font_size); ?>px;
     }
 
     #cdb-form-empleado button {
@@ -96,8 +112,8 @@ if (!empty($existing_empleado)) {
         width: 100%;
         padding: 10px;
         margin-top: 15px;
-        background: black;
-        color: white;
+        background: <?php echo esc_attr($cdb_button_bg); ?>;
+        color: <?php echo esc_attr($cdb_button_text); ?>;
         border: none;
         border-radius: 4px;
         cursor: pointer;
@@ -105,6 +121,11 @@ if (!empty($existing_empleado)) {
 
     #cdb-form-empleado button:hover {
         background: #333;
+    }
+
+    .cdb-form-message.success,
+    .cdb-form-message.error {
+        color: <?php echo esc_attr($cdb_message_color); ?>;
     }
 </style>
 
@@ -135,3 +156,4 @@ jQuery(document).ready(function($) {
     });
 });
 </script>
+
