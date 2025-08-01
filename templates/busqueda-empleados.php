@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 .cdb-busqueda-table{width:100%;border-collapse:collapse}
 .cdb-busqueda-table th,.cdb-busqueda-table td{padding:6px;border-bottom:1px solid #ccc;text-align:left}
 #cdb-busqueda-spinner{display:none;margin-top:10px}
+#cdb-busqueda-empleados .awesomplete > ul{background:#FAF8EE}
+#cdb-busqueda-empleados .awesomplete > ul > li[aria-selected="true"]{background:#E6E1D3}
 </style>
 <div id="cdb-busqueda-empleados">
     <div class="cdb-busqueda-filtros">
