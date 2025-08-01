@@ -33,19 +33,42 @@ if (!empty($existing_empleado)) {
 
 // Opciones de diseño
 $disenio = get_option('cdb_form_disenio_empleado');
-$cdb_background       = isset($disenio['background_color']) ? $disenio['background_color'] : '#fafafa';
-$cdb_border_color     = isset($disenio['border_color']) ? $disenio['border_color'] : '#ddd';
-$cdb_text_color       = isset($disenio['text_color']) ? $disenio['text_color'] : '#000';
-$cdb_button_bg        = isset($disenio['button_bg']) ? $disenio['button_bg'] : 'black';
-$cdb_button_text      = isset($disenio['button_text_color']) ? $disenio['button_text_color'] : 'white';
-$cdb_font_size        = isset($disenio['font_size']) ? intval($disenio['font_size']) : 14;
-$cdb_padding          = isset($disenio['padding']) ? intval($disenio['padding']) : 20;
-$cdb_field_spacing    = isset($disenio['field_spacing']) ? intval($disenio['field_spacing']) : 10;
-$cdb_message_color    = isset($disenio['message_color']) ? $disenio['message_color'] : '#008000';
-$cdb_container_background = isset($disenio['container_background_color']) ? $disenio['container_background_color'] : '#ffffff';
+$cdb_background            = isset($disenio['background_color']) ? $disenio['background_color'] : '#fafafa';
+$cdb_border_color          = isset($disenio['border_color']) ? $disenio['border_color'] : '#ddd';
+$cdb_text_color            = isset($disenio['text_color']) ? $disenio['text_color'] : '#000';
+$cdb_button_bg             = isset($disenio['button_bg']) ? $disenio['button_bg'] : 'black';
+$cdb_button_text           = isset($disenio['button_text_color']) ? $disenio['button_text_color'] : 'white';
+$cdb_font_size             = isset($disenio['font_size']) ? intval($disenio['font_size']) : 14;
+$cdb_padding               = isset($disenio['padding']) ? intval($disenio['padding']) : 20;
+$cdb_field_spacing         = isset($disenio['field_spacing']) ? intval($disenio['field_spacing']) : 10;
+$cdb_success_color         = isset($disenio['success_message_color']) ? $disenio['success_message_color'] : '#008000';
+$cdb_error_color           = isset($disenio['error_message_color']) ? $disenio['error_message_color'] : '#FF0000';
+$cdb_container_background  = isset($disenio['container_background_color']) ? $disenio['container_background_color'] : '#ffffff';
+$cdb_margin_top            = isset($disenio['margin_top']) ? intval($disenio['margin_top']) : 0;
+$cdb_margin_right          = isset($disenio['margin_right']) ? intval($disenio['margin_right']) : 0;
+$cdb_margin_bottom         = isset($disenio['margin_bottom']) ? intval($disenio['margin_bottom']) : 0;
+$cdb_margin_left           = isset($disenio['margin_left']) ? intval($disenio['margin_left']) : 0;
+$cdb_alignment             = isset($disenio['alignment']) ? $disenio['alignment'] : 'center';
 ?>
 
-<div class="cdb-empleado-container">
+<?php
+    $alignment_css = '';
+    if ( $cdb_alignment === 'center' ) {
+        $alignment_css = 'margin-left:auto;margin-right:auto;';
+    } elseif ( $cdb_alignment === 'right' ) {
+        $alignment_css = 'margin-left:auto;margin-right:0;';
+    } else {
+        $alignment_css = 'margin-right:auto;margin-left:0;';
+    }
+?>
+
+<div class="cdb-empleado-container" style="<?php
+        echo 'margin-top:' . esc_attr( $cdb_margin_top ) . 'px;';
+        echo 'margin-right:' . esc_attr( $cdb_margin_right ) . 'px;';
+        echo 'margin-bottom:' . esc_attr( $cdb_margin_bottom ) . 'px;';
+        echo 'margin-left:' . esc_attr( $cdb_margin_left ) . 'px;';
+        echo $alignment_css;
+    ?>">
     <!-- Formulario para crear/actualizar empleado -->
     <form id="cdb-form-empleado" method="post">
         <?php wp_nonce_field('cdb_form_nonce', 'security'); ?>
@@ -63,6 +86,7 @@ $cdb_container_background = isset($disenio['container_background_color']) ? $dis
 
         <button type="submit"><?php echo esc_html($button_text); ?></button>
     </form>
+    <p id="cdb-form-message" class="cdb-form-message" aria-live="polite"></p>
 </div>
 
 <style>
@@ -73,7 +97,6 @@ $cdb_container_background = isset($disenio['container_background_color']) ? $dis
         background-color: <?php echo esc_attr($cdb_container_background); ?>;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         max-width: 600px;
-        margin: 0 auto;
     }
     
     .cdb-empleado-container h2 {
@@ -124,9 +147,12 @@ $cdb_container_background = isset($disenio['container_background_color']) ? $dis
         background: #333;
     }
 
-    .cdb-form-message.success,
+    .cdb-form-message.success {
+        color: <?php echo esc_attr( $cdb_success_color ); ?>;
+    }
+
     .cdb-form-message.error {
-        color: <?php echo esc_attr($cdb_message_color); ?>;
+        color: <?php echo esc_attr( $cdb_error_color ); ?>;
     }
 </style>
 
@@ -144,15 +170,17 @@ jQuery(document).ready(function($) {
         };
 
         $.post('<?php echo admin_url('admin-ajax.php'); ?>', formData, function(response) {
+            var $msg = $('#cdb-form-message');
+            $msg.removeClass('success error');
             if (response.success) {
-                alert(response.message || 'Perfil de empleado actualizado con éxito.');
+                $msg.addClass('success').text(response.message || 'Perfil de empleado actualizado con éxito.');
                 location.reload();
             } else {
-                alert(response.message || 'Hubo un error inesperado.');
+                $msg.addClass('error').text(response.message || 'Hubo un error inesperado.');
             }
         }, 'json')
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            alert('Error en la solicitud: ' + textStatus);
+        .fail(function(jqXHR, textStatus) {
+            $('#cdb-form-message').addClass('error').text('Error en la solicitud: ' + textStatus);
         });
     });
 });
