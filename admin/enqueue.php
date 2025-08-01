@@ -11,10 +11,5 @@ function cdb_form_admin_enqueue( $hook ) {
         return;
     }
 
-    // Estilos
-    wp_enqueue_style( 'cdb-form-admin-style', CDB_FORM_URL . 'assets/css/admin-styles.css', array(), '1.0', 'all' );
-
-    // Scripts
-    wp_enqueue_script( 'cdb-form-admin-script', CDB_FORM_URL . 'assets/js/admin-scripts.js', array( 'jquery' ), '1.0', true );
 }
 add_action( 'admin_enqueue_scripts', 'cdb_form_admin_enqueue' );

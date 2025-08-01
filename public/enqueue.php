@@ -6,9 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Cargar estilos y scripts en el frontend
 function cdb_form_public_enqueue() {
-    // Estilos
-    wp_enqueue_style( 'cdb-form-frontend-style', CDB_FORM_URL . 'assets/css/frontend-styles.css', array(), '1.0', 'all' );
-
     // Scripts
     wp_enqueue_script( 'cdb-form-frontend-script', CDB_FORM_URL . 'assets/js/frontend-scripts.js', array( 'jquery' ), '1.0', true );
 
