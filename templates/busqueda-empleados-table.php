@@ -4,7 +4,7 @@
 <table class="cdb-busqueda-table">
     <thead>
         <tr>
-            <th><?php esc_html_e( 'Puntuaci\xC3\xB3n', 'cdb-form' ); ?></th>
+            <th><?php esc_html_e( 'Puntuación', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Nombre', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Posiciones', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Bares', 'cdb-form' ); ?></th>
