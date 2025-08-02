@@ -20,14 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Valores por defecto de mensajes y avisos.
 $cdb_form_defaults = array(
-    'cdb_aviso_sin_puntuacion'     => __( 'Puntuación gráfica no disponible.', 'cdb-form' ),
-    'cdb_empleado_no_encontrado'   => __( 'Empleado no encontrado.', 'cdb-form' ),
-    'cdb_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear antes tu perfil de empleado.', 'cdb-form' ),
-    'cdb_bares_sin_resultados'     => __( 'No hay bares que coincidan con tu búsqueda.', 'cdb-form' ),
-    'cdb_empleados_vacio'          => __( 'Aún no hay empleados registrados.', 'cdb-form' ),
-    'cdb_empleados_sin_resultados' => __( 'Sin coincidencias para tu búsqueda.', 'cdb-form' ),
-    'cdb_acceso_sin_login'         => __( 'Debes iniciar sesión para acceder a esta sección.', 'cdb-form' ),
-    'cdb_acceso_sin_permisos'      => __( 'No tienes permisos para ver este contenido.', 'cdb-form' ),
+    'cdb_aviso_sin_puntuacion'     => __( 'Puntuación gráfica no disponible.| Añade más valoraciones para generar tu gráfico.', 'cdb-form' ),
+    'cdb_empleado_no_encontrado'   => __( 'Empleado no encontrado.| Crea primero tu perfil de empleado para continuar.', 'cdb-form' ),
+    'cdb_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear tu perfil.| Completa tu información de empleado y vuelve aquí.', 'cdb-form' ),
+    'cdb_bares_sin_resultados'     => __( 'No hay bares que coincidan con tu búsqueda.| Ajusta filtros o prueba con otro término.', 'cdb-form' ),
+    'cdb_empleados_vacio'          => __( 'Aún no hay empleados registrados.| ¡Sé el primero en unirte al proyecto!', 'cdb-form' ),
+    'cdb_empleados_sin_resultados' => __( 'Sin coincidencias para tu búsqueda.| Modifica los criterios e inténtalo de nuevo.', 'cdb-form' ),
+    'cdb_acceso_sin_login'         => __( 'Debes iniciar sesión para acceder.| Inicia sesión o regístrate para continuar.', 'cdb-form' ),
+    'cdb_acceso_sin_permisos'      => __( 'No tienes permisos para ver este contenido.| Contacta con un admin si crees que es un error.', 'cdb-form' ),
     // …añade aquí cualquier clave nueva que surja
 );
 
