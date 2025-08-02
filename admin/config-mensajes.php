@@ -31,14 +31,8 @@ function cdb_form_config_mensajes_page() {
         return;
     }
 
-    // Definición de los mensajes configurables en el orden solicitado.
+    // Definición de los mensajes configurables.
     $mensajes = array(
-        'saludo_usuario' => array(
-            'text_option'  => 'cdb_mensaje_saludo_usuario',
-            'color_option' => 'cdb_color_saludo_usuario',
-            'label'        => __( 'Saludo al Usuario', 'cdb-form' ),
-            'description'  => __( 'Texto de saludo inicial. Usa %s para incluir el nombre del usuario.', 'cdb-form' ),
-        ),
         'bienvenida_general' => array(
             'text_option'  => 'cdb_mensaje_bienvenida',
             'color_option' => 'cdb_color_bienvenida',
