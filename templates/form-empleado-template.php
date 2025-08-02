@@ -80,7 +80,7 @@ $cdb_alignment             = isset($disenio['alignment']) ? $disenio['alignment'
     <form id="cdb-form-empleado" method="post">
         <?php wp_nonce_field('cdb_form_nonce', 'security'); ?>
 
-        <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>">
+        <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>" aria-hidden="true">
 
         <label for="nombre"><?php esc_html_e( 'Nombre:', 'cdb-form' ); ?></label>
         <input type="text" id="nombre" name="nombre" value="<?php echo esc_attr($empleado_nombre); ?>" required>

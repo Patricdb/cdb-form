@@ -11,7 +11,6 @@ jQuery(document).ready(function($) {
         var form = $(this);
         var formData = form.serialize();
 
-        console.log("Datos enviados (Empleado):", formData); // Depuración en consola
 
         $.ajax({
             type: 'POST',
@@ -19,7 +18,6 @@ jQuery(document).ready(function($) {
             data: formData + '&action=cdb_actualizar_disponibilidad',
             dataType: 'json',
             success: function(response) {
-                console.log("Respuesta AJAX (Empleado):", response); // Depuración en consola
 
                 if (response.success) {
                     window.alert(cdbGetMsg('cdb_ajax_disponibilidad_actualizada'));
@@ -29,7 +27,6 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Error AJAX (Empleado):", textStatus, errorThrown);
                 window.alert(cdbGetMsg('cdb_ajax_error_disponibilidad'));
             }
         });
@@ -42,7 +39,6 @@ jQuery(document).ready(function($) {
         var form = $(this);
         var formData = form.serialize();
 
-        console.log("Datos enviados (Bar):", formData); // Depuración en consola
 
         $.ajax({
             type: 'POST',
@@ -50,7 +46,6 @@ jQuery(document).ready(function($) {
             data: formData + '&action=cdb_actualizar_estado_bar',
             dataType: 'json',
             success: function(response) {
-                console.log("Respuesta AJAX (Bar):", response); // Depuración en consola
 
                 if (response.success) {
                     window.alert(cdbGetMsg('cdb_ajax_estado_bar_actualizado'));
@@ -60,7 +55,6 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Error AJAX (Bar):", textStatus, errorThrown);
                 window.alert(cdbGetMsg('cdb_ajax_error_estado_bar'));
             }
         });
@@ -89,7 +83,6 @@ jQuery(document).ready(function($) {
         }).fail(function(jqXHR){
             if (spinner) spinner.style.display = 'none';
             window.alert(cdbGetMsg('cdb_ajax_error_comunicacion'));
-            console.error('cdb_buscar_empleados AJAX fail', jqXHR);
         });
     }
 
@@ -145,9 +138,7 @@ jQuery(document).ready(function($) {
                 nonce: cdb_form_ajax.nonce,
                 tipo: tipo,
                 term: termino
-            }, callback).fail(function(jqXHR){
-                console.error('cdb_sugerencias AJAX fail', jqXHR);
-            });
+            }, callback);
         }
 
         var posSugs = [], barSugs = [];
@@ -253,7 +244,6 @@ jQuery(document).ready(function($) {
     if (initResult === false) {
         document.addEventListener('awesomplete-loaded', initBusqueda, { once: true });
         setTimeout(initBusqueda, 50);
-        setTimeout(function(){ if(!window.Awesomplete){ console.error('Awesomplete failed to load'); } }, 5000);
     }
 
     // ---- Buscador de bares ----
@@ -282,7 +272,6 @@ jQuery(document).ready(function($) {
         }).fail(function(jqXHR){
             if (spinner) spinner.style.display = 'none';
             window.alert(cdbGetMsg('cdb_ajax_error_comunicacion'));
-            console.error('cdb_buscar_bares AJAX fail', jqXHR);
         });
     }
 
@@ -328,9 +317,7 @@ jQuery(document).ready(function($) {
                 nonce: cdb_form_ajax.nonce,
                 tipo: t,
                 term: term
-            }, cb).fail(function(jqXHR){
-                console.error('cdb_sugerencias AJAX fail', jqXHR);
-            });
+            }, cb);
         }
 
         var zonaS = [], barS = [];
@@ -387,7 +374,6 @@ jQuery(document).ready(function($) {
     if (initBars === false) {
         document.addEventListener('awesomplete-loaded', initBusquedaBares, { once: true });
         setTimeout(initBusquedaBares, 50);
-        setTimeout(function(){ if(!window.Awesomplete){ console.error('Awesomplete failed to load for buscador de bares'); } }, 5000);
     }
 });
 

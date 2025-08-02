@@ -224,7 +224,7 @@ function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
     $tipo_guardado = get_option( $color_option, $tipo );
     $clase         = cdb_form_get_tipo_color_class( $tipo_guardado );
 
-    $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '">';
+    $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '" role="alert">';
     $html .= '<strong class="cdb-mensaje-destacado">' . wp_kses_post( $texto ) . '</strong>';
     $html .= '</div>';
 
@@ -357,7 +357,7 @@ function cdb_form_render_mensaje( $text_option, $color_option, $default_text, $d
         }
     }
 
-    $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '">';
+    $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '" role="alert">';
     $html .= '<strong class="cdb-mensaje-destacado">' . wp_kses_post( $texto ) . '</strong>';
 
     if ( '' !== $secundario ) {
