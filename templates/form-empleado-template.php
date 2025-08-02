@@ -29,6 +29,10 @@ if (!empty($existing_empleado)) {
     $empleado_disponible = get_post_meta($empleado_id, 'disponible', true) ?: '1';
     $button_text         = __( 'Actualizar Empleado', 'cdb-form' );
 } else {
+    echo cdb_form_get_mensaje(
+        'cdb_empleado_no_encontrado',
+        __( 'Empleado no encontrado.', 'cdb-form' )
+    );
     $empleado_id         = 0;
     $empleado_nombre     = '';
     $empleado_disponible = '1';

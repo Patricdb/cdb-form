@@ -215,7 +215,10 @@ function cdb_bienvenida_empleado_shortcode() {
             $puntuacion_total_final = round($puntuacion_total_final, 1); // Redondeamos a 1 decimal (opcional)
             $output .= cdb_generar_barra_progreso_simple($puntuacion_total_final);
         } else {
-            $output .= '<p>' . esc_html__( 'Puntuación Gráfica no disponible.', 'cdb-form' ) . '</p>';
+            $output .= cdb_form_get_mensaje(
+                'cdb_aviso_sin_puntuacion',
+                __( 'Puntuación Gráfica no disponible.', 'cdb-form' )
+            );
         }
 
         // Mostrar la Puntuación de Experiencia.
@@ -433,9 +436,8 @@ function cdb_mostrar_puntuacion_total() {
     }
     $puntuacion_total = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
     if (!$puntuacion_total) {
-        return cdb_form_render_mensaje(
-            'cdb_mensaje_puntuacion_no_disponible',
-            'cdb_color_puntuacion_no_disponible',
+        return cdb_form_get_mensaje(
+            'cdb_aviso_sin_puntuacion',
             __( 'Puntuación Gráfica no disponible.', 'cdb-form' ),
             'info'
         );
@@ -487,9 +489,8 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
 
     // 5) Si no hay empleados, avisar
     if (!$query->have_posts()) {
-        return cdb_form_render_mensaje(
-            'cdb_mensaje_sin_empleados',
-            'cdb_color_sin_empleados',
+        return cdb_form_get_mensaje(
+            'cdb_empleados_vacio',
             __( 'No se encontraron empleados.', 'cdb-form' )
         );
     }
@@ -591,9 +592,8 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
 
     // 5) Si no hay empleados, salimos.
     if (!$query->have_posts()) {
-        return cdb_form_render_mensaje(
-            'cdb_mensaje_sin_empleados',
-            'cdb_color_sin_empleados',
+        return cdb_form_get_mensaje(
+            'cdb_empleados_vacio',
             __( 'No se encontraron empleados con puntuación total.', 'cdb-form' )
         );
     }

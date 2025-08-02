@@ -152,6 +152,44 @@ function cdb_form_get_option_compat( $keys, $default = '' ) {
 }
 
 /**
+ * Obtiene y renderiza un mensaje configurable usando una clave canónica.
+ *
+ * Permite mantener compatibilidad con nombres de opciones antiguos
+ * migrándolos automáticamente a la nueva nomenclatura.
+ *
+ * @param string $slug         Clave del mensaje.
+ * @param string $default_text Texto por defecto si no hay opción guardada.
+ * @param string $default_tipo Tipo/color por defecto.
+ * @return string HTML del mensaje listo para mostrarse.
+ */
+function cdb_form_get_mensaje( $slug, $default_text = '', $default_tipo = 'aviso' ) {
+    $map = array(
+        'cdb_aviso_sin_puntuacion'     => 'cdb_mensaje_puntuacion_no_disponible',
+        'cdb_empleado_no_encontrado'   => 'cdb_mensaje_empleado_no_encontrado',
+        'cdb_experiencia_sin_perfil'   => 'cdb_mensaje_experiencia_sin_perfil',
+        'cdb_bares_sin_resultados'     => 'cdb_mensaje_busqueda_sin_bares',
+        'cdb_empleados_vacio'          => 'cdb_mensaje_sin_empleados',
+        'cdb_empleados_sin_resultados' => 'cdb_mensaje_busqueda_sin_empleados',
+        'cdb_acceso_sin_login'         => 'cdb_mensaje_login_requerido',
+        'cdb_acceso_sin_permisos'      => 'cdb_mensaje_sin_permiso',
+    );
+
+    $text_option  = $slug;
+    $color_option = 'cdb_color_' . $slug;
+
+    if ( isset( $map[ $slug ] ) ) {
+        $old_text_option  = $map[ $slug ];
+        $old_color_option = str_replace( 'cdb_mensaje_', 'cdb_color_', $old_text_option );
+
+        // Migrar valores antiguos a las nuevas claves canónicas.
+        cdb_form_get_option_compat( array( $text_option, $old_text_option ), $default_text );
+        cdb_form_get_option_compat( array( $color_option, $old_color_option ), $default_tipo );
+    }
+
+    return cdb_form_render_mensaje( $text_option, $color_option, $default_text, $default_tipo );
+}
+
+/**
  * Renderiza un mensaje configurado desde las opciones del plugin.
  *
  * @param string $text_option  Nombre de la opción que almacena el texto.
