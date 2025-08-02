@@ -59,6 +59,22 @@ También puedes registrar variantes desde código utilizando `cdb_form_register_
 | cdb_empleados_sin_resultados | **Sin coincidencias para tu búsqueda.** \| Modifica los criterios e inténtalo de nuevo. | Búsqueda de empleados sin resultados |
 | cdb_empleados_vacio | **Aún no hay empleados registrados.** \| ¡Sé el primero en unirte al proyecto! | Rankings de empleados cuando no existen registros |
 | cdb_experiencia_sin_perfil | **Para registrar experiencia debes crear tu perfil.** \| Completa tu información de empleado y vuelve aquí. | Formulario de experiencia sin perfil de empleado |
+| cdb_ajax_exito_empleado | **Empleado creado correctamente.** \| El perfil se ha guardado sin problemas. | Respuesta exitosa al crear empleado por AJAX |
+| cdb_ajax_error_empleado | **Error al crear empleado.** \| Inténtalo de nuevo más tarde. | Fallo al crear empleado por AJAX |
+| cdb_ajax_exito_experiencia | **Experiencia registrada.** \| Se ha guardado la experiencia. | Registro de experiencia por AJAX |
+| cdb_ajax_empleados_sin_resultados | **Sin resultados.** \| No hay empleados que coincidan con tu búsqueda. | Búsqueda de empleados sin coincidencias (AJAX) |
+| cdb_ajax_bares_sin_resultados | **Sin resultados.** \| No hay bares que coincidan con tu búsqueda. | Búsqueda de bares sin coincidencias (AJAX) |
+| cdb_ajax_disponibilidad_actualizada | **Disponibilidad actualizada correctamente.** \| Los datos se han guardado. | Actualización de disponibilidad del empleado |
+| cdb_ajax_error_disponibilidad | **Hubo un problema al actualizar la disponibilidad.** \| Inténtalo de nuevo más tarde. | Error al actualizar disponibilidad del empleado |
+| cdb_ajax_estado_bar_actualizado | **Estado del bar actualizado correctamente.** \| Los datos se han guardado. | Actualización del estado del bar |
+| cdb_ajax_error_estado_bar | **Hubo un problema al actualizar el estado del bar.** \| Inténtalo de nuevo más tarde. | Error al actualizar estado del bar |
+| cdb_ajax_error_comunicacion | **Error de comunicación.** \| No se pudo contactar con el servidor. | Fallo de conexión AJAX |
+| cdb_ajax_error_anio_cifras | **El año debe tener 4 cifras.** \| Introduce un año válido. | Validación de filtros de búsqueda (año con 4 cifras) |
+| cdb_ajax_error_nombre_invalido | **Selecciona un nombre válido.** \| Elige una opción de la lista. | Validación de filtro de nombre en búsqueda de empleados |
+| cdb_ajax_error_posicion_invalida | **Selecciona una posición válida.** \| Usa la ayuda de autocompletado. | Validación de filtro de posición en búsqueda de empleados |
+| cdb_ajax_error_bar_invalido | **Selecciona un bar válido.** \| Usa la ayuda de autocompletado. | Validación de filtro de bar en búsquedas |
+| cdb_ajax_error_anio_invalido | **Selecciona un año válido.** \| Usa un formato de cuatro cifras. | Validación de filtro de año en búsqueda de empleados |
+| cdb_ajax_error_zona_invalida | **Selecciona una zona válida.** \| Elige una opción de la lista. | Validación de filtro de zona en búsqueda de bares |
 
 Para personalizar estos textos ve al submenú **Cdb Form → Configuración de Mensajes y Avisos**.
 
