@@ -1,0 +1,49 @@
+/*!
+ * Estilos base para los avisos y su configuración.
+ *
+ * Esta hoja se carga tanto en el administrador como en el frontend. Proporciona
+ * la estructura principal de los mensajes (<div class="cdb-aviso">) mientras que
+ * los colores específicos de cada tipo (fondo y texto) se añaden dinámicamente
+ * desde public/enqueue.php mediante <code>wp_add_inline_style</code>.
+ */
+.cdb-aviso {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-left: 4px solid transparent;
+}
+
+.cdb-mensaje-destacado,
+.cdb-mensaje-secundario {
+    display: block;
+}
+
+.cdb-mensaje-destacado {
+    font-weight: 700;
+}
+
+.cdb-mensaje-secundario {
+    margin-top: 4px;
+}
+
+/* Estilos utilizados únicamente en la pantalla de Configuración de Mensajes */
+.cdb-config-mensaje { margin-bottom: 20px; }
+.cdb-config-mensaje.editing { border: 1px solid #2271b1; padding: 10px; }
+.cdb-mensaje-preview { padding: 8px 12px; margin-bottom: 8px; border-left: 4px solid transparent; }
+.cdb-color-swatch { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+.cdb-tipo-color-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.cdb-tipo-color-row input[type="text"] { width:120px; }
+.cdb-tipo-color-row .cdb-color-swatch { width:20px; height:20px; }
+.cdb-tipo-color-row.deleting { opacity:0.5; }
+
+/* Utilidad de acceso solo para lectores de pantalla */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

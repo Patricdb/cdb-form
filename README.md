@@ -2,6 +2,8 @@
 
 Plugin de formularios personalizados para [proyectocdb.es](https://proyectocdb.es). Proporciona herramientas para que empleados y bares puedan registrar su información y experiencia.
 
+> Nota: el workflow CI ejecuta `npm ci` + `npm run build` para validar el bundle.
+
 ## Instalación
 
 1. Copia la carpeta `cdb-form` en el directorio `wp-content/plugins` de tu instalación de WordPress.
