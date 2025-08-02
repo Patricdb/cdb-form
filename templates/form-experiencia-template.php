@@ -18,9 +18,8 @@ if (!$current_user->exists()) {
 // Obtener la ID del empleado asociado al usuario actual mediante la función específica.
 $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
 if (!$empleado_id) {
-    echo cdb_form_render_mensaje(
-        'cdb_mensaje_experiencia_sin_perfil',
-        'cdb_color_experiencia_sin_perfil',
+    echo cdb_form_get_mensaje(
+        'cdb_experiencia_sin_perfil',
         __( 'No tienes un perfil de empleado registrado. Para registrar experiencia, primero debes crear tu perfil de empleado.', 'cdb-form' )
     );
     echo do_shortcode('[cdb_form_empleado]');

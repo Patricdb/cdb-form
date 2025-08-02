@@ -1,7 +1,6 @@
 <?php if ( empty( $empleados ) ) : ?>
-    <?php echo cdb_form_render_mensaje(
-        'cdb_mensaje_busqueda_sin_empleados',
-        'cdb_color_busqueda_sin_empleados',
+    <?php echo cdb_form_get_mensaje(
+        'cdb_empleados_sin_resultados',
         __( 'No se encontraron empleados con esos filtros.', 'cdb-form' )
     ); ?>
 <?php else : ?>

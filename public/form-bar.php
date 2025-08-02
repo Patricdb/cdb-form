@@ -12,9 +12,8 @@ add_shortcode( 'form-bar', 'cdb_form_bar' );
 function cdb_form_bar() {
     // Comprobar si el usuario está conectado.
     if ( ! is_user_logged_in() ) {
-        return cdb_form_render_mensaje(
-            'cdb_mensaje_login_requerido',
-            'cdb_color_login_requerido',
+        return cdb_form_get_mensaje(
+            'cdb_acceso_sin_login',
             __( 'Debes iniciar sesión para actualizar el estado de tu bar.', 'cdb-form' )
         );
     }
