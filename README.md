@@ -116,3 +116,11 @@ Para crear archivos de traducción personalizados sigue estos pasos:
    ```
 
 Coloca los archivos generados en la carpeta `languages` para que WordPress los cargue automáticamente.
+
+## Actualización del POT
+
+Para regenerar el archivo `cdb-form.pot` ejecuta:
+
+```bash
+npm install && npm run pot
+```

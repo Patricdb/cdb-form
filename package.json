@@ -1,0 +1,7 @@
+{
+  "name": "cdb-form",
+  "private": true,
+  "scripts": {
+    "pot": "wp i18n make-pot . languages/cdb-form.pot --exclude=node_modules,tests || vendor/bin/wp i18n make-pot . languages/cdb-form.pot --exclude=node_modules,tests"
+  }
+}
