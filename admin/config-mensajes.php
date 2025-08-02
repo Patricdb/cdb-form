@@ -143,10 +143,15 @@ function cdb_form_config_mensajes_page() {
         isset( $_POST['cdb_form_config_mensajes_nonce'] ) &&
         check_admin_referer( 'cdb_form_config_mensajes_save', 'cdb_form_config_mensajes_nonce' )
     ) {
-        // Guardar textos y tipo/color de cada mensaje
+        // Guardar textos (principal y secundario) y tipo/color de cada mensaje
         foreach ( $mensajes as $datos ) {
+            $sec_opt = $datos['text_option'] . '_secundaria';
+
             if ( isset( $_POST[ $datos['text_option'] ] ) ) {
                 update_option( $datos['text_option'], wp_kses_post( $_POST[ $datos['text_option'] ] ) );
+            }
+            if ( isset( $_POST[ $sec_opt ] ) ) {
+                update_option( $sec_opt, wp_kses_post( $_POST[ $sec_opt ] ) );
             }
             if ( isset( $_POST[ $datos['color_option'] ] ) ) {
                 update_option( $datos['color_option'], sanitize_key( $_POST[ $datos['color_option'] ] ) );
@@ -206,21 +211,27 @@ function cdb_form_config_mensajes_page() {
             <?php wp_nonce_field( 'cdb_form_config_mensajes_save', 'cdb_form_config_mensajes_nonce' ); ?>
 
             <?php foreach ( $mensajes as $id => $datos ) :
-                $texto      = get_option( $datos['text_option'], '' );
-                $tipo       = get_option( $datos['color_option'], 'aviso' );
-                $datos_tipo = $tipos_color[ $tipo ] ?? array();
-                $clase      = $datos_tipo['class'] ?? '';
-                $color_hex  = $datos_tipo['color'] ?? '#000';
-                $text_hex   = $datos_tipo['text'] ?? cdb_form_get_contrasting_text_color( $color_hex );
+                $texto       = get_option( $datos['text_option'], '' );
+                $sec_opt     = $datos['text_option'] . '_secundaria';
+                $secundario  = get_option( $sec_opt, '' );
+                $tipo        = get_option( $datos['color_option'], 'aviso' );
+                $datos_tipo  = $tipos_color[ $tipo ] ?? array();
+                $clase       = $datos_tipo['class'] ?? '';
+                $color_hex   = $datos_tipo['color'] ?? '#000';
+                $text_hex    = $datos_tipo['text'] ?? cdb_form_get_contrasting_text_color( $color_hex );
                 ?>
                 <div class="cdb-config-mensaje" id="mensaje-<?php echo esc_attr( $id ); ?>">
                     <strong><?php echo esc_html( $datos['label'] ); ?></strong>
                     <div class="cdb-mensaje-preview <?php echo esc_attr( $clase ); ?>" style="border-left-color: <?php echo esc_attr( $color_hex ); ?>; background-color: <?php echo esc_attr( $color_hex ); ?>; color: <?php echo esc_attr( $text_hex ); ?>;">
-                        <?php echo esc_html( $texto ); ?>
+                        <strong class="cdb-mensaje-destacado"><?php echo wp_kses_post( $texto ); ?></strong>
+                        <span class="cdb-mensaje-secundario" <?php if ( empty( $secundario ) ) echo 'style="display:none;"'; ?>><?php echo wp_kses_post( $secundario ); ?></span>
                     </div>
                     <button type="button" class="button cdb-edit-mensaje"><?php esc_html_e( 'Editar', 'cdb-form' ); ?></button>
                     <div class="cdb-mensaje-edicion" style="display:none;">
-                        <textarea class="large-text" rows="3" name="<?php echo esc_attr( $datos['text_option'] ); ?>"><?php echo esc_textarea( $texto ); ?></textarea>
+                        <label><?php esc_html_e( 'Frase destacada', 'cdb-form' ); ?></label>
+                        <textarea class="large-text" rows="2" name="<?php echo esc_attr( $datos['text_option'] ); ?>" data-role="destacado"><?php echo esc_textarea( $texto ); ?></textarea>
+                        <label><?php esc_html_e( 'Frase secundaria', 'cdb-form' ); ?></label>
+                        <textarea class="large-text" rows="2" name="<?php echo esc_attr( $sec_opt ); ?>" data-role="secundario"><?php echo esc_textarea( $secundario ); ?></textarea>
                         <p class="description"><?php echo esc_html( $datos['description'] ); ?></p>
                         <label><?php esc_html_e( 'Tipo/Color', 'cdb-form' ); ?></label>
                         <select name="<?php echo esc_attr( $datos['color_option'] ); ?>">
