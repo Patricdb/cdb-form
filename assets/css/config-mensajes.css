@@ -12,6 +12,9 @@
     border-left: 4px solid transparent;
 }
 
+.cdb-mensaje-destacado { font-weight: 700; display: block; }
+.cdb-mensaje-secundario { display: block; margin-top: 4px; }
+
 /* Estilos utilizados únicamente en la pantalla de Configuración de Mensajes */
 .cdb-config-mensaje { margin-bottom: 20px; }
 .cdb-config-mensaje.editing { border: 1px solid #2271b1; padding: 10px; }

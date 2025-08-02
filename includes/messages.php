@@ -126,9 +126,19 @@ function cdb_form_register_tipo_color( $slug, $args ) {
  * @return string HTML del mensaje listo para mostrarse.
  */
 function cdb_form_render_mensaje( $text_option, $color_option, $default_text, $default_tipo = 'aviso' ) {
-    $texto = get_option( $text_option, $default_text );
-    $tipo  = get_option( $color_option, $default_tipo );
-    $clase = cdb_form_get_tipo_color_class( $tipo );
+    $texto      = get_option( $text_option, $default_text );
+    $secundario = get_option( $text_option . '_secundaria', '' );
+    $tipo       = get_option( $color_option, $default_tipo );
+    $clase      = cdb_form_get_tipo_color_class( $tipo );
 
-    return '<div class="cdb-aviso ' . esc_attr( $clase ) . '">' . esc_html( $texto ) . '</div>';
+    $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '">';
+    $html .= '<strong class="cdb-mensaje-destacado">' . wp_kses_post( $texto ) . '</strong>';
+
+    if ( ! empty( $secundario ) ) {
+        $html .= '<span class="cdb-mensaje-secundario">' . wp_kses_post( $secundario ) . '</span>';
+    }
+
+    $html .= '</div>';
+
+    return $html;
 }

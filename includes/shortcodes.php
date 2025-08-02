@@ -114,10 +114,12 @@ function cdb_bienvenida_usuario_shortcode() {
     $output .= '<h1>' . sprintf( esc_html__( '¡Hola, %s!', 'cdb-form' ), esc_html( $current_user->display_name ) ) . '</h1>';
 
     // Mensaje de bienvenida configurable.
-    $mensaje_bienvenida = get_option( 'cdb_mensaje_bienvenida', __( 'Gracias por colaborar con el Proyecto CdB.', 'cdb-form' ) );
-    $tipo_bienvenida    = get_option( 'cdb_color_bienvenida', 'info' );
-    $clase_bienvenida   = cdb_form_get_tipo_color_class( $tipo_bienvenida );
-    $output            .= '<div class="cdb-aviso ' . esc_attr( $clase_bienvenida ) . '">' . esc_html( $mensaje_bienvenida ) . '</div>';
+    $output .= cdb_form_render_mensaje(
+        'cdb_mensaje_bienvenida',
+        'cdb_color_bienvenida',
+        __( 'Gracias por colaborar con el Proyecto CdB.', 'cdb-form' ),
+        'info'
+    );
 
     // 4) Lógica específica para empleados.
     if (in_array('empleado', $roles)) {
@@ -128,11 +130,12 @@ function cdb_bienvenida_usuario_shortcode() {
             $output .= do_shortcode('[cdb_bienvenida_empleado]');
         } else {
             // Sin perfil: mensaje configurable e invitación a crear uno.
-            $mensaje       = get_option( 'cdb_mensaje_bienvenida_usuario', 'No tienes un perfil de empleado registrado.' );
-            $tipo_usuario  = get_option( 'cdb_color_bienvenida_usuario', 'aviso' );
-            $clase_usuario = cdb_form_get_tipo_color_class( $tipo_usuario );
-            $output       .= '<div class="cdb-aviso ' . esc_attr( $clase_usuario ) . '">' . esc_html( $mensaje ) . '</div>';
-            $output       .= do_shortcode('[cdb_form_empleado]');
+            $output .= cdb_form_render_mensaje(
+                'cdb_mensaje_bienvenida_usuario',
+                'cdb_color_bienvenida_usuario',
+                'No tienes un perfil de empleado registrado.'
+            );
+            $output .= do_shortcode('[cdb_form_empleado]');
         }
     }
 
@@ -175,10 +178,12 @@ function cdb_bienvenida_empleado_shortcode() {
         $exp_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$tabla_exp} WHERE empleado_id = %d", $empleado_id ) );
         if (0 === $exp_count) {
             // Mensaje configurable para empleados sin experiencia registrada.
-            $mensaje_exp = get_option( 'cdb_mensaje_empleado_sin_experiencia', __( 'Aún no has registrado ninguna experiencia laboral.', 'cdb-form' ) );
-            $tipo_exp    = get_option( 'cdb_color_empleado_sin_experiencia', 'info' );
-            $clase_exp   = cdb_form_get_tipo_color_class( $tipo_exp );
-            $output     .= '<div class="cdb-aviso ' . esc_attr( $clase_exp ) . '">' . esc_html( $mensaje_exp ) . '</div>';
+            $output .= cdb_form_render_mensaje(
+                'cdb_mensaje_empleado_sin_experiencia',
+                'cdb_color_empleado_sin_experiencia',
+                __( 'Aún no has registrado ninguna experiencia laboral.', 'cdb-form' ),
+                'info'
+            );
         }
 
         $empleado_nombre  = get_the_title($empleado_id);
@@ -218,11 +223,12 @@ function cdb_bienvenida_empleado_shortcode() {
     } else {
         // Mensaje para empleados que aún no han creado su perfil.
         // Configurable desde 'cdb_mensaje_bienvenida_usuario' y 'cdb_color_bienvenida_usuario'.
-        $mensaje    = get_option( 'cdb_mensaje_bienvenida_usuario', 'No tienes ningún perfil de empleado asignado.' );
-        $tipo_color = get_option( 'cdb_color_bienvenida_usuario', 'aviso' );
-        $clase      = cdb_form_get_tipo_color_class( $tipo_color );
-        $output    .= '<div class="cdb-aviso ' . esc_attr( $clase ) . '">' . esc_html( $mensaje ) . '</div>';
-        $output    .= do_shortcode('[cdb_form_empleado]');
+        $output .= cdb_form_render_mensaje(
+            'cdb_mensaje_bienvenida_usuario',
+            'cdb_color_bienvenida_usuario',
+            'No tienes ningún perfil de empleado asignado.'
+        );
+        $output .= do_shortcode('[cdb_form_empleado]');
     }
     return $output;
 }

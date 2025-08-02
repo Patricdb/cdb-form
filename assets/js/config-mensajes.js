@@ -8,7 +8,12 @@ jQuery(document).ready(function($){
 
     // Actualizar preview de texto
     $('.cdb-mensaje-edicion textarea').on('input', function(){
-        $(this).closest('.cdb-config-mensaje').find('.cdb-mensaje-preview').text($(this).val());
+        var cont   = $(this).closest('.cdb-config-mensaje');
+        var prev   = cont.find('.cdb-mensaje-preview');
+        var dest   = cont.find('textarea[data-role="destacado"]').val();
+        var sec    = cont.find('textarea[data-role="secundario"]').val();
+        prev.find('.cdb-mensaje-destacado').text(dest);
+        prev.find('.cdb-mensaje-secundario').text(sec).toggle(sec.trim().length > 0);
     });
 
     // Actualizar preview de colores y clase
