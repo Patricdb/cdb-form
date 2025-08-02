@@ -211,14 +211,39 @@ function cdb_form_config_mensajes_page() {
             <?php wp_nonce_field( 'cdb_form_config_mensajes_save', 'cdb_form_config_mensajes_nonce' ); ?>
 
             <?php foreach ( $mensajes as $id => $datos ) :
-                $texto       = get_option( $datos['text_option'], '' );
-                $sec_opt     = $datos['text_option'] . '_secundaria';
-                $secundario  = get_option( $sec_opt, '' );
-                $tipo        = get_option( $datos['color_option'], 'aviso' );
-                $datos_tipo  = $tipos_color[ $tipo ] ?? array();
-                $clase       = $datos_tipo['class'] ?? '';
-                $color_hex   = $datos_tipo['color'] ?? '#000';
-                $text_hex    = $datos_tipo['text'] ?? cdb_form_get_contrasting_text_color( $color_hex );
+                $texto = cdb_form_get_option_compat(
+                    array(
+                        $datos['text_option'],
+                        $datos['text_option'] . '_destacado',
+                        $datos['text_option'] . '_principal',
+                        $datos['text_option'] . '_mensaje_destacado',
+                        $datos['text_option'] . '_mensaje_principal',
+                        $datos['text_option'] . '_frase_destacada',
+                        $datos['text_option'] . '_frase_principal',
+                        $datos['text_option'] . '_featured',
+                        $datos['text_option'] . '_primary',
+                        $datos['text_option'] . '_highlight',
+                    ),
+                    ''
+                );
+                $sec_opt    = $datos['text_option'] . '_secundaria';
+                $secundario = cdb_form_get_option_compat(
+                    array(
+                        $sec_opt,
+                        $datos['text_option'] . '_secundario',
+                        $datos['text_option'] . '_mensaje_secundario',
+                        $datos['text_option'] . '_mensaje_secundaria',
+                        $datos['text_option'] . '_frase_secundaria',
+                        $datos['text_option'] . '_frase_secundario',
+                        $datos['text_option'] . '_secondary',
+                    ),
+                    ''
+                );
+                $tipo       = get_option( $datos['color_option'], 'aviso' );
+                $datos_tipo = $tipos_color[ $tipo ] ?? array();
+                $clase      = $datos_tipo['class'] ?? '';
+                $color_hex  = $datos_tipo['color'] ?? '#000';
+                $text_hex   = $datos_tipo['text'] ?? cdb_form_get_contrasting_text_color( $color_hex );
                 ?>
                 <div class="cdb-config-mensaje" id="mensaje-<?php echo esc_attr( $id ); ?>">
                     <strong><?php echo esc_html( $datos['label'] ); ?></strong>

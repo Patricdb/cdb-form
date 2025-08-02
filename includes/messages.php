@@ -117,6 +117,41 @@ function cdb_form_register_tipo_color( $slug, $args ) {
 }
 
 /**
+ * Obtiene el valor de la primera opción existente entre varias claves.
+ *
+ * El primer elemento del array se considera el nombre canónico de la opción.
+ * Si se encuentra un valor en alguna de las claves alternativas, se migrará a
+ * la clave canónica para mantener la coherencia de nomenclatura.
+ *
+ * @param array  $keys    Lista de posibles nombres de opción.
+ * @param string $default Valor por defecto si ninguna opción existe.
+ * @return string
+ */
+function cdb_form_get_option_compat( $keys, $default = '' ) {
+    if ( empty( $keys ) || ! is_array( $keys ) ) {
+        return $default;
+    }
+
+    $canonical = array_shift( $keys );
+    $value     = get_option( $canonical, null );
+
+    if ( null !== $value && '' !== $value ) {
+        return $value;
+    }
+
+    foreach ( $keys as $alt_key ) {
+        $value = get_option( $alt_key, null );
+        if ( null !== $value && '' !== $value ) {
+            // Migrar el valor a la clave canónica para futuras llamadas.
+            update_option( $canonical, $value );
+            return $value;
+        }
+    }
+
+    return $default;
+}
+
+/**
  * Renderiza un mensaje configurado desde las opciones del plugin.
  *
  * @param string $text_option  Nombre de la opción que almacena el texto.
@@ -126,8 +161,33 @@ function cdb_form_register_tipo_color( $slug, $args ) {
  * @return string HTML del mensaje listo para mostrarse.
  */
 function cdb_form_render_mensaje( $text_option, $color_option, $default_text, $default_tipo = 'aviso' ) {
-    $texto      = get_option( $text_option, $default_text );
-    $secundario = get_option( $text_option . '_secundaria', '' );
+    $texto      = cdb_form_get_option_compat(
+        array(
+            $text_option,
+            $text_option . '_destacado',
+            $text_option . '_principal',
+            $text_option . '_mensaje_destacado',
+            $text_option . '_mensaje_principal',
+            $text_option . '_frase_destacada',
+            $text_option . '_frase_principal',
+            $text_option . '_featured',
+            $text_option . '_primary',
+            $text_option . '_highlight',
+        ),
+        $default_text
+    );
+    $secundario = cdb_form_get_option_compat(
+        array(
+            $text_option . '_secundaria',
+            $text_option . '_secundario',
+            $text_option . '_mensaje_secundario',
+            $text_option . '_mensaje_secundaria',
+            $text_option . '_frase_secundaria',
+            $text_option . '_frase_secundario',
+            $text_option . '_secondary',
+        ),
+        ''
+    );
     $tipo       = get_option( $color_option, $default_tipo );
     $clase      = cdb_form_get_tipo_color_class( $tipo );
 
