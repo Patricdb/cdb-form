@@ -93,14 +93,28 @@ function cdb_bienvenida_usuario_shortcode() {
     $output  = '<h1>' . sprintf( esc_html__( '¡Hola, %s!', 'cdb-form' ), esc_html($current_user->display_name) ) . '</h1>';
     $output .= '<p>' . esc_html__( 'Grácias por colaborar con el Proyecto CdB!', 'cdb-form' ) . '</p>';
 
+    $tiene_seccion = false;
     // Cargar la sección de empleado si el usuario tiene ese rol.
     if (in_array('empleado', (array) $current_user->roles)) {
+        $tiene_seccion = true;
         $output .= do_shortcode('[cdb_bienvenida_empleado]');
     }
     // Cargar la sección de empleador si el usuario tiene ese rol.
     if (in_array('empleador', (array) $current_user->roles)) {
+        $tiene_seccion = true;
         $output .= do_shortcode('[cdb_bienvenida_empleador]');
     }
+
+    if (!$tiene_seccion) {
+        // Mensaje y color del aviso del shortcode [cdb_bienvenida_usuario]
+        // Ambos son configurables desde las opciones 'cdb_mensaje_bienvenida_usuario' (mensaje)
+        // y 'cdb_color_bienvenida_usuario' (color/tipo de mensaje, por defecto: 'aviso')
+        // Pensado para futura gestión desde el panel de administración.
+        $mensaje = get_option('cdb_mensaje_bienvenida_usuario', 'No tienes ningún perfil de empleado asignado.');
+        $color   = get_option('cdb_color_bienvenida_usuario', 'aviso');
+        $output .= '<div class="cdb-aviso cdb-aviso--' . esc_attr($color) . '">' . esc_html($mensaje) . '</div>';
+    }
+
     return $output;
 }
 add_shortcode('cdb_bienvenida_usuario', 'cdb_bienvenida_usuario_shortcode');
