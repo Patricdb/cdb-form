@@ -24,7 +24,7 @@ Inserta estos shortcodes en una página o entrada para mostrar los distintos for
 - `[cdb_form_bar]` – formulario para crear o editar un bar asociado al usuario.
 - `[cdb_form_empleado]` – formulario para crear o actualizar el perfil de empleado.
 - `[cdb_experiencia]` – formulario de experiencia laboral con listado de entradas guardadas.
-- `[cdb_bienvenida_usuario]` – mensaje de bienvenida que carga distintas secciones según el rol: muestra panel de empleado, empleador o invitación a crear perfil si falta, todo ello con mensajes configurables.
+- `[cdb_bienvenida_usuario]` – muestra siempre un saludo y un mensaje de bienvenida para cualquier usuario autenticado y, según su rol, carga el panel de empleado o empleador. Incluye mensajes específicos para empleados sin perfil o sin experiencia.
 - `[cdb_top_empleados_experiencia_precalculada]` – ranking de empleados por puntuación de experiencia.
 - `[cdb_top_empleados_puntuacion_total]` – ranking de empleados por puntuación gráfica.
 
@@ -32,7 +32,7 @@ Inserta estos shortcodes en una página o entrada para mostrar los distintos for
 
 ### Configuración de mensajes y avisos
 
-En esta pantalla es posible editar el contenido de cada mensaje y definir variantes de avisos con sus propias clases CSS. Cada variante permite elegir un color de fondo y otro de texto. Si no se especifica color de texto, el sistema calcula automáticamente uno con contraste adecuado.
+En esta pantalla es posible editar el contenido de cada mensaje y definir variantes de avisos con sus propias clases CSS. Actualmente pueden configurarse el **Saludo al Usuario**, el **Mensaje de Bienvenida**, el **Mensaje para Empleado sin perfil** y el **Mensaje para Empleado sin experiencia**. Cada variante permite elegir un color de fondo y otro de texto. Si no se especifica color de texto, el sistema calcula automáticamente uno con contraste adecuado.
 
 Para añadir una nueva variante introduce nombre, clase CSS, color de fondo y color de texto. Posteriormente podrás usar esa variante en los shortcodes seleccionándola en los mensajes correspondientes.
 
