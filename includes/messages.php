@@ -28,6 +28,22 @@ $cdb_form_defaults = array(
     'cdb_empleados_sin_resultados' => __( 'Sin coincidencias para tu búsqueda.| Modifica los criterios e inténtalo de nuevo.', 'cdb-form' ),
     'cdb_acceso_sin_login'         => __( 'Debes iniciar sesión para acceder.| Inicia sesión o regístrate para continuar.', 'cdb-form' ),
     'cdb_acceso_sin_permisos'      => __( 'No tienes permisos para ver este contenido.| Contacta con un admin si crees que es un error.', 'cdb-form' ),
+    'cdb_ajax_exito_empleado'      => __( 'Empleado creado correctamente.| El perfil se ha guardado sin problemas.', 'cdb-form' ),
+    'cdb_ajax_error_empleado'      => __( 'Error al crear empleado.| Inténtalo de nuevo más tarde.', 'cdb-form' ),
+    'cdb_ajax_exito_experiencia'   => __( 'Experiencia registrada.| Se ha guardado la experiencia.', 'cdb-form' ),
+    'cdb_ajax_empleados_sin_resultados' => __( 'Sin resultados.| No hay empleados que coincidan con tu búsqueda.', 'cdb-form' ),
+    'cdb_ajax_bares_sin_resultados'     => __( 'Sin resultados.| No hay bares que coincidan con tu búsqueda.', 'cdb-form' ),
+    'cdb_ajax_disponibilidad_actualizada' => __( 'Disponibilidad actualizada correctamente.| Los datos se han guardado.', 'cdb-form' ),
+    'cdb_ajax_error_disponibilidad' => __( 'Hubo un problema al actualizar la disponibilidad.| Inténtalo de nuevo más tarde.', 'cdb-form' ),
+    'cdb_ajax_estado_bar_actualizado' => __( 'Estado del bar actualizado correctamente.| Los datos se han guardado.', 'cdb-form' ),
+    'cdb_ajax_error_estado_bar'    => __( 'Hubo un problema al actualizar el estado del bar.| Inténtalo de nuevo más tarde.', 'cdb-form' ),
+    'cdb_ajax_error_comunicacion'  => __( 'Error de comunicación.| No se pudo contactar con el servidor.', 'cdb-form' ),
+    'cdb_ajax_error_anio_cifras'   => __( 'El año debe tener 4 cifras.| Introduce un año válido.', 'cdb-form' ),
+    'cdb_ajax_error_nombre_invalido' => __( 'Selecciona un nombre válido.| Elige una opción de la lista.', 'cdb-form' ),
+    'cdb_ajax_error_posicion_invalida' => __( 'Selecciona una posición válida.| Usa la ayuda de autocompletado.', 'cdb-form' ),
+    'cdb_ajax_error_bar_invalido'  => __( 'Selecciona un bar válido.| Usa la ayuda de autocompletado.', 'cdb-form' ),
+    'cdb_ajax_error_anio_invalido' => __( 'Selecciona un año válido.| Usa un formato de cuatro cifras.', 'cdb-form' ),
+    'cdb_ajax_error_zona_invalida' => __( 'Selecciona una zona válida.| Elige una opción de la lista.', 'cdb-form' ),
     // …añade aquí cualquier clave nueva que surja
 );
 
@@ -213,6 +229,58 @@ function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
     $html .= '</div>';
 
     return $html;
+}
+
+/**
+ * Devuelve un mensaje configurable como texto plano para uso en JavaScript.
+ *
+ * @param string $clave Clave del mensaje.
+ * @return string Texto plano del mensaje.
+ */
+function cdb_form_get_mensaje_js( $clave ) {
+    global $cdb_form_defaults;
+
+    $default   = $cdb_form_defaults[ $clave ] ?? '';
+    $texto     = cdb_form_get_option_compat(
+        array(
+            $clave,
+            $clave . '_destacado',
+            $clave . '_principal',
+            $clave . '_mensaje_destacado',
+            $clave . '_mensaje_principal',
+            $clave . '_frase_destacada',
+            $clave . '_frase_principal',
+            $clave . '_featured',
+            $clave . '_primary',
+            $clave . '_highlight',
+        ),
+        $default
+    );
+    $secundario = cdb_form_get_option_compat(
+        array(
+            $clave . '_secundaria',
+            $clave . '_secundario',
+            $clave . '_mensaje_secundario',
+            $clave . '_mensaje_secundaria',
+            $clave . '_frase_secundaria',
+            $clave . '_frase_secundario',
+            $clave . '_secondary',
+        ),
+        ''
+    );
+
+    if ( '' === $secundario && strpos( $texto, '|' ) !== false ) {
+        $parts = array_map( 'trim', explode( '|', $texto, 2 ) );
+        $texto = $parts[0];
+        $secundario = $parts[1] ?? '';
+    }
+
+    $mensaje = $texto;
+    if ( '' !== $secundario ) {
+        $mensaje .= ' ' . $secundario;
+    }
+
+    return trim( wp_strip_all_tags( $mensaje ) );
 }
 
 /**
