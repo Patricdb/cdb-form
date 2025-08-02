@@ -4,13 +4,14 @@
     ); ?>
 <?php else : ?>
 <table class="cdb-busqueda-table">
+    <caption><?php esc_html_e( 'Resultados de búsqueda de empleados', 'cdb-form' ); ?></caption>
     <thead>
         <tr>
-            <th><?php esc_html_e( 'Puntuación', 'cdb-form' ); ?></th>
-            <th><?php esc_html_e( 'Nombre', 'cdb-form' ); ?></th>
-            <th><?php esc_html_e( 'Posiciones', 'cdb-form' ); ?></th>
-            <th><?php esc_html_e( 'Bares', 'cdb-form' ); ?></th>
-            <th><?php esc_html_e( 'Año', 'cdb-form' ); ?></th>
+            <th scope="col"><?php esc_html_e( 'Puntuación', 'cdb-form' ); ?></th>
+            <th scope="col"><?php esc_html_e( 'Nombre', 'cdb-form' ); ?></th>
+            <th scope="col"><?php esc_html_e( 'Posiciones', 'cdb-form' ); ?></th>
+            <th scope="col"><?php esc_html_e( 'Bares', 'cdb-form' ); ?></th>
+            <th scope="col"><?php esc_html_e( 'Año', 'cdb-form' ); ?></th>
         </tr>
     </thead>
     <tbody>
