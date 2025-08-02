@@ -256,6 +256,8 @@ function cdb_form_config_mensajes_page() {
                     ),
                     ''
                 );
+                $clave_i18n      = $placeholder_map[ $datos['text_option'] ] ?? $datos['text_option'];
+                $traduccion_i18n = cdb_form_get_mensaje_i18n( $clave_i18n );
                 $tipo       = get_option( $datos['color_option'], 'aviso' );
                 $datos_tipo = $tipos_color[ $tipo ] ?? array();
                 $clase      = $datos_tipo['class'] ?? '';
@@ -275,6 +277,7 @@ function cdb_form_config_mensajes_page() {
                         <label><?php esc_html_e( 'Frase secundaria', 'cdb-form' ); ?></label>
                         <textarea class="large-text" rows="2" name="<?php echo esc_attr( $sec_opt ); ?>" data-role="secundario"><?php echo esc_textarea( $secundario ); ?></textarea>
                         <p class="description"><?php echo esc_html( $datos['description'] ); ?></p>
+                        <p class="description"><em><?php esc_html_e( 'Traducción actual:', 'cdb-form' ); ?></em> <?php echo esc_html( $traduccion_i18n ); ?></p>
                         <label><?php esc_html_e( 'Tipo/Color', 'cdb-form' ); ?></label>
                         <select name="<?php echo esc_attr( $datos['color_option'] ); ?>">
                             <?php foreach ( $tipos_color as $slug => $info ) : ?>

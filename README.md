@@ -92,3 +92,27 @@ Para más información consulta la carpeta `docs/`.
 ## Internacionalización
 
 El plugin carga las traducciones desde la carpeta `languages` mediante `load_plugin_textdomain()` al iniciarse. Para generar el archivo `cdb-form.pot` se utilizan las funciones de internacionalización de WordPress en todo el código.
+
+## Traducciones
+
+Para crear archivos de traducción personalizados sigue estos pasos:
+
+1. Genera el archivo `.pot` con la utilidad de WP-CLI:
+
+   ```bash
+   wp i18n make-pot . languages/cdb-form.pot
+   ```
+
+2. Crea un archivo `.po` para tu idioma a partir del `.pot` (ejemplo para español de España):
+
+   ```bash
+   msginit --locale=es_ES --input=languages/cdb-form.pot --output-file=languages/es_ES.po
+   ```
+
+3. Rellena los `msgstr` del `.po` y compílalo a `.mo`:
+
+   ```bash
+   msgfmt languages/es_ES.po -o languages/es_ES.mo
+   ```
+
+Coloca los archivos generados en la carpeta `languages` para que WordPress los cargue automáticamente.

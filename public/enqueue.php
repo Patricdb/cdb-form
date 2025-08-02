@@ -82,5 +82,28 @@ function cdb_form_public_enqueue() {
             'cdb_ajax_error_zona_invalida'  => cdb_form_get_mensaje_js( 'cdb_ajax_error_zona_invalida' ),
         )
     );
+
+    wp_localize_script(
+        'cdb-form-frontend-script',
+        'cdbMsgs_i18n',
+        array(
+            'cdb_ajax_exito_empleado'       => cdb_form_get_mensaje_i18n( 'cdb_ajax_exito_empleado' ),
+            'cdb_ajax_error_empleado'       => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_empleado' ),
+            'cdb_ajax_exito_experiencia'    => cdb_form_get_mensaje_i18n( 'cdb_ajax_exito_experiencia' ),
+            'cdb_ajax_empleados_sin_resultados' => cdb_form_get_mensaje_i18n( 'cdb_ajax_empleados_sin_resultados' ),
+            'cdb_ajax_bares_sin_resultados'     => cdb_form_get_mensaje_i18n( 'cdb_ajax_bares_sin_resultados' ),
+            'cdb_ajax_disponibilidad_actualizada' => cdb_form_get_mensaje_i18n( 'cdb_ajax_disponibilidad_actualizada' ),
+            'cdb_ajax_error_disponibilidad' => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_disponibilidad' ),
+            'cdb_ajax_estado_bar_actualizado' => cdb_form_get_mensaje_i18n( 'cdb_ajax_estado_bar_actualizado' ),
+            'cdb_ajax_error_estado_bar'     => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_estado_bar' ),
+            'cdb_ajax_error_comunicacion'   => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_comunicacion' ),
+            'cdb_ajax_error_anio_cifras'    => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_anio_cifras' ),
+            'cdb_ajax_error_nombre_invalido' => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_nombre_invalido' ),
+            'cdb_ajax_error_posicion_invalida' => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_posicion_invalida' ),
+            'cdb_ajax_error_bar_invalido'   => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_bar_invalido' ),
+            'cdb_ajax_error_anio_invalido'  => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_anio_invalido' ),
+            'cdb_ajax_error_zona_invalida'  => cdb_form_get_mensaje_i18n( 'cdb_ajax_error_zona_invalida' ),
+        )
+    );
 }
 add_action( 'wp_enqueue_scripts', 'cdb_form_public_enqueue' );
