@@ -1,3 +1,18 @@
+/*!
+ * Estilos base para los avisos y su configuración.
+ *
+ * Esta hoja se carga tanto en el administrador como en el frontend. Proporciona
+ * la estructura principal de los mensajes (<div class="cdb-aviso">) mientras que
+ * los colores específicos de cada tipo se añaden dinámicamente desde
+ * public/enqueue.php mediante <code>wp_add_inline_style</code>.
+ */
+.cdb-aviso {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-left: 4px solid transparent;
+}
+
+/* Estilos utilizados únicamente en la pantalla de Configuración de Mensajes */
 .cdb-config-mensaje { margin-bottom: 20px; }
 .cdb-config-mensaje.editing { border: 1px solid #2271b1; padding: 10px; }
 .cdb-mensaje-preview { padding: 8px 12px; margin-bottom: 8px; border-left: 4px solid transparent; }
