@@ -131,6 +131,28 @@ function cdb_form_render_mensaje( $text_option, $color_option, $default_text, $d
     $tipo       = get_option( $color_option, $default_tipo );
     $clase      = cdb_form_get_tipo_color_class( $tipo );
 
+    // Si no hay frase secundaria configurada, intentar dividir el texto principal
+    // en dos frases usando distintos delimitadores (\n, <br> o signos de puntuación).
+    if ( empty( $secundario ) && is_string( $texto ) ) {
+        $partes = array();
+
+        // Permitir salto de línea manual mediante <br>.
+        if ( preg_match( '/<br\s*\/?>/i', $texto ) ) {
+            $partes = preg_split( '/<br\s*\/?>/i', $texto, 2 );
+        // Permitir salto de línea manual mediante retorno de carro.
+        } elseif ( strpos( $texto, "\n" ) !== false ) {
+            $partes = preg_split( "/\r?\n/", $texto, 2 );
+        } else {
+            // Separación automática tras signos de puntuación comunes.
+            $partes = preg_split( '/(?<=[\.!?;:])\s+/', $texto, 2 );
+        }
+
+        if ( isset( $partes[1] ) ) {
+            $texto      = trim( $partes[0] );
+            $secundario = trim( $partes[1] );
+        }
+    }
+
     $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '">';
     $html .= '<strong class="cdb-mensaje-destacado">' . wp_kses_post( $texto ) . '</strong>';
 
