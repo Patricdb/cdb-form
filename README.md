@@ -51,14 +51,14 @@ También puedes registrar variantes desde código utilizando `cdb_form_register_
 <!-- ACTUALIZAR ESTA TABLA SI SE AÑADEN NUEVAS CLAVES EN $cdb_form_defaults -->
 | Clave | Texto por defecto | Contexto (dónde aparece) |
 | --- | --- | --- |
-| cdb_acceso_sin_login | Debes iniciar sesión para acceder a esta sección. | Formularios de bar o empleado cuando el usuario no ha iniciado sesión |
-| cdb_acceso_sin_permisos | No tienes permisos para ver este contenido. | Formulario de empleado cuando el usuario no tiene permisos |
-| cdb_aviso_sin_puntuacion | Puntuación gráfica no disponible. | Panel de empleado cuando no hay gráfico |
-| cdb_bares_sin_resultados | No hay bares que coincidan con tu búsqueda. | Búsqueda de bares sin resultados |
-| cdb_empleado_no_encontrado | Empleado no encontrado. | Formulario de empleado cuando no existe perfil asociado |
-| cdb_empleados_sin_resultados | Sin coincidencias para tu búsqueda. | Búsqueda de empleados sin resultados |
-| cdb_empleados_vacio | Aún no hay empleados registrados. | Rankings de empleados cuando no existen registros |
-| cdb_experiencia_sin_perfil | Para registrar experiencia debes crear antes tu perfil de empleado. | Formulario de experiencia sin perfil de empleado |
+| cdb_acceso_sin_login | **Debes iniciar sesión para acceder.** \| Inicia sesión o regístrate para continuar. | Formularios de bar o empleado cuando el usuario no ha iniciado sesión |
+| cdb_acceso_sin_permisos | **No tienes permisos para ver este contenido.** \| Contacta con un admin si crees que es un error. | Formulario de empleado cuando el usuario no tiene permisos |
+| cdb_aviso_sin_puntuacion | **Puntuación gráfica no disponible.** \| Añade más valoraciones para generar tu gráfico. | Panel de empleado cuando no hay gráfico |
+| cdb_bares_sin_resultados | **No hay bares que coincidan con tu búsqueda.** \| Ajusta filtros o prueba con otro término. | Búsqueda de bares sin resultados |
+| cdb_empleado_no_encontrado | **Empleado no encontrado.** \| Crea primero tu perfil de empleado para continuar. | Formulario de empleado cuando no existe perfil asociado |
+| cdb_empleados_sin_resultados | **Sin coincidencias para tu búsqueda.** \| Modifica los criterios e inténtalo de nuevo. | Búsqueda de empleados sin resultados |
+| cdb_empleados_vacio | **Aún no hay empleados registrados.** \| ¡Sé el primero en unirte al proyecto! | Rankings de empleados cuando no existen registros |
+| cdb_experiencia_sin_perfil | **Para registrar experiencia debes crear tu perfil.** \| Completa tu información de empleado y vuelve aquí. | Formulario de experiencia sin perfil de empleado |
 
 Para personalizar estos textos ve al submenú **Cdb Form → Configuración de Mensajes y Avisos**.
 
