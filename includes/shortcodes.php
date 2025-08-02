@@ -86,30 +86,42 @@ function cdb_calcular_puntuacion_experiencia_dinamica($empleado_id) {
  * Muestra un saludo personalizado y, según el rol, carga las secciones de empleado y/o empleador.
  */
 function cdb_bienvenida_usuario_shortcode() {
+    // [cdb_bienvenida_usuario]
+    // Solo continúa si el usuario tiene sesión iniciada.
+    // De lo contrario, se devuelve un aviso y no se cargan las secciones de empleado/empleador.
     if (!is_user_logged_in()) {
         return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
     }
+
+    // Con sesión activa, se prepara el saludo general visible para cualquier rol válido.
     $current_user = wp_get_current_user();
     $output  = '<h1>' . sprintf( esc_html__( '¡Hola, %s!', 'cdb-form' ), esc_html($current_user->display_name) ) . '</h1>';
     $output .= '<p>' . esc_html__( 'Grácias por colaborar con el Proyecto CdB!', 'cdb-form' ) . '</p>';
 
     $tiene_seccion = false;
-    // Cargar la sección de empleado si el usuario tiene ese rol.
+
+    // Bloque para usuarios con rol "empleado":
+    // - Muestra información de perfil y disponibilidad a través de [cdb_bienvenida_empleado].
+    // - Este shortcode vuelve a comprobar sesión y rol, por lo que hay validación redundante.
     if (in_array('empleado', (array) $current_user->roles)) {
         $tiene_seccion = true;
         $output .= do_shortcode('[cdb_bienvenida_empleado]');
     }
-    // Cargar la sección de empleador si el usuario tiene ese rol.
+
+    // Bloque para usuarios con rol "empleador":
+    // - Carga la sección de bienvenida del empleador mediante [cdb_bienvenida_empleador].
+    // - La plantilla llamada también revalida sesión/rol.
     if (in_array('empleador', (array) $current_user->roles)) {
         $tiene_seccion = true;
         $output .= do_shortcode('[cdb_bienvenida_empleador]');
     }
 
+    // Si el usuario no es "empleado" ni "empleador", se muestra un aviso genérico.
+    // Esto abarca roles como "administrator" u otros personalizados.
     if (!$tiene_seccion) {
-        // Mensaje y color del aviso del shortcode [cdb_bienvenida_usuario]
-        // Ambos son configurables desde las opciones 'cdb_mensaje_bienvenida_usuario' (mensaje)
-        // y 'cdb_color_bienvenida_usuario' (color/tipo de mensaje, por defecto: 'aviso')
-        // Pensado para futura gestión desde el panel de administración.
+        // Mensaje y color del aviso configurables desde las opciones del plugin.
+        // Nota: el mensaje sugiere ausencia de perfil de empleado, aunque la comprobación
+        // del perfil se realiza de nuevo dentro de [cdb_bienvenida_empleado].
         $mensaje = get_option('cdb_mensaje_bienvenida_usuario', 'No tienes ningún perfil de empleado asignado.');
         $color   = get_option('cdb_color_bienvenida_usuario', 'aviso');
         $output .= '<div class="cdb-aviso cdb-aviso--' . esc_attr($color) . '">' . esc_html($mensaje) . '</div>';
@@ -279,17 +291,34 @@ function cdb_generar_barra_progreso_simple($puntuacion_total) {
  * Incluye la plantilla que muestra el formulario y la lista de experiencias.
  */
 function cdb_experiencia_shortcode() {
+    // [cdb_experiencia]
+    // Muestra el formulario y listado de experiencia solo en el caso de:
+    // - Usuario con sesión iniciada
+    // - Rol "empleado"
+    // - Perfil de empleado ya existente
+
+    // 1) Comprobar sesión iniciada; si no la hay, se muestra aviso y se detiene.
     if (!is_user_logged_in()) {
         return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
     }
+
+    // 2) Verificar que el usuario tenga el rol adecuado.
+    // Otros roles (por ejemplo, "empleador" o "administrator") no ven contenido.
     $current_user = wp_get_current_user();
     if (!in_array('empleado', (array) $current_user->roles)) {
         return '';
     }
+
+    // 3) Comprobar que el usuario tenga un perfil de empleado publicado.
+    // Sin este perfil no puede registrar experiencias.
+    // La plantilla incluida volverá a validar este dato, generando comprobación redundante.
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
         return '<p style="color: red;">' . esc_html__( 'No tienes un perfil de empleado registrado.', 'cdb-form' ) . '</p>';
     }
+
+    // 4) Si pasa las verificaciones, se carga la plantilla del formulario.
+    // 'form-experiencia-template.php' incluye nuevamente validaciones de sesión y perfil.
     ob_start();
     include CDB_FORM_PATH . 'templates/form-experiencia-template.php';
     return ob_get_clean();
