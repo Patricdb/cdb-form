@@ -4,7 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Cargar estilos y scripts en el panel de administración
+// Cargar estilos y scripts en el panel de administración.
+// La hoja de estilos "config-mensajes.css" se comparte con el frontend
+// (ver public/enqueue.php) para que las clases de aviso definidas en la
+// configuración tengan estilo también para los usuarios.
 function cdb_form_admin_enqueue( $hook ) {
     // Cargar solo en las páginas del plugin
     if ( strpos( $hook, 'cdb-form' ) === false ) {
