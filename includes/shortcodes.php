@@ -83,48 +83,53 @@ function cdb_calcular_puntuacion_experiencia_dinamica($empleado_id) {
 
 /**
  * Shortcode [cdb_bienvenida_usuario]
- * Muestra un saludo personalizado y, según el rol, carga las secciones de empleado y/o empleador.
+ *
+ * Centraliza la lógica de visibilidad y carga secciones específicas según el rol
+ * del usuario. Actualmente gestiona los roles "empleado" y "empleador".
+ *  - Empleado con perfil: muestra su panel de bienvenida.
+ *  - Empleado sin perfil: muestra mensaje configurable e invita a crear uno.
+ *  - Empleador: muestra la sección de bienvenida del empleador si existe.
+ *  - Otros roles: no se muestra nada.
  */
 function cdb_bienvenida_usuario_shortcode() {
     // [cdb_bienvenida_usuario]
-    // Solo continúa si el usuario tiene sesión iniciada.
-    // De lo contrario, se devuelve un aviso y no se cargan las secciones de empleado/empleador.
+    // 1) Comprobación de sesión.
     if (!is_user_logged_in()) {
         return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
     }
 
-    // Con sesión activa, se prepara el saludo general visible para cualquier rol válido.
+    // 2) Determinar el rol del usuario y continuar solo si es relevante.
     $current_user = wp_get_current_user();
+    $roles        = (array) $current_user->roles;
+    if (!array_intersect(['empleado', 'empleador'], $roles)) {
+        // Roles no gestionados (administrator, etc.).
+        return '';
+    }
+
+    // 3) Preparar saludo inicial común para roles relevantes.
     $output  = '<h1>' . sprintf( esc_html__( '¡Hola, %s!', 'cdb-form' ), esc_html($current_user->display_name) ) . '</h1>';
     $output .= '<p>' . esc_html__( 'Grácias por colaborar con el Proyecto CdB!', 'cdb-form' ) . '</p>';
 
-    $tiene_seccion = false;
-
-    // Bloque para usuarios con rol "empleado":
-    // - Muestra información de perfil y disponibilidad a través de [cdb_bienvenida_empleado].
-    // - Este shortcode vuelve a comprobar sesión y rol, por lo que hay validación redundante.
-    if (in_array('empleado', (array) $current_user->roles)) {
-        $tiene_seccion = true;
-        $output .= do_shortcode('[cdb_bienvenida_empleado]');
+    // 4) Lógica específica para empleados.
+    if (in_array('empleado', $roles)) {
+        // Comprobar si el usuario ya tiene un perfil de empleado asociado.
+        $empleado_id = cdb_obtener_empleado_id($current_user->ID);
+        if ($empleado_id) {
+            // Perfil existente: se muestra el panel del empleado.
+            $output .= do_shortcode('[cdb_bienvenida_empleado]');
+        } else {
+            // Sin perfil: mensaje configurable e invitación a crear uno.
+            $mensaje = get_option('cdb_mensaje_invitar_empleado', 'No tienes ningún perfil de empleado asignado.');
+            $color   = get_option('cdb_color_invitar_empleado', 'aviso');
+            $output .= '<div class="cdb-aviso cdb-aviso--' . esc_attr($color) . '">' . esc_html($mensaje) . '</div>';
+            $output .= do_shortcode('[cdb_form_empleado]');
+        }
     }
 
-    // Bloque para usuarios con rol "empleador":
-    // - Carga la sección de bienvenida del empleador mediante [cdb_bienvenida_empleador].
-    // - La plantilla llamada también revalida sesión/rol.
-    if (in_array('empleador', (array) $current_user->roles)) {
-        $tiene_seccion = true;
+    // 5) Lógica específica para empleadores.
+    if (in_array('empleador', $roles) && shortcode_exists('cdb_bienvenida_empleador')) {
+        // Solo se carga si la sección existe para evitar errores.
         $output .= do_shortcode('[cdb_bienvenida_empleador]');
-    }
-
-    // Si el usuario no es "empleado" ni "empleador", se muestra un aviso genérico.
-    // Esto abarca roles como "administrator" u otros personalizados.
-    if (!$tiene_seccion) {
-        // Mensaje y color del aviso configurables desde las opciones del plugin.
-        // Nota: el mensaje sugiere ausencia de perfil de empleado, aunque la comprobación
-        // del perfil se realiza de nuevo dentro de [cdb_bienvenida_empleado].
-        $mensaje = get_option('cdb_mensaje_bienvenida_usuario', 'No tienes ningún perfil de empleado asignado.');
-        $color   = get_option('cdb_color_bienvenida_usuario', 'aviso');
-        $output .= '<div class="cdb-aviso cdb-aviso--' . esc_attr($color) . '">' . esc_html($mensaje) . '</div>';
     }
 
     return $output;

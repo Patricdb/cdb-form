@@ -24,7 +24,7 @@ Inserta estos shortcodes en una página o entrada para mostrar los distintos for
 - `[cdb_form_bar]` – formulario para crear o editar un bar asociado al usuario.
 - `[cdb_form_empleado]` – formulario para crear o actualizar el perfil de empleado.
 - `[cdb_experiencia]` – formulario de experiencia laboral con listado de entradas guardadas.
-- `[cdb_bienvenida_usuario]` – mensaje de bienvenida que carga distintas secciones según el rol.
+- `[cdb_bienvenida_usuario]` – mensaje de bienvenida que carga distintas secciones según el rol: muestra panel de empleado, empleador o invitación a crear perfil si falta, todo ello con mensajes configurables.
 - `[cdb_top_empleados_experiencia_precalculada]` – ranking de empleados por puntuación de experiencia.
 - `[cdb_top_empleados_puntuacion_total]` – ranking de empleados por puntuación gráfica.
 
