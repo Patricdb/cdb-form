@@ -14,13 +14,7 @@ if (!$current_user->exists()) {
 // Obtener la ID del empleado asociado al usuario actual mediante la función específica.
 $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
 if (!$empleado_id) {
-    $user_name = $current_user->display_name;
-    echo '<div class="cdb-bienvenida-empleado">';
-    echo '<h2>¡Hola, ' . esc_html( $user_name ) . '!</h2>';
-    echo '<p><strong>Bienvenido/a al Proyecto CdB</strong></p>';
-    echo '<p>Gracias por unirte a nuestra comunidad de empleados de hostelería.<br>';
-    echo '¡Estás a un paso de empezar a construir tu perfil, compartir tu experiencia y conectar con otros profesionales y bares!';
-    echo '</p></div>';
+    echo '<p>' . esc_html__( 'No tienes un perfil de empleado registrado. Para registrar experiencia, primero debes crear tu perfil de empleado.', 'cdb-form' ) . '</p>';
     echo do_shortcode('[cdb_form_empleado]');
     return;
 }

@@ -164,13 +164,7 @@ function cdb_bienvenida_empleado_shortcode() {
         // Mostrar la Puntuación de Experiencia.
         $output .= '<p><strong>' . esc_html__( 'Puntuación de Experiencia:', 'cdb-form' ) . '</strong> ' . esc_html($puntuacion_experiencia) . '</p>';
     } else {
-        $user_name = $current_user->display_name;
-        $output .= '<div class="cdb-bienvenida-empleado">';
-        $output .= '<h2>¡Hola, ' . esc_html( $user_name ) . '!</h2>';
-        $output .= '<p><strong>Bienvenido/a al Proyecto CdB</strong></p>';
-        $output .= '<p>Gracias por unirte a nuestra comunidad de empleados de hostelería.<br>';
-        $output .= '¡Estás a un paso de empezar a construir tu perfil, compartir tu experiencia y conectar con otros profesionales y bares!';
-        $output .= '</p></div>';
+        $output .= '<p style="color: red;">' . esc_html__( 'No tienes ningún perfil de empleado asignado.', 'cdb-form' ) . '</p>';
         $output .= do_shortcode('[cdb_form_empleado]');
     }
     return $output;
@@ -277,20 +271,7 @@ function cdb_experiencia_shortcode() {
     }
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
-        $user_name = $current_user->display_name;
-        ob_start();
-        ?>
-        <div class="cdb-bienvenida-empleado">
-            <h2>¡Hola, <?php echo esc_html( $user_name ); ?>!</h2>
-            <p><strong>Bienvenido/a al Proyecto CdB</strong></p>
-            <p>
-                Gracias por unirte a nuestra comunidad de empleados de hostelería.<br>
-                ¡Estás a un paso de empezar a construir tu perfil, compartir tu experiencia y conectar con otros profesionales y bares!
-            </p>
-        </div>
-        <?php
-        echo do_shortcode('[cdb_form_empleado]');
-        return ob_get_clean();
+        return '<p style="color: red;">' . esc_html__( 'No tienes un perfil de empleado registrado.', 'cdb-form' ) . '</p>';
     }
     ob_start();
     include CDB_FORM_PATH . 'templates/form-experiencia-template.php';
