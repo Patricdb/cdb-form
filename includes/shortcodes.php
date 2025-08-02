@@ -164,7 +164,10 @@ function cdb_bienvenida_empleado_shortcode() {
         // Mostrar la Puntuación de Experiencia.
         $output .= '<p><strong>' . esc_html__( 'Puntuación de Experiencia:', 'cdb-form' ) . '</strong> ' . esc_html($puntuacion_experiencia) . '</p>';
     } else {
-        $output .= '<p style="color: red;">' . esc_html__( 'No tienes ningún perfil de empleado asignado.', 'cdb-form' ) . '</p>';
+        // Mensaje de bienvenida del shortcode [cdb_bienvenida_usuario]
+        // Ahora configurable desde la opción 'cdb_mensaje_bienvenida_usuario' (por defecto: 'No tienes ningún perfil de empleado asignado.')
+        $mensaje = get_option('cdb_mensaje_bienvenida_usuario', 'No tienes ningún perfil de empleado asignado.');
+        $output .= '<div class="cdb-aviso">' . esc_html($mensaje) . '</div>';
         $output .= do_shortcode('[cdb_form_empleado]');
     }
     return $output;
