@@ -3,8 +3,8 @@
  *
  * Esta hoja se carga tanto en el administrador como en el frontend. Proporciona
  * la estructura principal de los mensajes (<div class="cdb-aviso">) mientras que
- * los colores específicos de cada tipo se añaden dinámicamente desde
- * public/enqueue.php mediante <code>wp_add_inline_style</code>.
+ * los colores específicos de cada tipo (fondo y texto) se añaden dinámicamente
+ * desde public/enqueue.php mediante <code>wp_add_inline_style</code>.
  */
 .cdb-aviso {
     padding: 8px 12px;

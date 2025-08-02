@@ -10,9 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Además del script principal (registrado para cargarse solo cuando se
  * necesite), aquí se encola la hoja de estilos base para los mensajes y se
  * generan reglas dinámicas para cada tipo/color configurable por el
- * administrador.  De esta forma, los shortcodes que imprimen avisos pueden
- * usar clases como <code>cdb-aviso--aviso</code> o cualquier otra definida en
- * la pantalla de ajustes y mantener los colores elegidos.
+ * administrador. A partir de la versión 1.1 estas reglas incluyen tanto el
+ * color de fondo como el de texto, de modo que los shortcodes que imprimen
+ * avisos pueden usar clases como <code>cdb-aviso--aviso</code> o cualquier
+ * otra definida en la pantalla de ajustes y mantener los colores elegidos.
  */
 function cdb_form_public_enqueue() {
     // Registrar el script sin encolarlo; se encolará condicionalmente.
@@ -37,11 +38,15 @@ function cdb_form_public_enqueue() {
     $css   = '';
     foreach ( $tipos as $info ) {
         $class = isset( $info['class'] ) ? sanitize_html_class( $info['class'] ) : '';
-        $color = isset( $info['color'] ) ? sanitize_hex_color( $info['color'] ) : '';
-        if ( ! $class || ! $color ) {
+        $bg    = isset( $info['color'] ) ? sanitize_hex_color( $info['color'] ) : '';
+        $text  = isset( $info['text'] ) ? sanitize_hex_color( $info['text'] ) : '';
+        if ( ! $class || ! $bg ) {
             continue;
         }
-        $css .= sprintf( '.%1$s{border-left-color:%2$s;}', $class, $color );
+        if ( ! $text ) {
+            $text = cdb_form_get_contrasting_text_color( $bg );
+        }
+        $css .= sprintf( '.%1$s{border-left-color:%2$s;background-color:%2$s;color:%3$s;}', $class, $bg, $text );
     }
 
     if ( $css ) {
