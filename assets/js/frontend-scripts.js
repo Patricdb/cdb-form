@@ -1,4 +1,9 @@
 jQuery(document).ready(function($) {
+    function cdbGetMsg(key){
+        var src = (typeof cdbMsgs_i18n !== 'undefined' && cdbMsgs_i18n[key]) ? cdbMsgs_i18n[key] :
+                  (typeof cdbMsgs !== 'undefined' && cdbMsgs[key] ? cdbMsgs[key] : '');
+        return src.replace('|', ' ');
+    }
     // 🔹 Manejo de actualización de disponibilidad del empleado
     $('#cdb-update-disponibilidad').on('submit', function(e) {
         e.preventDefault();
@@ -17,15 +22,15 @@ jQuery(document).ready(function($) {
                 console.log("Respuesta AJAX (Empleado):", response); // Depuración en consola
 
                 if (response.success) {
-                    window.alert(cdbMsgs.cdb_ajax_disponibilidad_actualizada);
+                    window.alert(cdbGetMsg('cdb_ajax_disponibilidad_actualizada'));
                     location.reload();
                 } else {
-                    window.alert(response.data.message || cdbMsgs.cdb_ajax_error_disponibilidad);
+                    window.alert(response.data.message || cdbGetMsg('cdb_ajax_error_disponibilidad'));
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("Error AJAX (Empleado):", textStatus, errorThrown);
-                window.alert(cdbMsgs.cdb_ajax_error_disponibilidad);
+                window.alert(cdbGetMsg('cdb_ajax_error_disponibilidad'));
             }
         });
     });
@@ -48,15 +53,15 @@ jQuery(document).ready(function($) {
                 console.log("Respuesta AJAX (Bar):", response); // Depuración en consola
 
                 if (response.success) {
-                    window.alert(cdbMsgs.cdb_ajax_estado_bar_actualizado);
+                    window.alert(cdbGetMsg('cdb_ajax_estado_bar_actualizado'));
                     location.reload();
                 } else {
-                    window.alert(response.data.message || cdbMsgs.cdb_ajax_error_estado_bar);
+                    window.alert(response.data.message || cdbGetMsg('cdb_ajax_error_estado_bar'));
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("Error AJAX (Bar):", textStatus, errorThrown);
-                window.alert(cdbMsgs.cdb_ajax_error_estado_bar);
+                window.alert(cdbGetMsg('cdb_ajax_error_estado_bar'));
             }
         });
     });
@@ -83,7 +88,7 @@ jQuery(document).ready(function($) {
             if (spinner) spinner.style.display = 'none';
         }).fail(function(jqXHR){
             if (spinner) spinner.style.display = 'none';
-            window.alert(cdbMsgs.cdb_ajax_error_comunicacion);
+            window.alert(cdbGetMsg('cdb_ajax_error_comunicacion'));
             console.error('cdb_buscar_empleados AJAX fail', jqXHR);
         });
     }
@@ -216,23 +221,23 @@ jQuery(document).ready(function($) {
 
         function validarFiltros(){
             if(anioInput.value && !/^[0-9]{4}$/.test(anioInput.value)){
-                window.alert(cdbMsgs.cdb_ajax_error_anio_cifras);
+                window.alert(cdbGetMsg('cdb_ajax_error_anio_cifras'));
                 return false;
             }
             if(nombreInput.value && !nombreInput.dataset.valid){
-                window.alert(cdbMsgs.cdb_ajax_error_nombre_invalido);
+                window.alert(cdbGetMsg('cdb_ajax_error_nombre_invalido'));
                 return false;
             }
             if(posInput.value && !posInput.dataset.valid){
-                window.alert(cdbMsgs.cdb_ajax_error_posicion_invalida);
+                window.alert(cdbGetMsg('cdb_ajax_error_posicion_invalida'));
                 return false;
             }
             if(barInput.value && !barInput.dataset.valid){
-                window.alert(cdbMsgs.cdb_ajax_error_bar_invalido);
+                window.alert(cdbGetMsg('cdb_ajax_error_bar_invalido'));
                 return false;
             }
             if(anioInput.value && !anioInput.dataset.valid){
-                window.alert(cdbMsgs.cdb_ajax_error_anio_invalido);
+                window.alert(cdbGetMsg('cdb_ajax_error_anio_invalido'));
                 return false;
             }
             return true;
@@ -276,7 +281,7 @@ jQuery(document).ready(function($) {
             if (spinner) spinner.style.display = 'none';
         }).fail(function(jqXHR){
             if (spinner) spinner.style.display = 'none';
-            window.alert(cdbMsgs.cdb_ajax_error_comunicacion);
+            window.alert(cdbGetMsg('cdb_ajax_error_comunicacion'));
             console.error('cdb_buscar_bares AJAX fail', jqXHR);
         });
     }
@@ -359,15 +364,15 @@ jQuery(document).ready(function($) {
 
         function validarFiltrosBares(){
             if(aperturaInput.value && !/^[0-9]{4}$/.test(aperturaInput.value)){
-                window.alert(cdbMsgs.cdb_ajax_error_anio_cifras);
+                window.alert(cdbGetMsg('cdb_ajax_error_anio_cifras'));
                 return false;
             }
             if(bNombreInput.value && !bNombreInput.dataset.valid){
-                window.alert(cdbMsgs.cdb_ajax_error_bar_invalido);
+                window.alert(cdbGetMsg('cdb_ajax_error_bar_invalido'));
                 return false;
             }
             if(zonaInput.value && !zonaInput.dataset.valid){
-                window.alert(cdbMsgs.cdb_ajax_error_zona_invalida);
+                window.alert(cdbGetMsg('cdb_ajax_error_zona_invalida'));
                 return false;
             }
             return true;

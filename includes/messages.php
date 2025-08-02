@@ -20,30 +20,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Valores por defecto de mensajes y avisos.
 $cdb_form_defaults = array(
-    'cdb_aviso_sin_puntuacion'     => __( 'Puntuación gráfica no disponible.| Añade más valoraciones para generar tu gráfico.', 'cdb-form' ),
-    'cdb_empleado_no_encontrado'   => __( 'Empleado no encontrado.| Crea primero tu perfil de empleado para continuar.', 'cdb-form' ),
-    'cdb_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear tu perfil.| Completa tu información de empleado y vuelve aquí.', 'cdb-form' ),
-    'cdb_bares_sin_resultados'     => __( 'No hay bares que coincidan con tu búsqueda.| Ajusta filtros o prueba con otro término.', 'cdb-form' ),
-    'cdb_empleados_vacio'          => __( 'Aún no hay empleados registrados.| ¡Sé el primero en unirte al proyecto!', 'cdb-form' ),
-    'cdb_empleados_sin_resultados' => __( 'Sin coincidencias para tu búsqueda.| Modifica los criterios e inténtalo de nuevo.', 'cdb-form' ),
-    'cdb_acceso_sin_login'         => __( 'Debes iniciar sesión para acceder.| Inicia sesión o regístrate para continuar.', 'cdb-form' ),
-    'cdb_acceso_sin_permisos'      => __( 'No tienes permisos para ver este contenido.| Contacta con un admin si crees que es un error.', 'cdb-form' ),
-    'cdb_ajax_exito_empleado'      => __( 'Empleado creado correctamente.| El perfil se ha guardado sin problemas.', 'cdb-form' ),
-    'cdb_ajax_error_empleado'      => __( 'Error al crear empleado.| Inténtalo de nuevo más tarde.', 'cdb-form' ),
-    'cdb_ajax_exito_experiencia'   => __( 'Experiencia registrada.| Se ha guardado la experiencia.', 'cdb-form' ),
-    'cdb_ajax_empleados_sin_resultados' => __( 'Sin resultados.| No hay empleados que coincidan con tu búsqueda.', 'cdb-form' ),
-    'cdb_ajax_bares_sin_resultados'     => __( 'Sin resultados.| No hay bares que coincidan con tu búsqueda.', 'cdb-form' ),
-    'cdb_ajax_disponibilidad_actualizada' => __( 'Disponibilidad actualizada correctamente.| Los datos se han guardado.', 'cdb-form' ),
-    'cdb_ajax_error_disponibilidad' => __( 'Hubo un problema al actualizar la disponibilidad.| Inténtalo de nuevo más tarde.', 'cdb-form' ),
-    'cdb_ajax_estado_bar_actualizado' => __( 'Estado del bar actualizado correctamente.| Los datos se han guardado.', 'cdb-form' ),
-    'cdb_ajax_error_estado_bar'    => __( 'Hubo un problema al actualizar el estado del bar.| Inténtalo de nuevo más tarde.', 'cdb-form' ),
-    'cdb_ajax_error_comunicacion'  => __( 'Error de comunicación.| No se pudo contactar con el servidor.', 'cdb-form' ),
-    'cdb_ajax_error_anio_cifras'   => __( 'El año debe tener 4 cifras.| Introduce un año válido.', 'cdb-form' ),
-    'cdb_ajax_error_nombre_invalido' => __( 'Selecciona un nombre válido.| Elige una opción de la lista.', 'cdb-form' ),
-    'cdb_ajax_error_posicion_invalida' => __( 'Selecciona una posición válida.| Usa la ayuda de autocompletado.', 'cdb-form' ),
-    'cdb_ajax_error_bar_invalido'  => __( 'Selecciona un bar válido.| Usa la ayuda de autocompletado.', 'cdb-form' ),
-    'cdb_ajax_error_anio_invalido' => __( 'Selecciona un año válido.| Usa un formato de cuatro cifras.', 'cdb-form' ),
-    'cdb_ajax_error_zona_invalida' => __( 'Selecciona una zona válida.| Elige una opción de la lista.', 'cdb-form' ),
+    'cdb_aviso_sin_puntuacion'     => __( 'Puntuación gráfica no disponible.', 'cdb-form' ) . '|' . __( 'Añade más valoraciones para generar tu gráfico.', 'cdb-form' ),
+    'cdb_empleado_no_encontrado'   => __( 'Empleado no encontrado.', 'cdb-form' ) . '|' . __( 'Crea primero tu perfil de empleado para continuar.', 'cdb-form' ),
+    'cdb_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear tu perfil.', 'cdb-form' ) . '|' . __( 'Completa tu información de empleado y vuelve aquí.', 'cdb-form' ),
+    'cdb_bares_sin_resultados'     => __( 'No hay bares que coincidan con tu búsqueda.', 'cdb-form' ) . '|' . __( 'Ajusta filtros o prueba con otro término.', 'cdb-form' ),
+    'cdb_empleados_vacio'          => __( 'Aún no hay empleados registrados.', 'cdb-form' ) . '|' . __( '¡Sé el primero en unirte al proyecto!', 'cdb-form' ),
+    'cdb_empleados_sin_resultados' => __( 'Sin coincidencias para tu búsqueda.', 'cdb-form' ) . '|' . __( 'Modifica los criterios e inténtalo de nuevo.', 'cdb-form' ),
+    'cdb_acceso_sin_login'         => __( 'Debes iniciar sesión para acceder.', 'cdb-form' ) . '|' . __( 'Inicia sesión o regístrate para continuar.', 'cdb-form' ),
+    'cdb_acceso_sin_permisos'      => __( 'No tienes permisos para ver este contenido.', 'cdb-form' ) . '|' . __( 'Contacta con un admin si crees que es un error.', 'cdb-form' ),
+    'cdb_ajax_exito_empleado'      => __( 'Empleado creado correctamente.', 'cdb-form' ) . '|' . __( 'El perfil se ha guardado sin problemas.', 'cdb-form' ),
+    'cdb_ajax_error_empleado'      => __( 'Error al crear empleado.', 'cdb-form' ) . '|' . __( 'Inténtalo de nuevo más tarde.', 'cdb-form' ),
+    'cdb_ajax_exito_experiencia'   => __( 'Experiencia registrada.', 'cdb-form' ) . '|' . __( 'Se ha guardado la experiencia.', 'cdb-form' ),
+    'cdb_ajax_empleados_sin_resultados' => __( 'Sin resultados.', 'cdb-form' ) . '|' . __( 'No hay empleados que coincidan con tu búsqueda.', 'cdb-form' ),
+    'cdb_ajax_bares_sin_resultados'     => __( 'Sin resultados.', 'cdb-form' ) . '|' . __( 'No hay bares que coincidan con tu búsqueda.', 'cdb-form' ),
+    'cdb_ajax_disponibilidad_actualizada' => __( 'Disponibilidad actualizada correctamente.', 'cdb-form' ) . '|' . __( 'Los datos se han guardado.', 'cdb-form' ),
+    'cdb_ajax_error_disponibilidad' => __( 'Hubo un problema al actualizar la disponibilidad.', 'cdb-form' ) . '|' . __( 'Inténtalo de nuevo más tarde.', 'cdb-form' ),
+    'cdb_ajax_estado_bar_actualizado' => __( 'Estado del bar actualizado correctamente.', 'cdb-form' ) . '|' . __( 'Los datos se han guardado.', 'cdb-form' ),
+    'cdb_ajax_error_estado_bar'    => __( 'Hubo un problema al actualizar el estado del bar.', 'cdb-form' ) . '|' . __( 'Inténtalo de nuevo más tarde.', 'cdb-form' ),
+    'cdb_ajax_error_comunicacion'  => __( 'Error de comunicación.', 'cdb-form' ) . '|' . __( 'No se pudo contactar con el servidor.', 'cdb-form' ),
+    'cdb_ajax_error_anio_cifras'   => __( 'El año debe tener 4 cifras.', 'cdb-form' ) . '|' . __( 'Introduce un año válido.', 'cdb-form' ),
+    'cdb_ajax_error_nombre_invalido' => __( 'Selecciona un nombre válido.', 'cdb-form' ) . '|' . __( 'Elige una opción de la lista.', 'cdb-form' ),
+    'cdb_ajax_error_posicion_invalida' => __( 'Selecciona una posición válida.', 'cdb-form' ) . '|' . __( 'Usa la ayuda de autocompletado.', 'cdb-form' ),
+    'cdb_ajax_error_bar_invalido'  => __( 'Selecciona un bar válido.', 'cdb-form' ) . '|' . __( 'Usa la ayuda de autocompletado.', 'cdb-form' ),
+    'cdb_ajax_error_anio_invalido' => __( 'Selecciona un año válido.', 'cdb-form' ) . '|' . __( 'Usa un formato de cuatro cifras.', 'cdb-form' ),
+    'cdb_ajax_error_zona_invalida' => __( 'Selecciona una zona válida.', 'cdb-form' ) . '|' . __( 'Elige una opción de la lista.', 'cdb-form' ),
     // …añade aquí cualquier clave nueva que surja
 );
 
@@ -275,12 +275,24 @@ function cdb_form_get_mensaje_js( $clave ) {
         $secundario = $parts[1] ?? '';
     }
 
-    $mensaje = $texto;
+    $mensaje = trim( wp_strip_all_tags( $texto ) );
     if ( '' !== $secundario ) {
-        $mensaje .= ' ' . $secundario;
+        $mensaje .= '|' . trim( wp_strip_all_tags( $secundario ) );
     }
 
-    return trim( wp_strip_all_tags( $mensaje ) );
+    return $mensaje;
+}
+
+/**
+ * Devuelve un mensaje traducido según el idioma actual de WordPress.
+ *
+ * @param string $key Clave del mensaje.
+ * @return string Mensaje traducido.
+ */
+function cdb_form_get_mensaje_i18n( $key ) {
+    $msg = cdb_form_get_mensaje_js( $key );
+    list( $dest, $sec ) = array_pad( explode( '|', $msg, 2 ), 2, '' );
+    return trim( sprintf( '%s %s', __( $dest, 'cdb-form' ), __( $sec, 'cdb-form' ) ) );
 }
 
 /**
