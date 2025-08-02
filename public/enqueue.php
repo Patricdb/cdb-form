@@ -19,18 +19,18 @@ function cdb_form_public_enqueue() {
     // Registrar el script sin encolarlo; se encolará condicionalmente.
     wp_register_script(
         'cdb-form-frontend-script',
-        CDB_FORM_URL . 'assets/js/frontend-scripts.js',
+        CDB_FORM_URL . 'build/frontend.js',
         array( 'jquery' ),
-        '1.0',
+        filemtime( CDB_FORM_PATH . 'build/frontend.js' ),
         true
     );
 
     // Hoja de estilos compartida entre el admin y el frontend.
     wp_enqueue_style(
         'cdb-form-config-mensajes',
-        CDB_FORM_URL . 'assets/css/config-mensajes.css',
+        CDB_FORM_URL . 'build/frontend.css',
         array(),
-        '1.0'
+        filemtime( CDB_FORM_PATH . 'build/frontend.css' )
     );
 
     // Generar las reglas CSS para cada tipo/color definido.

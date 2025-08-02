@@ -18,9 +18,9 @@ function cdb_form_admin_enqueue( $hook ) {
     if ( 'cdb-form_page_cdb-form-config-mensajes' === $hook ) {
         wp_enqueue_style(
             'cdb-form-config-mensajes',
-            CDB_FORM_URL . 'assets/css/config-mensajes.css',
+            CDB_FORM_URL . 'build/frontend.css',
             array(),
-            '1.0'
+            filemtime( CDB_FORM_PATH . 'build/frontend.css' )
         );
         wp_enqueue_script(
             'cdb-form-config-mensajes',
