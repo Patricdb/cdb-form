@@ -25,16 +25,14 @@ function cdb_form_empleado() {
     // Comprobar si el usuario está conectado.
     if ( ! is_user_logged_in() ) {
         return cdb_form_get_mensaje(
-            'cdb_acceso_sin_login',
-            __( 'Debes iniciar sesión para actualizar tu estado.', 'cdb-form' )
+            'cdb_acceso_sin_login'
         );
     }
 
     // Comprobar si el usuario tiene el rol "Empleado".
     if ( ! cdb_usuario_es_empleado() ) {
         return cdb_form_get_mensaje(
-            'cdb_acceso_sin_permisos',
-            __( 'No tienes permisos para acceder a esta sección.', 'cdb-form' )
+            'cdb_acceso_sin_permisos'
         );
     }
 

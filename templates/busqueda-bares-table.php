@@ -1,7 +1,6 @@
 <?php if ( empty( $bares ) ) : ?>
     <?php echo cdb_form_get_mensaje(
-        'cdb_bares_sin_resultados',
-        __( 'No se encontraron bares con esos filtros.', 'cdb-form' )
+        'cdb_bares_sin_resultados'
     ); ?>
 <?php else : ?>
 <table class="cdb-busqueda-table">
