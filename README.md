@@ -28,11 +28,11 @@ Inserta estos shortcodes en una página o entrada para mostrar los distintos for
 - `[cdb_top_empleados_experiencia_precalculada]` – ranking de empleados por puntuación de experiencia.
 - `[cdb_top_empleados_puntuacion_total]` – ranking de empleados por puntuación gráfica.
 
- Los textos y los colores de fondo y texto mostrados por estos shortcodes pueden personalizarse desde el submenú **Configuración de Mensajes y Avisos** dentro del menú "CdB Form" del panel de administración.
+Los mensajes y sus colores de fondo y texto mostrados por estos shortcodes pueden personalizarse desde el submenú **Configuración de Mensajes y Avisos** dentro del menú "CdB Form" del panel de administración. El saludo mostrado por `[cdb_bienvenida_usuario]` es fijo y funciona como título de página.
 
 ### Configuración de mensajes y avisos
 
-En esta pantalla es posible editar el contenido de cada mensaje y definir variantes de avisos con sus propias clases CSS. Actualmente pueden configurarse el **Saludo al Usuario**, el **Mensaje de Bienvenida**, el **Mensaje para Empleado sin perfil** y el **Mensaje para Empleado sin experiencia**. Cada variante permite elegir un color de fondo y otro de texto. Si no se especifica color de texto, el sistema calcula automáticamente uno con contraste adecuado.
+En esta pantalla es posible editar el contenido de cada mensaje y definir variantes de avisos con sus propias clases CSS. Actualmente pueden configurarse el **Mensaje de Bienvenida**, el **Mensaje para Empleado sin perfil** y el **Mensaje para Empleado sin experiencia**. Cada variante permite elegir un color de fondo y otro de texto. Si no se especifica color de texto, el sistema calcula automáticamente uno con contraste adecuado.
 
 Para añadir una nueva variante introduce nombre, clase CSS, color de fondo y color de texto. Posteriormente podrás usar esa variante en los shortcodes seleccionándola en los mensajes correspondientes.
 

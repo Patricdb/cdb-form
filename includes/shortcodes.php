@@ -85,8 +85,8 @@ function cdb_calcular_puntuacion_experiencia_dinamica($empleado_id) {
  * Shortcode [cdb_bienvenida_usuario]
  *
  * Centraliza la lógica de visibilidad y carga secciones específicas según el rol
- * del usuario. Siempre muestra un saludo y un mensaje de bienvenida
- * configurables para cualquier usuario autenticado.
+ * del usuario. Muestra siempre un saludo (no configurable) y un mensaje de
+ * bienvenida configurable para cualquier usuario autenticado.
  *  - Empleado sin perfil: muestra mensaje configurable e invita a crear uno.
  *  - Empleado con perfil pero sin experiencia: muestra mensaje configurable.
  *  - Empleado con perfil y experiencia: muestra su panel de bienvenida.
@@ -106,12 +106,10 @@ function cdb_bienvenida_usuario_shortcode() {
     // 3) Saludo y mensaje de bienvenida comunes a todos los usuarios.
     $output = '';
 
-    $saludo_template = get_option( 'cdb_mensaje_saludo_usuario', __( '¡Hola, %s!', 'cdb-form' ) );
-    $tipo_saludo     = get_option( 'cdb_color_saludo_usuario', 'info' );
-    $clase_saludo    = cdb_form_get_tipo_color_class( $tipo_saludo );
-    $output         .= '<div class="cdb-aviso ' . esc_attr( $clase_saludo ) . '"><h1>' .
-        sprintf( esc_html( $saludo_template ), esc_html( $current_user->display_name ) ) . '</h1></div>';
+    // Saludo fijo como título de la página, no forma parte de los mensajes configurables.
+    $output .= '<h1>' . sprintf( esc_html__( '¡Hola, %s!', 'cdb-form' ), esc_html( $current_user->display_name ) ) . '</h1>';
 
+    // Mensaje de bienvenida configurable.
     $mensaje_bienvenida = get_option( 'cdb_mensaje_bienvenida', __( 'Gracias por colaborar con el Proyecto CdB.', 'cdb-form' ) );
     $tipo_bienvenida    = get_option( 'cdb_color_bienvenida', 'info' );
     $clase_bienvenida   = cdb_form_get_tipo_color_class( $tipo_bienvenida );
