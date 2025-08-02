@@ -46,6 +46,22 @@ Para añadir una nueva variante introduce nombre, clase CSS, color de fondo y co
 
 También puedes registrar variantes desde código utilizando `cdb_form_register_tipo_color( $slug, $args )`, pasando un array con `name`, `class`, `color` y `text`.
 
+## Mensajes configurables
+
+<!-- ACTUALIZAR ESTA TABLA SI SE AÑADEN NUEVAS CLAVES EN $cdb_form_defaults -->
+| Clave | Texto por defecto | Contexto (dónde aparece) |
+| --- | --- | --- |
+| cdb_acceso_sin_login | Debes iniciar sesión para acceder a esta sección. | Formularios de bar o empleado cuando el usuario no ha iniciado sesión |
+| cdb_acceso_sin_permisos | No tienes permisos para ver este contenido. | Formulario de empleado cuando el usuario no tiene permisos |
+| cdb_aviso_sin_puntuacion | Puntuación gráfica no disponible. | Panel de empleado cuando no hay gráfico |
+| cdb_bares_sin_resultados | No hay bares que coincidan con tu búsqueda. | Búsqueda de bares sin resultados |
+| cdb_empleado_no_encontrado | Empleado no encontrado. | Formulario de empleado cuando no existe perfil asociado |
+| cdb_empleados_sin_resultados | Sin coincidencias para tu búsqueda. | Búsqueda de empleados sin resultados |
+| cdb_empleados_vacio | Aún no hay empleados registrados. | Rankings de empleados cuando no existen registros |
+| cdb_experiencia_sin_perfil | Para registrar experiencia debes crear antes tu perfil de empleado. | Formulario de experiencia sin perfil de empleado |
+
+Para personalizar estos textos ve al submenú **Cdb Form → Configuración de Mensajes y Avisos**.
+
 ## Procesamiento de formularios
 
 Los formularios funcionan mediante llamadas AJAX a `admin-ajax.php` y se validan con nonces de seguridad:
