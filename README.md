@@ -28,6 +28,8 @@ Inserta estos shortcodes en una página o entrada para mostrar los distintos for
 - `[cdb_top_empleados_experiencia_precalculada]` – ranking de empleados por puntuación de experiencia.
 - `[cdb_top_empleados_puntuacion_total]` – ranking de empleados por puntuación gráfica.
 
+Los textos y colores mostrados por estos shortcodes pueden personalizarse desde el submenú **Configuración de Mensajes y Avisos** dentro del menú "CdB Form" del panel de administración.
+
 ## Procesamiento de formularios
 
 Los formularios funcionan mediante llamadas AJAX a `admin-ajax.php` y se validan con nonces de seguridad:
