@@ -96,7 +96,11 @@ function cdb_bienvenida_usuario_shortcode() {
     // [cdb_bienvenida_usuario]
     // 1) Comprobación de sesión.
     if (!is_user_logged_in()) {
-        return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_login_requerido',
+            'cdb_color_login_requerido',
+            __( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' )
+        );
     }
 
     // 2) Preparar datos de usuario y roles.
@@ -323,7 +327,11 @@ function cdb_experiencia_shortcode() {
 
     // 1) Comprobar sesión iniciada; si no la hay, se muestra aviso y se detiene.
     if (!is_user_logged_in()) {
-        return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_login_requerido',
+            'cdb_color_login_requerido',
+            __( 'Debes iniciar sesión para acceder a esta página.', 'cdb-form' )
+        );
     }
 
     // 2) Verificar que el usuario tenga el rol adecuado.
@@ -338,7 +346,11 @@ function cdb_experiencia_shortcode() {
     // La plantilla incluida volverá a validar este dato, generando comprobación redundante.
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
-        return '<p style="color: red;">' . esc_html__( 'No tienes un perfil de empleado registrado.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_experiencia_sin_perfil',
+            'cdb_color_experiencia_sin_perfil',
+            __( 'No tienes un perfil de empleado registrado.', 'cdb-form' )
+        );
     }
 
     // 4) Si pasa las verificaciones, se carga la plantilla del formulario.
@@ -395,7 +407,11 @@ add_shortcode('cdb_form_bar', 'cdb_form_bar_shortcode');
  */
 function cdb_mostrar_puntuacion_total() {
     if (!is_user_logged_in()) {
-        return '<p>' . esc_html__( 'Error: Debes iniciar sesión para ver tu puntuación.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_login_requerido',
+            'cdb_color_login_requerido',
+            __( 'Debes iniciar sesión para ver tu puntuación.', 'cdb-form' )
+        );
     }
     $current_user = wp_get_current_user();
     if (!in_array('empleado', (array) $current_user->roles)) {
@@ -403,11 +419,20 @@ function cdb_mostrar_puntuacion_total() {
     }
     $empleado_id = cdb_obtener_empleado_id($current_user->ID);
     if (!$empleado_id) {
-        return '<p>' . esc_html__( 'No se encontró un empleado asociado a este usuario.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_empleado_no_encontrado',
+            'cdb_color_empleado_no_encontrado',
+            __( 'No se encontró un empleado asociado a este usuario.', 'cdb-form' )
+        );
     }
     $puntuacion_total = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
     if (!$puntuacion_total) {
-        return '<p>' . esc_html__( 'Puntuación Gráfica no disponible.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_puntuacion_no_disponible',
+            'cdb_color_puntuacion_no_disponible',
+            __( 'Puntuación Gráfica no disponible.', 'cdb-form' ),
+            'info'
+        );
     }
     return '<p><strong>' . esc_html__( 'Puntuación Gráfica:', 'cdb-form' ) . '</strong> ' . esc_html($puntuacion_total) . '</p>';
 }
@@ -456,7 +481,11 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
 
     // 5) Si no hay empleados, avisar
     if (!$query->have_posts()) {
-        return '<p>' . esc_html__( 'No se encontraron empleados.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_sin_empleados',
+            'cdb_color_sin_empleados',
+            __( 'No se encontraron empleados.', 'cdb-form' )
+        );
     }
 
     // 6) Generar la tabla
@@ -556,7 +585,11 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
 
     // 5) Si no hay empleados, salimos.
     if (!$query->have_posts()) {
-        return '<p>' . esc_html__( 'No se encontraron empleados con puntuación total.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_sin_empleados',
+            'cdb_color_sin_empleados',
+            __( 'No se encontraron empleados con puntuación total.', 'cdb-form' )
+        );
     }
 
     // 6) Cabecera de la tabla
@@ -637,7 +670,11 @@ function cdb_posiciones_empleados_shortcode($atts) {
 
     // Validación: si no hay posicion_id válido, salimos
     if (!$posicion_id) {
-        return '<p style="color: red;">Error: No se ha proporcionado una posición válida.</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_posicion_no_valida',
+            'cdb_color_posicion_no_valida',
+            __( 'Error: No se ha proporcionado una posición válida.', 'cdb-form' )
+        );
     }
 
     // 2) Recuperar el nombre (título) de la Posición
@@ -807,7 +844,11 @@ function cdb_top_bares_puntuacion_total_shortcode() {
     $query = new WP_Query($args);
 
     if (!$query->have_posts()) {
-        return '<p>No se encontraron bares con puntuación total.</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_busqueda_sin_bares',
+            'cdb_color_busqueda_sin_bares',
+            __( 'No se encontraron bares con puntuación total.', 'cdb-form' )
+        );
     }
 
     $output  = '<h3>Top 21 Bares por Puntuación Total (Gráfica)</h3>';
@@ -863,7 +904,11 @@ function cdb_top_bares_gmaps_shortcode() {
     $query = new WP_Query($args);
 
     if (!$query->have_posts()) {
-        return '<p>No se encontraron bares con reputación (gmaps).</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_busqueda_sin_bares',
+            'cdb_color_busqueda_sin_bares',
+            __( 'No se encontraron bares con reputación (gmaps).', 'cdb-form' )
+        );
     }
 
     $output  = '<h3>Top 21 Bares por valoración en Google Maps</h3>';
@@ -919,7 +964,11 @@ function cdb_top_bares_tripadvisor_shortcode() {
     $query = new WP_Query($args);
 
     if (!$query->have_posts()) {
-        return '<p>No se encontraron bares con reputación (tripadvisor).</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_busqueda_sin_bares',
+            'cdb_color_busqueda_sin_bares',
+            __( 'No se encontraron bares con reputación (tripadvisor).', 'cdb-form' )
+        );
     }
 
     $output  = '<h3>Top 21 Bares por valoración en TripAdvisor</h3>';
@@ -975,7 +1024,11 @@ function cdb_top_bares_instagram_shortcode() {
     $query = new WP_Query($args);
 
     if (!$query->have_posts()) {
-        return '<p>No se encontraron bares con reputación (instagram).</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_busqueda_sin_bares',
+            'cdb_color_busqueda_sin_bares',
+            __( 'No se encontraron bares con reputación (instagram).', 'cdb-form' )
+        );
     }
 
     $output  = '<h3>Top 21 Bares por seguidores en Instagram</h3>';

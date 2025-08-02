@@ -24,12 +24,20 @@ function cdb_usuario_es_empleado() {
 function cdb_form_empleado() {
     // Comprobar si el usuario está conectado.
     if ( ! is_user_logged_in() ) {
-        return '<p style="color: red;">' . esc_html__( 'Debes iniciar sesión para actualizar tu estado.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_login_requerido',
+            'cdb_color_login_requerido',
+            __( 'Debes iniciar sesión para actualizar tu estado.', 'cdb-form' )
+        );
     }
 
     // Comprobar si el usuario tiene el rol "Empleado".
     if ( ! cdb_usuario_es_empleado() ) {
-        return '<p style="color: red;">' . esc_html__( 'No tienes permisos para acceder a esta sección.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_sin_permiso',
+            'cdb_color_sin_permiso',
+            __( 'No tienes permisos para acceder a esta sección.', 'cdb-form' )
+        );
     }
 
     // Obtener el ID del usuario actual.
@@ -43,7 +51,11 @@ function cdb_form_empleado() {
     ]);
 
     if (empty($empleado)) {
-        return '<p style="color: red;">' . esc_html__( 'No tienes un perfil de empleado. Crea uno antes de actualizar tu disponibilidad.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_disponibilidad_sin_perfil',
+            'cdb_color_disponibilidad_sin_perfil',
+            __( 'No tienes un perfil de empleado. Crea uno antes de actualizar tu disponibilidad.', 'cdb-form' )
+        );
     }
 
     $empleado_id = $empleado[0]->ID;
