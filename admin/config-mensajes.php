@@ -33,17 +33,29 @@ function cdb_form_config_mensajes_page() {
 
     // Definición de los mensajes configurables en el orden solicitado.
     $mensajes = array(
-        'bienvenida_gracias' => array(
-            'text_option'  => 'cdb_mensaje_bienvenida_gracias',
-            'color_option' => 'cdb_color_bienvenida_gracias',
-            'label'        => __( 'Mensaje de Agradecimiento', 'cdb-form' ),
-            'description'  => __( 'Texto opcional de agradecimiento mostrado en la bienvenida', 'cdb-form' ),
+        'saludo_usuario' => array(
+            'text_option'  => 'cdb_mensaje_saludo_usuario',
+            'color_option' => 'cdb_color_saludo_usuario',
+            'label'        => __( 'Saludo al Usuario', 'cdb-form' ),
+            'description'  => __( 'Texto de saludo inicial. Usa %s para incluir el nombre del usuario.', 'cdb-form' ),
         ),
-        'bienvenida_usuario' => array(
+        'bienvenida_general' => array(
+            'text_option'  => 'cdb_mensaje_bienvenida',
+            'color_option' => 'cdb_color_bienvenida',
+            'label'        => __( 'Mensaje de Bienvenida', 'cdb-form' ),
+            'description'  => __( 'Texto mostrado tras el saludo inicial.', 'cdb-form' ),
+        ),
+        'empleado_sin_perfil' => array(
             'text_option'  => 'cdb_mensaje_bienvenida_usuario',
             'color_option' => 'cdb_color_bienvenida_usuario',
-            'label'        => __( 'Mensaje de Bienvenida (sin perfil)', 'cdb-form' ),
-            'description'  => __( 'Este mensaje se muestra solo a usuarios que aún no han creado perfil de empleado', 'cdb-form' ),
+            'label'        => __( 'Mensaje para Empleado sin perfil', 'cdb-form' ),
+            'description'  => __( 'Se muestra a empleados que aún no han creado su perfil.', 'cdb-form' ),
+        ),
+        'empleado_sin_experiencia' => array(
+            'text_option'  => 'cdb_mensaje_empleado_sin_experiencia',
+            'color_option' => 'cdb_color_empleado_sin_experiencia',
+            'label'        => __( 'Mensaje para Empleado sin experiencia', 'cdb-form' ),
+            'description'  => __( 'Se muestra a empleados con perfil pero sin experiencia registrada.', 'cdb-form' ),
         ),
     );
 
