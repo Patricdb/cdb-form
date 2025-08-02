@@ -7,7 +7,11 @@ if (!defined('ABSPATH')) {
 // Verificar si el usuario está conectado
 $current_user = wp_get_current_user();
 if (!$current_user->exists()) {
-    echo '<p>' . esc_html__( 'Debes iniciar sesión para gestionar tu empleado.', 'cdb-form' ) . '</p>';
+    echo cdb_form_render_mensaje(
+        'cdb_mensaje_login_requerido',
+        'cdb_color_login_requerido',
+        __( 'Debes iniciar sesión para gestionar tu empleado.', 'cdb-form' )
+    );
     return;
 }
 

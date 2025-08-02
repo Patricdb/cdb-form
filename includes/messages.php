@@ -115,3 +115,20 @@ function cdb_form_register_tipo_color( $slug, $args ) {
 
     update_option( 'cdb_form_tipos_color', $tipos );
 }
+
+/**
+ * Renderiza un mensaje configurado desde las opciones del plugin.
+ *
+ * @param string $text_option  Nombre de la opción que almacena el texto.
+ * @param string $color_option Nombre de la opción que almacena el tipo/color.
+ * @param string $default_text Texto por defecto si no hay opción guardada.
+ * @param string $default_tipo Tipo/color por defecto.
+ * @return string HTML del mensaje listo para mostrarse.
+ */
+function cdb_form_render_mensaje( $text_option, $color_option, $default_text, $default_tipo = 'aviso' ) {
+    $texto = get_option( $text_option, $default_text );
+    $tipo  = get_option( $color_option, $default_tipo );
+    $clase = cdb_form_get_tipo_color_class( $tipo );
+
+    return '<div class="cdb-aviso ' . esc_attr( $clase ) . '">' . esc_html( $texto ) . '</div>';
+}

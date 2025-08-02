@@ -51,7 +51,87 @@ function cdb_form_config_mensajes_page() {
             'label'        => __( 'Mensaje para Empleado sin experiencia', 'cdb-form' ),
             'description'  => __( 'Se muestra a empleados con perfil pero sin experiencia registrada.', 'cdb-form' ),
         ),
+        'login_requerido' => array(
+            'text_option'  => 'cdb_mensaje_login_requerido',
+            'color_option' => 'cdb_color_login_requerido',
+            'label'        => __( 'Acceso restringido sin inicio de sesión', 'cdb-form' ),
+            'description'  => __( 'Se muestra a usuarios no autenticados.', 'cdb-form' ),
+        ),
+        'empleado_no_encontrado' => array(
+            'text_option'  => 'cdb_mensaje_empleado_no_encontrado',
+            'color_option' => 'cdb_color_empleado_no_encontrado',
+            'label'        => __( 'Empleado no encontrado', 'cdb-form' ),
+            'description'  => __( 'Aparece cuando no existe un empleado asociado al usuario.', 'cdb-form' ),
+        ),
+        'puntuacion_no_disponible' => array(
+            'text_option'  => 'cdb_mensaje_puntuacion_no_disponible',
+            'color_option' => 'cdb_color_puntuacion_no_disponible',
+            'label'        => __( 'Puntuación no disponible', 'cdb-form' ),
+            'description'  => __( 'Se muestra cuando no hay puntuación gráfica registrada.', 'cdb-form' ),
+        ),
+        'sin_empleados' => array(
+            'text_option'  => 'cdb_mensaje_sin_empleados',
+            'color_option' => 'cdb_color_sin_empleados',
+            'label'        => __( 'Listado de empleados vacío', 'cdb-form' ),
+            'description'  => __( 'Se muestra cuando un listado de empleados no tiene resultados.', 'cdb-form' ),
+        ),
+        'busqueda_sin_bares' => array(
+            'text_option'  => 'cdb_mensaje_busqueda_sin_bares',
+            'color_option' => 'cdb_color_busqueda_sin_bares',
+            'label'        => __( 'Búsqueda de bares sin resultados', 'cdb-form' ),
+            'description'  => __( 'Se muestra cuando la búsqueda de bares no devuelve resultados.', 'cdb-form' ),
+        ),
+        'busqueda_sin_empleados' => array(
+            'text_option'  => 'cdb_mensaje_busqueda_sin_empleados',
+            'color_option' => 'cdb_color_busqueda_sin_empleados',
+            'label'        => __( 'Búsqueda de empleados sin resultados', 'cdb-form' ),
+            'description'  => __( 'Se muestra cuando la búsqueda de empleados no devuelve resultados.', 'cdb-form' ),
+        ),
+        'experiencia_sin_perfil' => array(
+            'text_option'  => 'cdb_mensaje_experiencia_sin_perfil',
+            'color_option' => 'cdb_color_experiencia_sin_perfil',
+            'label'        => __( 'Experiencia sin perfil', 'cdb-form' ),
+            'description'  => __( 'Aparece en el formulario de experiencia cuando falta el perfil de empleado.', 'cdb-form' ),
+        ),
+        'posicion_no_valida' => array(
+            'text_option'  => 'cdb_mensaje_posicion_no_valida',
+            'color_option' => 'cdb_color_posicion_no_valida',
+            'label'        => __( 'Posición no válida', 'cdb-form' ),
+            'description'  => __( 'Se muestra cuando falta una posición al listar empleados por posición.', 'cdb-form' ),
+        ),
+        'bar_sin_registro' => array(
+            'text_option'  => 'cdb_mensaje_bar_sin_registro',
+            'color_option' => 'cdb_color_bar_sin_registro',
+            'label'        => __( 'Usuario sin bar registrado', 'cdb-form' ),
+            'description'  => __( 'Se muestra cuando el usuario intenta actualizar un bar sin tener uno asignado.', 'cdb-form' ),
+        ),
+        'sin_permiso' => array(
+            'text_option'  => 'cdb_mensaje_sin_permiso',
+            'color_option' => 'cdb_color_sin_permiso',
+            'label'        => __( 'Acceso sin permisos', 'cdb-form' ),
+            'description'  => __( 'Se muestra cuando el usuario no tiene permisos para acceder a la sección.', 'cdb-form' ),
+        ),
+        'disponibilidad_sin_perfil' => array(
+            'text_option'  => 'cdb_mensaje_disponibilidad_sin_perfil',
+            'color_option' => 'cdb_color_disponibilidad_sin_perfil',
+            'label'        => __( 'Disponibilidad sin perfil', 'cdb-form' ),
+            'description'  => __( 'Aparece al actualizar disponibilidad sin tener perfil de empleado.', 'cdb-form' ),
+        ),
     );
+
+    // Ejemplos de futuros mensajes que podrían añadirse:
+    // 'exito_guardado' => array(
+    //     'text_option'  => 'cdb_mensaje_exito_guardado',
+    //     'color_option' => 'cdb_color_exito_guardado',
+    //     'label'        => __( 'Acción completada con éxito', 'cdb-form' ),
+    //     'description'  => __( 'Útil para confirmar guardados o actualizaciones.', 'cdb-form' ),
+    // ),
+    // 'listado_vacio_motivacional' => array(
+    //     'text_option'  => 'cdb_mensaje_listado_vacio',
+    //     'color_option' => 'cdb_color_listado_vacio',
+    //     'label'        => __( 'Listado vacío motivacional', 'cdb-form' ),
+    //     'description'  => __( 'Mensajes positivos cuando un listado no tiene entradas.', 'cdb-form' ),
+    // ),
 
     // Tipos/color disponibles
     $tipos_color = cdb_form_get_tipos_color();

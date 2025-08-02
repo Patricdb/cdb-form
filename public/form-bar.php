@@ -12,7 +12,11 @@ add_shortcode( 'form-bar', 'cdb_form_bar' );
 function cdb_form_bar() {
     // Comprobar si el usuario está conectado.
     if ( ! is_user_logged_in() ) {
-        return '<p>' . esc_html__( 'Debes iniciar sesión para actualizar el estado de tu bar.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_login_requerido',
+            'cdb_color_login_requerido',
+            __( 'Debes iniciar sesión para actualizar el estado de tu bar.', 'cdb-form' )
+        );
     }
 
     // Obtener el ID del usuario actual.
@@ -26,7 +30,11 @@ function cdb_form_bar() {
     ));
 
     if (empty($bar)) {
-        return '<p>' . esc_html__( 'No tienes un bar registrado. Crea uno antes de actualizar su estado.', 'cdb-form' ) . '</p>';
+        return cdb_form_render_mensaje(
+            'cdb_mensaje_bar_sin_registro',
+            'cdb_color_bar_sin_registro',
+            __( 'No tienes un bar registrado. Crea uno antes de actualizar su estado.', 'cdb-form' )
+        );
     }
 
     $bar_id = $bar[0]->ID;
