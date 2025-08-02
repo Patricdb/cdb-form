@@ -18,6 +18,7 @@ require_once CDB_FORM_PATH . 'includes/validations.php';
 require_once CDB_FORM_PATH . 'includes/capabilities.php';
 require_once CDB_FORM_PATH . 'includes/shortcodes.php';
 require_once CDB_FORM_PATH . 'includes/ajax-functions.php';
+require_once CDB_FORM_PATH . 'includes/messages.php';
 
 // Cargar scripts y estilos para el admin y frontend
 require_once CDB_FORM_PATH . 'admin/enqueue.php';
