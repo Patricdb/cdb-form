@@ -32,6 +32,8 @@ $posicion_actual = '';
 
 $fecha_apertura = '';
 $fecha_cierre   = '';
+
+error_log("[DEBUG] Bar ID: {$bar_id_actual} - Apertura: {$fecha_apertura} - Cierre: {$fecha_cierre}");
 ?>
 
 <!-- Estilos visuales del formulario y la tabla de experiencia -->
@@ -180,15 +182,13 @@ $fecha_cierre   = '';
                         <td>
                             <!-- Icono de “ojo” para ver el equipo, si existe -->
                             <?php if (!empty($exp->equipo_id)) : ?>
-                                <a class="cdb-btn-ver" href="<?php echo esc_url(get_permalink($exp->equipo_id)); ?>" title="<?php esc_attr_e( 'Ver equipo', 'cdb-form' ); ?>" aria-label="<?php esc_attr_e( 'Ver', 'cdb-form' ); ?>">
-                                    <span class="dashicons dashicons-visibility" aria-hidden="true"></span>
-                                    <span class="sr-only"><?php esc_html_e( 'Ver', 'cdb-form' ); ?></span>
+                                <a class="cdb-btn-ver" href="<?php echo esc_url(get_permalink($exp->equipo_id)); ?>" title="Ver equipo">
+                                    <span class="dashicons dashicons-visibility"></span>
                                 </a>
                             <?php endif; ?>
                             <!-- Botón de borrado de experiencia -->
-                            <button class="cdb-btn-borrar" data-exp-id="<?php echo esc_attr($exp->exp_id); ?>" title="<?php esc_attr_e( 'Eliminar experiencia', 'cdb-form' ); ?>" aria-label="<?php esc_attr_e( 'Eliminar', 'cdb-form' ); ?>">
-                                <span class="dashicons dashicons-trash" aria-hidden="true"></span>
-                                <span class="sr-only"><?php esc_html_e( 'Eliminar', 'cdb-form' ); ?></span>
+                            <button class="cdb-btn-borrar" data-exp-id="<?php echo esc_attr($exp->exp_id); ?>" title="Eliminar experiencia">
+                                <span class="dashicons dashicons-trash"></span>
                             </button>
                         </td>
                     </tr>
@@ -209,13 +209,13 @@ $fecha_cierre   = '';
     <h2><?php esc_html_e( 'Actualizar Experiencia Laboral', 'cdb-form' ); ?></h2>
     <form id="cdb_experiencia_form">
         <!-- Acción para el AJAX -->
-        <input type="hidden" name="action" value="cdb_guardar_experiencia" aria-hidden="true">
+        <input type="hidden" name="action" value="cdb_guardar_experiencia">
         <!-- Nonce de seguridad -->
-        <input type="hidden" name="security" value="<?php echo wp_create_nonce('cdb_form_nonce'); ?>" aria-hidden="true">
+        <input type="hidden" name="security" value="<?php echo wp_create_nonce('cdb_form_nonce'); ?>">
         <!-- Se envía el empleado_id, aunque en el handler se obtiene de forma consistente -->
-        <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>" aria-hidden="true">
+        <input type="hidden" name="empleado_id" value="<?php echo esc_attr($empleado_id); ?>">
         <!-- Campo oculto para vincular equipo si es necesario -->
-        <input type="hidden" name="relacionar_equipo" value="1" aria-hidden="true">
+        <input type="hidden" name="relacionar_equipo" value="1">
 
         <?php
         // 1) Obtener todos los bares y crear array para Autocomplete
@@ -247,7 +247,7 @@ $fecha_cierre   = '';
             required
         >
         <!-- Hidden donde guardamos el ID real del bar seleccionado -->
-        <input type="hidden" id="bar_id" name="bar_id" value="" aria-hidden="true">
+        <input type="hidden" id="bar_id" name="bar_id" value="">
 
         <!-- Selección de Año (se actualizará dinámicamente) -->
         <label for="anio">Año:</label>

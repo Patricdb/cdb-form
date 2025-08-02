@@ -21,14 +21,12 @@ define( 'CDB_FORM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CDB_FORM_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Carga las traducciones del plugin.
+ * Carga el archivo de traducciones del plugin.
  */
-add_action(
-    'init',
-    function () {
-        load_plugin_textdomain( 'cdb-form', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-    }
-);
+function cdb_form_load_textdomain() {
+    load_plugin_textdomain( 'cdb-form', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', 'cdb_form_load_textdomain' );
 
 /*---------------------------------------------------------------
  * 2. CARGA OPCIONAL DEL PLUGIN cdb-bar (SI EXISTE)
