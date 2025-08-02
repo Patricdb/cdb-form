@@ -51,8 +51,8 @@ function cdb_form_bar() {
             <option value="Traspaso" <?php selected($estado_actual, 'Traspaso'); ?>><?php esc_html_e( 'Traspaso', 'cdb-form' ); ?></option>
             <option value="Desconocido" <?php selected($estado_actual, 'Desconocido'); ?>><?php esc_html_e( 'Desconocido', 'cdb-form' ); ?></option>
         </select>
-        <input type="hidden" name="bar_id" value="<?php echo esc_attr($bar_id); ?>" aria-hidden="true">
-        <input type="hidden" name="security" value="<?php echo wp_create_nonce('cdb_form_nonce'); ?>" aria-hidden="true">
+        <input type="hidden" name="bar_id" value="<?php echo esc_attr($bar_id); ?>">
+        <input type="hidden" name="security" value="<?php echo wp_create_nonce('cdb_form_nonce'); ?>">
         <button type="submit"><?php esc_html_e( 'Actualizar', 'cdb-form' ); ?></button>
     </form>
     <p id="cdb-response-message-bar" style="color: green;"></p>
