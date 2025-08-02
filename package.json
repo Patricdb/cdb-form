@@ -2,6 +2,18 @@
   "name": "cdb-form",
   "private": true,
   "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production && sass assets/scss/frontend.scss build/frontend.css --no-source-map",
+    "lint": "eslint assets/js --ext .js",
     "pot": "wp i18n make-pot . languages/cdb-form.pot --exclude=node_modules,tests || vendor/bin/wp i18n make-pot . languages/cdb-form.pot --exclude=node_modules,tests"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "babel-loader": "^9.1.3",
+    "eslint": "^8.57.0",
+    "sass": "^1.72.0",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   }
 }
