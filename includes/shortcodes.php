@@ -274,7 +274,11 @@ function cdb_experiencia_shortcode() {
     }
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
-        return '<p style="color: red;">' . esc_html__( 'No tienes un perfil de empleado registrado.', 'cdb-form' ) . '</p>';
+        // Mensaje de aviso del shortcode [cdb_experiencia]
+        // Ahora configurable desde la opción 'cdb_mensaje_experiencia_usuario' (por defecto: 'No tienes un perfil de empleado registrado.')
+        $mensaje = get_option('cdb_mensaje_experiencia_usuario', 'No tienes un perfil de empleado registrado.');
+        echo '<div class="cdb-aviso">'.$mensaje.'</div>';
+        return '';
     }
     ob_start();
     include CDB_FORM_PATH . 'templates/form-experiencia-template.php';
