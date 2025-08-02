@@ -217,7 +217,7 @@ function cdb_form_render_mensaje( $text_option, $color_option, $default_text, $d
     $html .= '<strong class="cdb-mensaje-destacado">' . wp_kses_post( $texto ) . '</strong>';
 
     if ( '' !== $secundario ) {
-        $html .= '<span class="cdb-mensaje-secundario">' . wp_kses_post( $secundario ) . '</span>';
+        $html .= '<br><span class="cdb-mensaje-secundario">' . wp_kses_post( $secundario ) . '</span>';
     }
 
     $html .= '</div>';
