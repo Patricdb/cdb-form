@@ -119,6 +119,18 @@ function cdb_form_config_mensajes_page() {
         ),
     );
 
+    global $cdb_form_defaults;
+    $placeholder_map = array(
+        'cdb_mensaje_puntuacion_no_disponible' => 'cdb_aviso_sin_puntuacion',
+        'cdb_mensaje_empleado_no_encontrado'   => 'cdb_empleado_no_encontrado',
+        'cdb_mensaje_experiencia_sin_perfil'   => 'cdb_experiencia_sin_perfil',
+        'cdb_mensaje_busqueda_sin_bares'       => 'cdb_bares_sin_resultados',
+        'cdb_mensaje_sin_empleados'            => 'cdb_empleados_vacio',
+        'cdb_mensaje_busqueda_sin_empleados'   => 'cdb_empleados_sin_resultados',
+        'cdb_mensaje_login_requerido'          => 'cdb_acceso_sin_login',
+        'cdb_mensaje_sin_permiso'              => 'cdb_acceso_sin_permisos',
+    );
+
     // Ejemplos de futuros mensajes que podrían añadirse:
     // 'exito_guardado' => array(
     //     'text_option'  => 'cdb_mensaje_exito_guardado',
@@ -198,6 +210,7 @@ function cdb_form_config_mensajes_page() {
     <div class="wrap">
         <h1><?php esc_html_e( 'Configuración de Mensajes y Avisos', 'cdb-form' ); ?></h1>
         <p><?php esc_html_e( 'Este panel centraliza la gestión de mensajes/avisos de la experiencia de usuario CdB.', 'cdb-form' ); ?></p>
+        <div class="notice notice-info"><p><?php esc_html_e( 'Si dejas un campo vacío se mostrará el texto por defecto', 'cdb-form' ); ?></p></div>
         <?php if ( $mensaje_guardado ) :
             $clase_notice = cdb_form_get_tipo_color_class( $tipo_mensaje );
             $bg_notice    = $tipos_color[ $tipo_mensaje ]['color'] ?? '#000';
@@ -211,21 +224,25 @@ function cdb_form_config_mensajes_page() {
             <?php wp_nonce_field( 'cdb_form_config_mensajes_save', 'cdb_form_config_mensajes_nonce' ); ?>
 
             <?php foreach ( $mensajes as $id => $datos ) :
-                $texto = cdb_form_get_option_compat(
-                    array(
-                        $datos['text_option'],
-                        $datos['text_option'] . '_destacado',
-                        $datos['text_option'] . '_principal',
-                        $datos['text_option'] . '_mensaje_destacado',
-                        $datos['text_option'] . '_mensaje_principal',
-                        $datos['text_option'] . '_frase_destacada',
-                        $datos['text_option'] . '_frase_principal',
-                        $datos['text_option'] . '_featured',
-                        $datos['text_option'] . '_primary',
-                        $datos['text_option'] . '_highlight',
-                    ),
-                    ''
-                );
+            $texto = cdb_form_get_option_compat(
+                array(
+                    $datos['text_option'],
+                    $datos['text_option'] . '_destacado',
+                    $datos['text_option'] . '_principal',
+                    $datos['text_option'] . '_mensaje_destacado',
+                    $datos['text_option'] . '_mensaje_principal',
+                    $datos['text_option'] . '_frase_destacada',
+                    $datos['text_option'] . '_frase_principal',
+                    $datos['text_option'] . '_featured',
+                    $datos['text_option'] . '_primary',
+                    $datos['text_option'] . '_highlight',
+                ),
+                ''
+            );
+            $placeholder = '';
+            if ( isset( $placeholder_map[ $datos['text_option'] ] ) && isset( $cdb_form_defaults[ $placeholder_map[ $datos['text_option'] ] ] ) ) {
+                $placeholder = $cdb_form_defaults[ $placeholder_map[ $datos['text_option'] ] ];
+            }
                 $sec_opt    = $datos['text_option'] . '_secundaria';
                 $secundario = cdb_form_get_option_compat(
                     array(
@@ -254,7 +271,7 @@ function cdb_form_config_mensajes_page() {
                     <button type="button" class="button cdb-edit-mensaje"><?php esc_html_e( 'Editar', 'cdb-form' ); ?></button>
                     <div class="cdb-mensaje-edicion" style="display:none;">
                         <label><?php esc_html_e( 'Frase destacada', 'cdb-form' ); ?></label>
-                        <textarea class="large-text" rows="2" name="<?php echo esc_attr( $datos['text_option'] ); ?>" data-role="destacado"><?php echo esc_textarea( $texto ); ?></textarea>
+                        <textarea class="large-text" rows="2" name="<?php echo esc_attr( $datos['text_option'] ); ?>" data-role="destacado" placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( $texto ); ?></textarea>
                         <label><?php esc_html_e( 'Frase secundaria', 'cdb-form' ); ?></label>
                         <textarea class="large-text" rows="2" name="<?php echo esc_attr( $sec_opt ); ?>" data-role="secundario"><?php echo esc_textarea( $secundario ); ?></textarea>
                         <p class="description"><?php echo esc_html( $datos['description'] ); ?></p>

@@ -18,6 +18,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  * texto recomendado automáticamente.
  */
 
+// Valores por defecto de mensajes y avisos.
+$cdb_form_defaults = array(
+    'cdb_aviso_sin_puntuacion'     => __( 'Puntuación gráfica no disponible.', 'cdb-form' ),
+    'cdb_empleado_no_encontrado'   => __( 'Empleado no encontrado.', 'cdb-form' ),
+    'cdb_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear antes tu perfil de empleado.', 'cdb-form' ),
+    'cdb_bares_sin_resultados'     => __( 'No hay bares que coincidan con tu búsqueda.', 'cdb-form' ),
+    'cdb_empleados_vacio'          => __( 'Aún no hay empleados registrados.', 'cdb-form' ),
+    'cdb_empleados_sin_resultados' => __( 'Sin coincidencias para tu búsqueda.', 'cdb-form' ),
+    'cdb_acceso_sin_login'         => __( 'Debes iniciar sesión para acceder a esta sección.', 'cdb-form' ),
+    'cdb_acceso_sin_permisos'      => __( 'No tienes permisos para ver este contenido.', 'cdb-form' ),
+    // …añade aquí cualquier clave nueva que surja
+);
+
 /**
  * Obtiene la lista de tipos de avisos disponibles.
  *
@@ -162,7 +175,9 @@ function cdb_form_get_option_compat( $keys, $default = '' ) {
  * @param string $default_tipo Tipo/color por defecto.
  * @return string HTML del mensaje listo para mostrarse.
  */
-function cdb_form_get_mensaje( $slug, $default_text = '', $default_tipo = 'aviso' ) {
+function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
+    global $cdb_form_defaults;
+
     $map = array(
         'cdb_aviso_sin_puntuacion'     => 'cdb_mensaje_puntuacion_no_disponible',
         'cdb_empleado_no_encontrado'   => 'cdb_mensaje_empleado_no_encontrado',
@@ -174,19 +189,30 @@ function cdb_form_get_mensaje( $slug, $default_text = '', $default_tipo = 'aviso
         'cdb_acceso_sin_permisos'      => 'cdb_mensaje_sin_permiso',
     );
 
-    $text_option  = $slug;
-    $color_option = 'cdb_color_' . $slug;
+    $text_option  = $clave;
+    $color_option = 'cdb_color_' . $clave;
 
-    if ( isset( $map[ $slug ] ) ) {
-        $old_text_option  = $map[ $slug ];
+    if ( isset( $map[ $clave ] ) ) {
+        $old_text_option  = $map[ $clave ];
         $old_color_option = str_replace( 'cdb_mensaje_', 'cdb_color_', $old_text_option );
-
         // Migrar valores antiguos a las nuevas claves canónicas.
-        cdb_form_get_option_compat( array( $text_option, $old_text_option ), $default_text );
-        cdb_form_get_option_compat( array( $color_option, $old_color_option ), $default_tipo );
+        cdb_form_get_option_compat( array( $text_option, $old_text_option ), null );
+        cdb_form_get_option_compat( array( $color_option, $old_color_option ), null );
     }
 
-    return cdb_form_render_mensaje( $text_option, $color_option, $default_text, $default_tipo );
+    $texto = get_option( $text_option, '' );
+    if ( '' === $texto ) {
+        $texto = $cdb_form_defaults[ $clave ] ?? __( 'Aviso no configurado', 'cdb-form' );
+    }
+
+    $tipo_guardado = get_option( $color_option, $tipo );
+    $clase         = cdb_form_get_tipo_color_class( $tipo_guardado );
+
+    $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '">';
+    $html .= '<strong class="cdb-mensaje-destacado">' . wp_kses_post( $texto ) . '</strong>';
+    $html .= '</div>';
+
+    return $html;
 }
 
 /**
