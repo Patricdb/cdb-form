@@ -216,9 +216,15 @@ function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
         cdb_form_get_option_compat( array( $color_option, $old_color_option ), null );
     }
 
-    $texto = get_option( $text_option, '' );
+    $texto      = get_option( $text_option, '' );
+    $secundario = get_option( $text_option . '_secundaria', '' );
     if ( '' === $texto ) {
         $texto = $cdb_form_defaults[ $clave ] ?? __( 'Aviso no configurado', 'cdb-form' );
+    }
+    if ( '' === $secundario && strpos( $texto, '|' ) !== false ) {
+        $parts      = array_map( 'trim', explode( '|', $texto, 2 ) );
+        $texto      = $parts[0];
+        $secundario = $parts[1] ?? '';
     }
 
     $tipo_guardado = get_option( $color_option, $tipo );
@@ -226,6 +232,9 @@ function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
 
     $html  = '<div class="cdb-aviso ' . esc_attr( $clase ) . '">';
     $html .= '<strong class="cdb-mensaje-destacado">' . wp_kses_post( $texto ) . '</strong>';
+    if ( '' !== $secundario ) {
+        $html .= '<span class="cdb-mensaje-secundario">' . wp_kses_post( $secundario ) . '</span>';
+    }
     $html .= '</div>';
 
     return $html;
