@@ -129,12 +129,7 @@ function cdb_bienvenida_usuario_shortcode() {
             // Perfil existente: se muestra el panel del empleado.
             $output .= do_shortcode('[cdb_bienvenida_empleado]');
         } else {
-            // Sin perfil: mensaje configurable e invitación a crear uno.
-            $output .= cdb_form_render_mensaje(
-                'cdb_mensaje_bienvenida_usuario',
-                'cdb_color_bienvenida_usuario',
-                'No tienes un perfil de empleado registrado.'
-            );
+            // Sin perfil: se muestra el formulario de empleado, que ya incluye su propio aviso.
             $output .= do_shortcode('[cdb_form_empleado]');
         }
     }
@@ -350,19 +345,14 @@ function cdb_experiencia_shortcode() {
     }
 
     // 3) Comprobar que el usuario tenga un perfil de empleado publicado.
-    // Sin este perfil no puede registrar experiencias.
-    // La plantilla incluida volverá a validar este dato, generando comprobación redundante.
+    // Si falta, se muestra directamente el formulario de creación evitando avisos duplicados.
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
-        return cdb_form_render_mensaje(
-            'cdb_mensaje_experiencia_sin_perfil',
-            'cdb_color_experiencia_sin_perfil',
-            __( 'No tienes un perfil de empleado registrado.', 'cdb-form' )
-        );
+        return do_shortcode('[cdb_form_empleado]');
     }
 
     // 4) Si pasa las verificaciones, se carga la plantilla del formulario.
-    // 'form-experiencia-template.php' incluye nuevamente validaciones de sesión y perfil.
+    // La plantilla validará nuevamente la sesión y mostrará los avisos necesarios.
     ob_start();
     include CDB_FORM_PATH . 'templates/form-experiencia-template.php';
     return ob_get_clean();
