@@ -214,6 +214,12 @@ function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
         // Migrar valores antiguos a las nuevas claves canónicas.
         cdb_form_get_option_compat( array( $text_option, $old_text_option ), null );
         cdb_form_get_option_compat( array( $color_option, $old_color_option ), null );
+
+        // Migrar la frase secundaria
+        cdb_form_get_option_compat(
+            array( $text_option . '_secundaria', $old_text_option . '_secundaria' ),
+            null
+        );
     }
 
     $texto      = get_option( $text_option, '' );
