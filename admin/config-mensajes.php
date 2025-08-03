@@ -277,7 +277,7 @@ function cdb_form_config_mensajes_page() {
                 $color_hex  = $datos_tipo['color'] ?? '#000';
                 $text_hex   = $datos_tipo['text'] ?? cdb_form_get_contrasting_text_color( $color_hex );
                 ?>
-                <div class="cdb-config-mensaje<?php echo ( '1' !== $mostrar ) ? ' oculto' : ''; ?>" id="mensaje-<?php echo esc_attr( $id ); ?>">
+                <div class="cdb-config-mensaje<?php echo ( '1' != $mostrar ) ? ' oculto' : ''; ?>" id="mensaje-<?php echo esc_attr( $id ); ?>">
                     <strong><?php echo esc_html( $datos['label'] ); ?></strong> <span class="cdb-oculto-label"><?php esc_html_e( 'Oculto', 'cdb-form' ); ?></span>
                     <div class="cdb-mensaje-preview <?php echo esc_attr( $clase ); ?>" style="border-left-color: <?php echo esc_attr( $color_hex ); ?>; background-color: <?php echo esc_attr( $color_hex ); ?>; color: <?php echo esc_attr( $text_hex ); ?>;">
                         <strong class="cdb-mensaje-destacado"><?php echo wp_kses_post( $texto ); ?></strong>
