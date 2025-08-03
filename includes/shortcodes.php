@@ -354,11 +354,7 @@ function cdb_experiencia_shortcode() {
     // La plantilla incluida volverá a validar este dato, generando comprobación redundante.
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
-        return cdb_form_render_mensaje(
-            'cdb_mensaje_experiencia_sin_perfil',
-            'cdb_color_experiencia_sin_perfil',
-            __( 'No tienes un perfil de empleado registrado.', 'cdb-form' )
-        );
+        return cdb_form_get_mensaje('cdb_experiencia_sin_perfil');
     }
 
     // 4) Si pasa las verificaciones, se carga la plantilla del formulario.

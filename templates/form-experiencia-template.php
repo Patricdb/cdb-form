@@ -4,27 +4,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Verificar si el usuario está conectado.
-$current_user = wp_get_current_user();
-if (!$current_user->exists()) {
-    echo cdb_form_render_mensaje(
-        'cdb_mensaje_login_requerido',
-        'cdb_color_login_requerido',
-        __( 'Debes iniciar sesión para gestionar tu empleado.', 'cdb-form' )
-    );
-    return;
-}
-
-// Obtener la ID del empleado asociado al usuario actual mediante la función específica.
-$empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
-if (!$empleado_id) {
-    echo cdb_form_get_mensaje(
-        'cdb_experiencia_sin_perfil'
-    );
-    echo do_shortcode('[cdb_form_empleado]');
-    return;
-}
-
 // (Opcional) Variables para inicializar campos en el formulario
 $bar_id_actual   = '';
 $anio_actual     = '';
