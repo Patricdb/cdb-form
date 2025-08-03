@@ -8,7 +8,6 @@
         <tr>
             <th><?php esc_html_e( 'Puntuación', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Nombre', 'cdb-form' ); ?></th>
-            <th><?php esc_html_e( 'Posiciones', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Bares', 'cdb-form' ); ?></th>
             <th><?php esc_html_e( 'Año', 'cdb-form' ); ?></th>
         </tr>
@@ -18,12 +17,6 @@
         <tr>
             <td><?php echo esc_html( $emp['puntuacion'] ); ?></td>
             <td><a href="<?php echo esc_url( get_permalink( $emp['id'] ) ); ?>"><?php echo esc_html( $emp['nombre'] ); ?></a></td>
-            <td>
-                <?php foreach ( $emp['posiciones'] as $index => $pos ) : ?>
-                    <?php if ( $index > 0 ) echo ', '; ?>
-                    <a href="<?php echo esc_url( get_permalink( $pos['id'] ) ); ?>"><?php echo esc_html( $pos['nombre'] ); ?></a>
-                <?php endforeach; ?>
-            </td>
             <td>
                 <?php foreach ( $emp['bares'] as $index => $bar ) : ?>
                     <?php if ( $index > 0 ) echo ', '; ?>
