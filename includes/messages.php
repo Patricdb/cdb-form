@@ -245,7 +245,7 @@ function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
         $secundario = $parts[1] ?? '';
     }
 
-    if ( '0' === $mostrar ) {
+    if ( '0' == $mostrar ) {
         return '';
     }
 
@@ -312,7 +312,7 @@ function cdb_form_get_mensaje_js( $clave ) {
     }
 
     $mostrar = get_option( $clave . '_mostrar', '1' );
-    if ( '0' === $mostrar ) {
+    if ( '0' == $mostrar ) {
         return '';
     }
 
