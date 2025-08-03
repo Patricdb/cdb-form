@@ -28,6 +28,9 @@
 /* Estilos utilizados únicamente en la pantalla de Configuración de Mensajes */
 .cdb-config-mensaje { margin-bottom: 20px; }
 .cdb-config-mensaje.editing { border: 1px solid #2271b1; padding: 10px; }
+.cdb-config-mensaje.oculto .cdb-mensaje-preview { opacity:0.5; }
+.cdb-oculto-label { display:none; margin-left:8px; font-style:italic; }
+.cdb-config-mensaje.oculto .cdb-oculto-label { display:inline; }
 .cdb-mensaje-preview { padding: 8px 12px; margin-bottom: 8px; border-left: 4px solid transparent; }
 .cdb-color-swatch { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:4px; vertical-align:middle; }
 .cdb-tipo-color-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }

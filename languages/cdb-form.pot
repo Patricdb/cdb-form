@@ -881,3 +881,11 @@ msgstr ""
 #: test.php:5
 msgid "Debes iniciar sesión."
 msgstr ""
+
+#: admin/config-mensajes.php:275
+msgid "Oculto"
+msgstr ""
+
+#: admin/config-mensajes.php:295
+msgid "Mostrar aviso"
+msgstr ""

@@ -47,7 +47,13 @@ jQuery(document).ready(function($){
     });
 
     // Marcar fila como eliminada
-    $('#cdb-tipos-color').on('change', 'input[type="checkbox"]', function(){
+        $('#cdb-tipos-color').on('change', 'input[type="checkbox"]', function(){
         $(this).closest('.cdb-tipo-color-row').toggleClass('deleting', this.checked);
     });
+
+    // Controlar visibilidad de los avisos
+    $('.cdb-mensaje-edicion input[data-role="mostrar"]').on('change', function(){
+        var cont = $(this).closest('.cdb-config-mensaje');
+        cont.toggleClass('oculto', !this.checked);
+    }).trigger('change');
 });
