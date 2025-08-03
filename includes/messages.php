@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Valores por defecto de mensajes y avisos.
 $cdb_form_defaults = array(
     'cdb_aviso_sin_puntuacion'     => __( 'Puntuación gráfica no disponible.', 'cdb-form' ) . '|' . __( 'Añade más valoraciones para generar tu gráfico.', 'cdb-form' ),
-    'cdb_empleado_no_encontrado'   => __( 'No encontramos tu perfil de empleado. Crea uno para unirte a tu equipo.', 'cdb-form' ),
+    'cdb_empleado_no_encontrado'   => __( 'Empleado no encontrado.', 'cdb-form' ) . '|' . __( 'Crea primero tu perfil de empleado para continuar.', 'cdb-form' ),
     'cdb_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear tu perfil.', 'cdb-form' ) . '|' . __( 'Completa tu información de empleado y vuelve aquí.', 'cdb-form' ),
     'cdb_bares_sin_resultados'     => __( 'No hay bares que coincidan con tu búsqueda.', 'cdb-form' ) . '|' . __( 'Ajusta filtros o prueba con otro término.', 'cdb-form' ),
     'cdb_empleados_vacio'          => __( 'Aún no hay empleados registrados.', 'cdb-form' ) . '|' . __( '¡Sé el primero en unirte al proyecto!', 'cdb-form' ),
