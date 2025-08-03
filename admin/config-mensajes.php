@@ -157,7 +157,8 @@ function cdb_form_config_mensajes_page() {
     ) {
         // Guardar textos (principal y secundario) y tipo/color de cada mensaje
         foreach ( $mensajes as $datos ) {
-            $sec_opt = $datos['text_option'] . '_secundaria';
+            $sec_opt  = $datos['text_option'] . '_secundaria';
+            $show_opt = $datos['text_option'] . '_mostrar';
 
             if ( isset( $_POST[ $datos['text_option'] ] ) ) {
                 update_option( $datos['text_option'], wp_kses_post( $_POST[ $datos['text_option'] ] ) );
@@ -168,6 +169,10 @@ function cdb_form_config_mensajes_page() {
             if ( isset( $_POST[ $datos['color_option'] ] ) ) {
                 update_option( $datos['color_option'], sanitize_key( $_POST[ $datos['color_option'] ] ) );
             }
+
+            // Guardar estado de visibilidad (1 = mostrar, 0 = ocultar).
+            $mostrar = isset( $_POST[ $show_opt ] ) ? '1' : '0';
+            update_option( $show_opt, $mostrar );
         }
 
         // Guardar tipos/color
@@ -256,6 +261,8 @@ function cdb_form_config_mensajes_page() {
                     ),
                     ''
                 );
+                $show_opt  = $datos['text_option'] . '_mostrar';
+                $mostrar   = get_option( $show_opt, '1' );
                 $clave_i18n      = $placeholder_map[ $datos['text_option'] ] ?? $datos['text_option'];
                 $traduccion_i18n = cdb_form_get_mensaje_i18n( $clave_i18n );
                 $tipo       = get_option( $datos['color_option'], 'aviso' );
@@ -264,8 +271,8 @@ function cdb_form_config_mensajes_page() {
                 $color_hex  = $datos_tipo['color'] ?? '#000';
                 $text_hex   = $datos_tipo['text'] ?? cdb_form_get_contrasting_text_color( $color_hex );
                 ?>
-                <div class="cdb-config-mensaje" id="mensaje-<?php echo esc_attr( $id ); ?>">
-                    <strong><?php echo esc_html( $datos['label'] ); ?></strong>
+                <div class="cdb-config-mensaje<?php echo ( '1' !== $mostrar ) ? ' oculto' : ''; ?>" id="mensaje-<?php echo esc_attr( $id ); ?>">
+                    <strong><?php echo esc_html( $datos['label'] ); ?></strong> <span class="cdb-oculto-label"><?php esc_html_e( 'Oculto', 'cdb-form' ); ?></span>
                     <div class="cdb-mensaje-preview <?php echo esc_attr( $clase ); ?>" style="border-left-color: <?php echo esc_attr( $color_hex ); ?>; background-color: <?php echo esc_attr( $color_hex ); ?>; color: <?php echo esc_attr( $text_hex ); ?>;">
                         <strong class="cdb-mensaje-destacado"><?php echo wp_kses_post( $texto ); ?></strong>
                         <span class="cdb-mensaje-secundario" <?php if ( empty( $secundario ) ) echo 'style="display:none;"'; ?>><?php echo wp_kses_post( $secundario ); ?></span>
@@ -285,6 +292,7 @@ function cdb_form_config_mensajes_page() {
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php esc_html_e( 'Clase CSS:', 'cdb-form' ); ?> <code class="cdb-clase-css"><?php echo esc_html( $clase ); ?></code></p>
+                        <label><input type="checkbox" name="<?php echo esc_attr( $show_opt ); ?>" value="1" <?php checked( $mostrar, '1' ); ?> data-role="mostrar" /> <?php esc_html_e( 'Mostrar aviso', 'cdb-form' ); ?></label>
                     </div>
                 </div>
             <?php endforeach; ?>
