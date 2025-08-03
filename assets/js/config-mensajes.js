@@ -1,4 +1,10 @@
 jQuery(document).ready(function($){
+
+    if (typeof cdbMensajes !== 'object') return;
+
+    var nuevoNombre = cdbMensajes.nuevoNombre || '';
+    var nuevaClase = cdbMensajes.nuevaClase || '';
+    var eliminar = cdbMensajes.eliminar || '';
     // Toggle edición de mensaje
     $('.cdb-edit-mensaje').on('click', function(){
         var cont = $(this).closest('.cdb-config-mensaje');
@@ -38,11 +44,11 @@ jQuery(document).ready(function($){
         e.preventDefault();
         var idx = $('#cdb-tipos-color .cdb-tipo-color-row').length + 1;
         var row = $('<div class="cdb-tipo-color-row"></div>');
-        row.append('<input type="text" name="tipos_color[new_'+idx+'][name]" placeholder="'+cdbMensajes.nuevoNombre+'" />');
-        row.append('<input type="text" name="tipos_color[new_'+idx+'][class]" placeholder="'+cdbMensajes.nuevaClase+'" />');
+        row.append('<input type="text" name="tipos_color[new_'+idx+'][name]" placeholder="'+nuevoNombre+'" />');
+        row.append('<input type="text" name="tipos_color[new_'+idx+'][class]" placeholder="'+nuevaClase+'" />');
         row.append('<input type="color" name="tipos_color[new_'+idx+'][color]" value="#000000" />');
         row.append('<input type="color" name="tipos_color[new_'+idx+'][text]" value="#ffffff" />');
-        row.append('<label><input type="checkbox" name="tipos_color[new_'+idx+'][delete]" value="1" /> '+cdbMensajes.eliminar+'</label>');
+        row.append('<label><input type="checkbox" name="tipos_color[new_'+idx+'][delete]" value="1" /> '+eliminar+'</label>');
         $('#cdb-tipos-color').append(row);
     });
 
