@@ -129,6 +129,12 @@ function cdb_form_config_mensajes_page() {
         'cdb_mensaje_busqueda_sin_empleados'   => 'cdb_empleados_sin_resultados',
         'cdb_mensaje_login_requerido'          => 'cdb_acceso_sin_login',
         'cdb_mensaje_sin_permiso'              => 'cdb_acceso_sin_permisos',
+        'cdb_mensaje_bienvenida'               => 'cdb_mensaje_bienvenida',
+        'cdb_mensaje_bienvenida_usuario'       => 'cdb_mensaje_bienvenida_usuario',
+        'cdb_mensaje_empleado_sin_experiencia' => 'cdb_mensaje_empleado_sin_experiencia',
+        'cdb_mensaje_posicion_no_valida'       => 'cdb_mensaje_posicion_no_valida',
+        'cdb_mensaje_bar_sin_registro'         => 'cdb_mensaje_bar_sin_registro',
+        'cdb_mensaje_disponibilidad_sin_perfil' => 'cdb_mensaje_disponibilidad_sin_perfil',
     );
 
     // Ejemplos de futuros mensajes que podrían añadirse:

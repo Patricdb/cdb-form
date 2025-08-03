@@ -44,6 +44,12 @@ $cdb_form_defaults = array(
     'cdb_ajax_error_bar_invalido'  => __( 'Selecciona un bar válido.', 'cdb-form' ) . '|' . __( 'Usa la ayuda de autocompletado.', 'cdb-form' ),
     'cdb_ajax_error_anio_invalido' => __( 'Selecciona un año válido.', 'cdb-form' ) . '|' . __( 'Usa un formato de cuatro cifras.', 'cdb-form' ),
     'cdb_ajax_error_zona_invalida' => __( 'Selecciona una zona válida.', 'cdb-form' ) . '|' . __( 'Elige una opción de la lista.', 'cdb-form' ),
+    'cdb_mensaje_bienvenida'            => __( 'Gracias por colaborar con el Proyecto CdB.', 'cdb-form' ) . '|' . __( 'Explora las opciones disponibles.', 'cdb-form' ),
+    'cdb_mensaje_bienvenida_usuario'    => __( 'No tienes un perfil de empleado registrado.', 'cdb-form' ) . '|' . __( 'Crea tu perfil para comenzar.', 'cdb-form' ),
+    'cdb_mensaje_empleado_sin_experiencia' => __( 'Aún no has registrado ninguna experiencia laboral.', 'cdb-form' ) . '|' . __( 'Añade tus puestos anteriores para completar tu perfil.', 'cdb-form' ),
+    'cdb_mensaje_posicion_no_valida'    => __( 'Error: No se ha proporcionado una posición válida.', 'cdb-form' ) . '|' . __( 'Selecciona una posición para continuar.', 'cdb-form' ),
+    'cdb_mensaje_bar_sin_registro'      => __( 'No tienes un bar registrado.', 'cdb-form' ) . '|' . __( 'Crea uno antes de actualizar su estado.', 'cdb-form' ),
+    'cdb_mensaje_disponibilidad_sin_perfil' => __( 'No tienes un perfil de empleado.', 'cdb-form' ) . '|' . __( 'Crea uno antes de actualizar tu disponibilidad.', 'cdb-form' ),
     // …añade aquí cualquier clave nueva que surja
 );
 
