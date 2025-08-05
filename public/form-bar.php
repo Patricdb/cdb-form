@@ -13,7 +13,7 @@ function cdb_form_bar() {
     // Comprobar si el usuario está conectado.
     if ( ! is_user_logged_in() ) {
         return cdb_form_get_mensaje(
-            'cdb_acceso_sin_login'
+            'cdb_mensaje_login_requerido'
         );
     }
 
