@@ -378,6 +378,20 @@ function cdb_form_render_mensaje( $text_option, $color_option, $default_text, $d
         ),
         ''
     );
+    $mostrar    = cdb_form_get_option_compat(
+        array(
+            $text_option . '_mostrar',
+            $text_option . '_visible',
+            $text_option . '_mostrar_mensaje',
+            $text_option . '_mostrar_aviso',
+            $text_option . '_show',
+            $text_option . '_display',
+        ),
+        '1'
+    );
+    if ( '0' === $mostrar ) {
+        return '';
+    }
     $tipo       = get_option( $color_option, $default_tipo );
     $clase      = cdb_form_get_tipo_color_class( $tipo );
 
