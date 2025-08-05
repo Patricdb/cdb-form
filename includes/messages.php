@@ -21,13 +21,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Valores por defecto de mensajes y avisos.
 $cdb_form_defaults = array(
     'cdb_aviso_sin_puntuacion'     => __( 'Puntuación gráfica no disponible.', 'cdb-form' ) . '|' . __( 'Añade más valoraciones para generar tu gráfico.', 'cdb-form' ),
+    'cdb_mensaje_puntuacion_no_disponible' => __( 'Puntuación gráfica no disponible.', 'cdb-form' ) . '|' . __( 'Añade más valoraciones para generar tu gráfico.', 'cdb-form' ),
     'cdb_empleado_no_encontrado'   => __( 'Empleado no encontrado.', 'cdb-form' ) . '|' . __( 'Crea primero tu perfil de empleado para continuar.', 'cdb-form' ),
+    'cdb_mensaje_empleado_no_encontrado'   => __( 'Empleado no encontrado.', 'cdb-form' ) . '|' . __( 'Crea primero tu perfil de empleado para continuar.', 'cdb-form' ),
     'cdb_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear tu perfil.', 'cdb-form' ) . '|' . __( 'Completa tu información de empleado y vuelve aquí.', 'cdb-form' ),
+    'cdb_mensaje_experiencia_sin_perfil'   => __( 'Para registrar experiencia debes crear tu perfil.', 'cdb-form' ) . '|' . __( 'Completa tu información de empleado y vuelve aquí.', 'cdb-form' ),
     'cdb_bares_sin_resultados'     => __( 'No hay bares que coincidan con tu búsqueda.', 'cdb-form' ) . '|' . __( 'Ajusta filtros o prueba con otro término.', 'cdb-form' ),
+    'cdb_mensaje_busqueda_sin_bares'       => __( 'No hay bares que coincidan con tu búsqueda.', 'cdb-form' ) . '|' . __( 'Ajusta filtros o prueba con otro término.', 'cdb-form' ),
     'cdb_empleados_vacio'          => __( 'Aún no hay empleados registrados.', 'cdb-form' ) . '|' . __( '¡Sé el primero en unirte al proyecto!', 'cdb-form' ),
+    'cdb_mensaje_sin_empleados'            => __( 'Aún no hay empleados registrados.', 'cdb-form' ) . '|' . __( '¡Sé el primero en unirte al proyecto!', 'cdb-form' ),
     'cdb_empleados_sin_resultados' => __( 'Sin coincidencias para tu búsqueda.', 'cdb-form' ) . '|' . __( 'Modifica los criterios e inténtalo de nuevo.', 'cdb-form' ),
+    'cdb_mensaje_busqueda_sin_empleados'   => __( 'Sin coincidencias para tu búsqueda.', 'cdb-form' ) . '|' . __( 'Modifica los criterios e inténtalo de nuevo.', 'cdb-form' ),
     'cdb_acceso_sin_login'         => __( 'Debes iniciar sesión para acceder.', 'cdb-form' ) . '|' . __( 'Inicia sesión o regístrate para continuar.', 'cdb-form' ),
     'cdb_acceso_sin_permisos'      => __( 'No tienes permisos para ver este contenido.', 'cdb-form' ) . '|' . __( 'Contacta con un admin si crees que es un error.', 'cdb-form' ),
+    'cdb_mensaje_login_requerido'  => __( 'Debes iniciar sesión para acceder.', 'cdb-form' ) . '|' . __( 'Inicia sesión o regístrate para continuar.', 'cdb-form' ),
+    'cdb_mensaje_sin_permiso'      => __( 'No tienes permisos para ver este contenido.', 'cdb-form' ) . '|' . __( 'Contacta con un admin si crees que es un error.', 'cdb-form' ),
     'cdb_ajax_exito_empleado'      => __( 'Empleado creado correctamente.', 'cdb-form' ) . '|' . __( 'El perfil se ha guardado sin problemas.', 'cdb-form' ),
     'cdb_ajax_error_empleado'      => __( 'Error al crear empleado.', 'cdb-form' ) . '|' . __( 'Inténtalo de nuevo más tarde.', 'cdb-form' ),
     'cdb_ajax_exito_experiencia'   => __( 'Experiencia registrada.', 'cdb-form' ) . '|' . __( 'Se ha guardado la experiencia.', 'cdb-form' ),
@@ -201,23 +209,25 @@ function cdb_form_get_mensaje( $clave, $tipo = 'aviso' ) {
     global $cdb_form_defaults;
 
     $map = array(
-        'cdb_aviso_sin_puntuacion'     => 'cdb_mensaje_puntuacion_no_disponible',
-        'cdb_empleado_no_encontrado'   => 'cdb_mensaje_empleado_no_encontrado',
-        'cdb_experiencia_sin_perfil'   => 'cdb_mensaje_experiencia_sin_perfil',
-        'cdb_bares_sin_resultados'     => 'cdb_mensaje_busqueda_sin_bares',
-        'cdb_empleados_vacio'          => 'cdb_mensaje_sin_empleados',
-        'cdb_empleados_sin_resultados' => 'cdb_mensaje_busqueda_sin_empleados',
-        'cdb_acceso_sin_login'         => 'cdb_mensaje_login_requerido',
-        'cdb_acceso_sin_permisos'      => 'cdb_mensaje_sin_permiso',
+        'cdb_mensaje_puntuacion_no_disponible' => 'cdb_aviso_sin_puntuacion',
+        'cdb_mensaje_empleado_no_encontrado'   => 'cdb_empleado_no_encontrado',
+        'cdb_mensaje_experiencia_sin_perfil'   => 'cdb_experiencia_sin_perfil',
+        'cdb_mensaje_busqueda_sin_bares'       => 'cdb_bares_sin_resultados',
+        'cdb_mensaje_sin_empleados'            => 'cdb_empleados_vacio',
+        'cdb_mensaje_busqueda_sin_empleados'   => 'cdb_empleados_sin_resultados',
+        'cdb_mensaje_login_requerido'          => 'cdb_acceso_sin_login',
+        'cdb_mensaje_sin_permiso'              => 'cdb_acceso_sin_permisos',
     );
 
-    $text_option  = $clave;
-    $color_option = 'cdb_color_' . $clave;
+    $text_option = $clave;
+    $slug        = preg_replace( '/^cdb_(mensaje_)?/', '', $clave );
+    $color_option = 'cdb_color_' . $slug;
     $show_option  = $text_option . '_mostrar';
 
     if ( isset( $map[ $clave ] ) ) {
         $old_text_option  = $map[ $clave ];
-        $old_color_option = str_replace( 'cdb_mensaje_', 'cdb_color_', $old_text_option );
+        $old_slug         = preg_replace( '/^cdb_(mensaje_)?/', '', $old_text_option );
+        $old_color_option = 'cdb_color_' . $old_slug;
         // Migrar valores antiguos a las nuevas claves canónicas.
         cdb_form_get_option_compat( array( $text_option, $old_text_option ), null );
         cdb_form_get_option_compat( array( $color_option, $old_color_option ), null );

@@ -25,14 +25,14 @@ function cdb_form_empleado() {
     // Comprobar si el usuario está conectado.
     if ( ! is_user_logged_in() ) {
         return cdb_form_get_mensaje(
-            'cdb_acceso_sin_login'
+            'cdb_mensaje_login_requerido'
         );
     }
 
     // Comprobar si el usuario tiene el rol "Empleado".
     if ( ! cdb_usuario_es_empleado() ) {
         return cdb_form_get_mensaje(
-            'cdb_acceso_sin_permisos'
+            'cdb_mensaje_sin_permiso'
         );
     }
 
