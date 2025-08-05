@@ -30,7 +30,7 @@ if (!empty($existing_empleado)) {
     $button_text         = __( 'Actualizar Empleado', 'cdb-form' );
 } else {
     echo cdb_form_get_mensaje(
-        'cdb_empleado_no_encontrado'
+        'cdb_mensaje_empleado_no_encontrado'
     );
     $empleado_id         = 0;
     $empleado_nombre     = '';

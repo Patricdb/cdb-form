@@ -216,7 +216,7 @@ function cdb_bienvenida_empleado_shortcode() {
             $output .= cdb_generar_barra_progreso_simple($puntuacion_total_final);
         } else {
             $output .= cdb_form_get_mensaje(
-                'cdb_aviso_sin_puntuacion'
+                'cdb_mensaje_puntuacion_no_disponible'
             );
         }
 
@@ -354,7 +354,7 @@ function cdb_experiencia_shortcode() {
     // La plantilla incluida volverá a validar este dato, generando comprobación redundante.
     $empleado_id = (int) cdb_obtener_empleado_id($current_user->ID);
     if ($empleado_id === 0) {
-        return cdb_form_get_mensaje('cdb_experiencia_sin_perfil');
+        return cdb_form_get_mensaje('cdb_mensaje_experiencia_sin_perfil');
     }
 
     // 4) Si pasa las verificaciones, se carga la plantilla del formulario.
@@ -432,7 +432,7 @@ function cdb_mostrar_puntuacion_total() {
     $puntuacion_total = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
     if (!$puntuacion_total) {
         return cdb_form_get_mensaje(
-            'cdb_aviso_sin_puntuacion',
+            'cdb_mensaje_puntuacion_no_disponible',
             'info'
         );
     }
@@ -484,7 +484,7 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
     // 5) Si no hay empleados, avisar
     if (!$query->have_posts()) {
         return cdb_form_get_mensaje(
-            'cdb_empleados_vacio'
+            'cdb_mensaje_sin_empleados'
         );
     }
 
@@ -586,7 +586,7 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
     // 5) Si no hay empleados, salimos.
     if (!$query->have_posts()) {
         return cdb_form_get_mensaje(
-            'cdb_empleados_vacio'
+            'cdb_mensaje_sin_empleados'
         );
     }
 

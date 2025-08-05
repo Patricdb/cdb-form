@@ -51,14 +51,14 @@ También puedes registrar variantes desde código utilizando `cdb_form_register_
 <!-- ACTUALIZAR ESTA TABLA SI SE AÑADEN NUEVAS CLAVES EN $cdb_form_defaults -->
 | Clave | Texto por defecto | Contexto (dónde aparece) |
 | --- | --- | --- |
-| cdb_acceso_sin_login | **Debes iniciar sesión para acceder.** \| Inicia sesión o regístrate para continuar. | Formularios de bar o empleado cuando el usuario no ha iniciado sesión |
-| cdb_acceso_sin_permisos | **No tienes permisos para ver este contenido.** \| Contacta con un admin si crees que es un error. | Formulario de empleado cuando el usuario no tiene permisos |
-| cdb_aviso_sin_puntuacion | **Puntuación gráfica no disponible.** \| Añade más valoraciones para generar tu gráfico. | Panel de empleado cuando no hay gráfico |
-| cdb_bares_sin_resultados | **No hay bares que coincidan con tu búsqueda.** \| Ajusta filtros o prueba con otro término. | Búsqueda de bares sin resultados |
-| cdb_empleado_no_encontrado | **Empleado no encontrado.** \| Crea primero tu perfil de empleado para continuar. | Formulario de empleado cuando no existe perfil asociado |
-| cdb_empleados_sin_resultados | **Sin coincidencias para tu búsqueda.** \| Modifica los criterios e inténtalo de nuevo. | Búsqueda de empleados sin resultados |
-| cdb_empleados_vacio | **Aún no hay empleados registrados.** \| ¡Sé el primero en unirte al proyecto! | Rankings de empleados cuando no existen registros |
-| cdb_experiencia_sin_perfil | **Para registrar experiencia debes crear tu perfil.** \| Completa tu información de empleado y vuelve aquí. | Formulario de experiencia sin perfil de empleado |
+| cdb_mensaje_login_requerido | **Debes iniciar sesión para acceder.** \| Inicia sesión o regístrate para continuar. | Formularios de bar o empleado cuando el usuario no ha iniciado sesión |
+| cdb_mensaje_sin_permiso | **No tienes permisos para ver este contenido.** \| Contacta con un admin si crees que es un error. | Formulario de empleado cuando el usuario no tiene permisos |
+| cdb_mensaje_puntuacion_no_disponible | **Puntuación gráfica no disponible.** \| Añade más valoraciones para generar tu gráfico. | Panel de empleado cuando no hay gráfico |
+| cdb_mensaje_busqueda_sin_bares | **No hay bares que coincidan con tu búsqueda.** \| Ajusta filtros o prueba con otro término. | Búsqueda de bares sin resultados |
+| cdb_mensaje_empleado_no_encontrado | **Empleado no encontrado.** \| Crea primero tu perfil de empleado para continuar. | Formulario de empleado cuando no existe perfil asociado |
+| cdb_mensaje_busqueda_sin_empleados | **Sin coincidencias para tu búsqueda.** \| Modifica los criterios e inténtalo de nuevo. | Búsqueda de empleados sin resultados |
+| cdb_mensaje_sin_empleados | **Aún no hay empleados registrados.** \| ¡Sé el primero en unirte al proyecto! | Rankings de empleados cuando no existen registros |
+| cdb_mensaje_experiencia_sin_perfil | **Para registrar experiencia debes crear tu perfil.** \| Completa tu información de empleado y vuelve aquí. | Formulario de experiencia sin perfil de empleado |
 | cdb_ajax_exito_empleado | **Empleado creado correctamente.** \| El perfil se ha guardado sin problemas. | Respuesta exitosa al crear empleado por AJAX |
 | cdb_ajax_error_empleado | **Error al crear empleado.** \| Inténtalo de nuevo más tarde. | Fallo al crear empleado por AJAX |
 | cdb_ajax_exito_experiencia | **Experiencia registrada.** \| Se ha guardado la experiencia. | Registro de experiencia por AJAX |
