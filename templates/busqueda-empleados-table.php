@@ -1,6 +1,6 @@
 <?php if ( empty( $empleados ) ) : ?>
     <?php echo cdb_form_get_mensaje(
-        'cdb_empleados_sin_resultados'
+        'cdb_mensaje_busqueda_sin_empleados'
     ); ?>
 <?php else : ?>
 <table class="cdb-busqueda-table">
