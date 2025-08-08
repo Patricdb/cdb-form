@@ -186,100 +186,62 @@ function cdb_bienvenida_empleado_shortcode() {
             );
         }
 
+        $empleado_nombre  = get_the_title($empleado_id);
+        $empleado_url     = get_permalink($empleado_id);
+        $disponible       = get_post_meta($empleado_id, 'disponible', true);
 
-        $empleado_nombre  = get_the_title( $empleado_id );
-        $empleado_url     = get_permalink( $empleado_id );
-        $disponible       = get_post_meta( $empleado_id, 'disponible', true );
-
-        // Obtener puntuaciones de gráfica por rol.
-        $puntuacion_grafica_empleados = cdb_obtener_puntuacion_grafica_por_rol( $empleado_id, 'empleado' );
-        if ( null === $puntuacion_grafica_empleados ) {
-            $meta_score = get_post_meta( $empleado_id, 'cdb_puntuacion_total', true );
-            if ( '' !== $meta_score ) {
-                $puntuacion_grafica_empleados = floatval( $meta_score );
-            }
+        // Obtener la puntuación total y la fecha de la última valoración.
+        $puntuacion_total_meta = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
+        $puntuacion_experiencia = get_post_meta($empleado_id, 'cdb_experiencia_score', true);
+        $puntuacion_experiencia = intval($puntuacion_experiencia);
+        $puntuacion_total_final = 0;
+        if (!empty($puntuacion_total_meta)) {
+            $puntuacion_total_final = floatval($puntuacion_total_meta) + ($puntuacion_experiencia / 100);
+            $puntuacion_total_final = round($puntuacion_total_final, 1);
         }
-        $puntuacion_grafica_empleador = cdb_obtener_puntuacion_grafica_por_rol( $empleado_id, 'empleador' );
-        $puntuacion_grafica_tutor     = cdb_obtener_puntuacion_grafica_por_rol( $empleado_id, 'tutor' );
-
-        // Puntuación de experiencia y total final.
-        $puntuacion_experiencia = intval( get_post_meta( $empleado_id, 'cdb_experiencia_score', true ) );
-        $grafica_base = $puntuacion_grafica_empleados ? floatval( $puntuacion_grafica_empleados ) : 0;
-        $puntuacion_total_final = round( $grafica_base + ( $puntuacion_experiencia / 100 ), 1 );
-
-        // Última valoración en formato relativo.
-        $ultima_val = cdb_obtener_fecha_ultima_valoracion( $empleado_id );
-        if ( $ultima_val ) {
-            $ultima_valoracion = sprintf(
-                esc_html__( 'Última valoración: hace %s', 'cdb-form' ),
-                esc_html( human_time_diff( strtotime( $ultima_val ), current_time( 'timestamp' ) ) )
-            );
+        $ultima_val = cdb_obtener_fecha_ultima_valoracion($empleado_id);
+        if ($ultima_val) {
+            $ultima_valoracion = human_time_diff(strtotime($ultima_val), current_time('timestamp'));
         } else {
-            $ultima_valoracion = esc_html__( 'Última valoración: sin registros', 'cdb-form' );
+            $ultima_valoracion = __('sin registros', 'cdb-form');
         }
 
-        // Formulario para actualizar disponibilidad (sobre la tarjeta).
-        $output .= '<form id="cdb-update-disponibilidad" class="cdb-disponibilidad-form" method="post">'
-                        . '<label for="disponible">' . esc_html__( 'Actualizar Disponibilidad:', 'cdb-form' ) . '</label>'
-                        . '<select id="disponible" name="disponible">'
-                            . '<option value="1" ' . selected( $disponible, 1, false ) . '>' . esc_html__( 'Sí', 'cdb-form' ) . '</option>'
-                            . '<option value="0" ' . selected( $disponible, 0, false ) . '>' . esc_html__( 'No', 'cdb-form' ) . '</option>'
-                        . '</select>'
-                        . '<input type="hidden" name="empleado_id" value="' . esc_attr( $empleado_id ) . '">'
-                        . '<input type="hidden" name="security" value="' . wp_create_nonce( 'cdb_form_nonce' ) . '">'
-                        . '<button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>'
-                    . '</form>';
-
-        // Preparar los metadatos de la tarjeta.
-        $meta_items = array();
-        if ( null !== $puntuacion_grafica_empleados ) {
-            $meta_items[] = sprintf(
-                esc_html__( 'Puntuación de Gráfica de Empleados: %s', 'cdb-form' ),
-                esc_html( $puntuacion_grafica_empleados )
-            );
-        }
-        if ( null !== $puntuacion_grafica_empleador ) {
-            $meta_items[] = sprintf(
-                esc_html__( 'Puntuación de Gráfica de Empleador: %s', 'cdb-form' ),
-                esc_html( $puntuacion_grafica_empleador )
-            );
-        }
-        if ( null !== $puntuacion_grafica_tutor ) {
-            $meta_items[] = sprintf(
-                esc_html__( 'Puntuación de Gráfica de Tutor: %s', 'cdb-form' ),
-                esc_html( $puntuacion_grafica_tutor )
-            );
-        }
-        $meta_items[] = sprintf(
-            esc_html__( 'Puntuación de Experiencia: %s', 'cdb-form' ),
-            esc_html( $puntuacion_experiencia )
-        );
-        $meta_items[] = sprintf(
-            esc_html__( 'Puntuación Total: %s', 'cdb-form' ),
-            esc_html( $puntuacion_total_final )
-        );
-        $meta_items[] = $ultima_valoracion;
-
-        // Tarjeta del empleado con metadatos.
         $output .= '<a class="cdb-empleado-card" href="' . esc_url( $empleado_url ) . '">'
                  . '<span class="cdb-empleado-card__text">'
                  . '<span class="cdb-empleado-card__label">' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</span>'
                  . '<span class="cdb-empleado-card__name">👉 ' . esc_html( $empleado_nombre ) . '</span>'
-                 . '<span class="cdb-empleado-card__meta">';
-        foreach ( $meta_items as $item ) {
-            $output .= '<span class="cdb-empleado-card__meta-line">' . $item . '</span>';
-        }
-        $output .= '</span>'
+                 . '<span class="cdb-empleado-card__meta">' . sprintf(
+                        esc_html__( 'Puntuación total %1$s · Última valoración hace %2$s', 'cdb-form' ),
+                        esc_html( $puntuacion_total_final ),
+                        esc_html( $ultima_valoracion )
+                    ) . '</span>'
                  . '</span>'
                  . '<span class="cdb-empleado-card__chev">&rsaquo;</span>'
                  . '</a>';
 
-        // Mostrar la barra de puntuación total si existen datos de gráfica.
-        if ( null !== $puntuacion_grafica_empleados ) {
-            $output .= cdb_generar_barra_progreso_simple( $puntuacion_total_final );
+        // Formulario para actualizar disponibilidad.
+        $output .= '<form id="cdb-update-disponibilidad" method="post">
+                        <label for="disponible">' . esc_html__( 'Actualizar Disponibilidad:', 'cdb-form' ) . '</label>
+                        <select id="disponible" name="disponible">
+                            <option value="1" ' . selected($disponible, 1, false) . '>' . esc_html__( 'Sí', 'cdb-form' ) . '</option>
+                            <option value="0" ' . selected($disponible, 0, false) . '>' . esc_html__( 'No', 'cdb-form' ) . '</option>
+                        </select>
+                        <input type="hidden" name="empleado_id" value="' . esc_attr($empleado_id) . '">
+                        <input type="hidden" name="security" value="' . wp_create_nonce('cdb_form_nonce') . '">
+                        <button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>
+                    </form>';
+
+        // Mostrar la barra de puntuación total si existe.
+        if (!empty($puntuacion_total_meta)) {
+            $output .= cdb_generar_barra_progreso_simple($puntuacion_total_final);
         } else {
-            $output .= cdb_form_get_mensaje( 'cdb_mensaje_puntuacion_no_disponible' );
+            $output .= cdb_form_get_mensaje(
+                'cdb_mensaje_puntuacion_no_disponible'
+            );
         }
+
+        // Mostrar la Puntuación de Experiencia.
+        $output .= '<p><strong>' . esc_html__( 'Puntuación de Experiencia:', 'cdb-form' ) . '</strong> ' . esc_html($puntuacion_experiencia) . '</p>';
     } else {
         // Mensaje para empleados que aún no han creado su perfil.
         // Configurable desde 'cdb_mensaje_bienvenida_usuario' y 'cdb_color_bienvenida_usuario'.
@@ -368,6 +330,8 @@ function cdb_generar_barra_progreso_simple($puntuacion_total) {
             <div class="cdb-progress-marker" style="left: 81%; color: #07ada8;">4</div>
         </div>
     </div>
+    <!-- Mostrar la puntuación total -->
+    <p><strong>Puntuación Total:</strong> <?php echo $puntuacion_total; ?>/100</p>
     <?php
     return ob_get_clean();
 }
@@ -458,7 +422,7 @@ add_shortcode('cdb_form_bar', 'cdb_form_bar_shortcode');
 /*---------------------------------------------------------------
  * 7. SHORTCODE [cdb_puntuacion_total]
  *---------------------------------------------------------------
- * Muestra la Puntuación de Gráfica (meta 'cdb_puntuacion_total') del empleado.
+ * Muestra la Puntuación Total (meta 'cdb_puntuacion_total') del empleado para la gráfica.
  *---------------------------------------------------------------*/
 
 /**
@@ -647,7 +611,7 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
     }
 
     // 6) Cabecera de la tabla
-    $output  = '<h3>Top 21 Empleados por Puntuación de Gráfica</h3>';
+    $output  = '<h3>Top 21 Empleados por Puntuación Total (Gráfica)</h3>';
     $output .= '<table style="width:100%; border-collapse: collapse;">';
     $output .= '<thead>';
     $output .= '<tr>';
@@ -901,11 +865,11 @@ function cdb_top_bares_puntuacion_total_shortcode() {
         return cdb_form_render_mensaje(
             'cdb_mensaje_busqueda_sin_bares',
             'cdb_color_busqueda_sin_bares',
-            __( 'No se encontraron bares con puntuación de gráfica.', 'cdb-form' )
+            __( 'No se encontraron bares con puntuación total.', 'cdb-form' )
         );
     }
 
-    $output  = '<h3>Top 21 Bares por Puntuación de Gráfica</h3>';
+    $output  = '<h3>Top 21 Bares por Puntuación Total (Gráfica)</h3>';
     $output .= '<table style="width:100%; border-collapse: collapse;">';
     $output .= '<thead>';
     $output .= '<tr>';

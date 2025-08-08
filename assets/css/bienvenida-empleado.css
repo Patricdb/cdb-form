@@ -43,15 +43,11 @@
   margin-bottom:6px;
 }
 .cdb-empleado-card__meta{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
+  display:block;
   margin-top:0;
   font-size:.85rem;
   color:#5a5a5a;
 }
-.cdb-empleado-card__meta-line{display:block;}
-#cdb-update-disponibilidad{margin-bottom:24px;}
 .cdb-empleado-card__chev{
   margin-left:auto; font-size:1.1rem; opacity:.6; transition:transform .15s ease, opacity .2s ease;
 }
