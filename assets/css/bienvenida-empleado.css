@@ -20,7 +20,7 @@
   transition:background .2s ease, box-shadow .2s ease, transform .15s ease;
   color:var(--cdb-text);
   max-width:520px;
-  margin-bottom:24px;
+  margin-top:24px;
 }
 .cdb-empleado-card:hover,
 .cdb-empleado-card:focus-visible{
@@ -42,12 +42,8 @@
   display:block;
   margin-bottom:6px;
 }
-.cdb-empleado-card__meta{
-  display:block;
-  margin-top:0;
-  font-size:.85rem;
-  color:#5a5a5a;
-}
+.cdb-empleado-card__meta{ display:block; }
+.cdb-empleado-card__meta-item{ display:block; margin-top:2px; font-size:.85rem; color:#5a5a5a; }
 .cdb-empleado-card__chev{
   margin-left:auto; font-size:1.1rem; opacity:.6; transition:transform .15s ease, opacity .2s ease;
 }
