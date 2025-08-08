@@ -190,8 +190,11 @@ function cdb_bienvenida_empleado_shortcode() {
         $empleado_url     = get_permalink( $empleado_id );
         $disponible       = get_post_meta( $empleado_id, 'disponible', true );
 
+        // Saltar cachés cuando un usuario conectado visualiza la página de bienvenida.
+        $bypass_cache = is_user_logged_in() && is_page();
+
         // Puntuaciones de gráfica por rol.
-        $scores            = cdb_form_get_grafica_scores_by_role( $empleado_id );
+        $scores            = cdb_form_get_card_scores( $empleado_id, $bypass_cache );
         $score_empleados   = isset( $scores['empleado'] ) ? floatval( $scores['empleado'] ) : 0;
         $score_empleadores = isset( $scores['empleador'] ) ? $scores['empleador'] : null;
         $score_tutores     = isset( $scores['tutor'] ) ? $scores['tutor'] : null;
@@ -203,7 +206,7 @@ function cdb_bienvenida_empleado_shortcode() {
         $puntuacion_total_final = round( $score_empleados + ( $puntuacion_experiencia / 100 ), 1 );
 
         // Última valoración en la gráfica.
-        $ultima_val = cdb_form_get_last_grafica_rating_datetime( $empleado_id );
+        $ultima_val = cdb_form_get_card_last_rating( $empleado_id, $bypass_cache );
         if ( $ultima_val ) {
             $ultima_valoracion = human_time_diff( strtotime( $ultima_val ), current_time( 'timestamp' ) );
         } else {
