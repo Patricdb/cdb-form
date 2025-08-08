@@ -42,15 +42,6 @@ function cdb_obtener_fecha_ultima_valoracion( $empleado_id ) {
 function cdb_form_get_card_scores( $empleado_id, $bypass_cache = false ) {
     $cache_key = 'cdb_form_card_scores_' . $empleado_id;
 
-    // Permitir invalidaciones específicas para usuarios logueados que vuelven de una nueva valoración.
-    if ( ! $bypass_cache && is_user_logged_in() ) {
-        $user_id = get_current_user_id();
-        if ( get_user_meta( $user_id, 'cdb_form_card_cache_invalidated', true ) ) {
-            $bypass_cache = true;
-            delete_user_meta( $user_id, 'cdb_form_card_cache_invalidated' );
-        }
-    }
-
     if ( $bypass_cache ) {
         delete_transient( $cache_key );
     }
@@ -109,15 +100,6 @@ function cdb_form_get_grafica_scores_by_role( $empleado_id ) {
 function cdb_form_get_card_last_rating( $empleado_id, $bypass_cache = false ) {
     $cache_key = 'cdb_form_card_last_' . $empleado_id;
 
-    // Igual que en las puntuaciones, saltar la caché si se ha invalidado para el usuario actual.
-    if ( ! $bypass_cache && is_user_logged_in() ) {
-        $user_id = get_current_user_id();
-        if ( get_user_meta( $user_id, 'cdb_form_card_cache_invalidated', true ) ) {
-            $bypass_cache = true;
-            delete_user_meta( $user_id, 'cdb_form_card_cache_invalidated' );
-        }
-    }
-
     if ( $bypass_cache ) {
         delete_transient( $cache_key );
     }
@@ -150,9 +132,4 @@ function cdb_form_get_last_grafica_rating_datetime( $empleado_id ) {
 add_action( 'cdb_grafica_after_save', function( $empleado_id ) {
     delete_transient( 'cdb_form_card_scores_' . $empleado_id );
     delete_transient( 'cdb_form_card_last_' . $empleado_id );
-
-    // Marcar que la siguiente carga debe saltar la caché para el usuario actual.
-    if ( is_user_logged_in() ) {
-        update_user_meta( get_current_user_id(), 'cdb_form_card_cache_invalidated', 1 );
-    }
 } );
