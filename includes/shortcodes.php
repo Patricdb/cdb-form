@@ -191,10 +191,7 @@ function cdb_bienvenida_empleado_shortcode() {
         $disponible       = get_post_meta( $empleado_id, 'disponible', true );
 
         // Saltar cachés cuando un usuario conectado vuelve tras registrar una valoración.
-        $bypass_cache = false;
-        if ( is_user_logged_in() && is_page() ) {
-            $bypass_cache = (bool) get_user_meta( get_current_user_id(), 'cdb_form_card_cache_invalidated', true );
-        }
+        $bypass_cache = is_user_logged_in() && is_page();
 
         // Puntuaciones de gráfica por rol.
         $scores            = cdb_form_get_card_scores( $empleado_id, $bypass_cache );
