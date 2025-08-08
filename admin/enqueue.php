@@ -22,10 +22,11 @@ function cdb_form_admin_enqueue( $hook ) {
             array(),
             '1.0'
         );
+        wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_script(
             'cdb-form-config-mensajes',
             CDB_FORM_URL . 'assets/js/config-mensajes.js',
-            array( 'jquery' ),
+            array( 'jquery', 'wp-color-picker' ),
             '1.0',
             true
         );
@@ -33,9 +34,10 @@ function cdb_form_admin_enqueue( $hook ) {
             'cdb-form-config-mensajes',
             'cdbMensajes',
             array(
-                'nuevoNombre' => __( 'Nombre', 'cdb-form' ),
-                'nuevaClase'  => __( 'Clase CSS', 'cdb-form' ),
-                'eliminar'    => __( 'Eliminar', 'cdb-form' ),
+                'nuevoNombre'   => __( 'Nombre', 'cdb-form' ),
+                'nuevaClase'    => __( 'Clase CSS', 'cdb-form' ),
+                'eliminar'      => __( 'Eliminar', 'cdb-form' ),
+                'contrasteBajo' => __( 'Contraste bajo', 'cdb-form' ),
             )
         );
     }

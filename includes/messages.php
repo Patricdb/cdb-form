@@ -64,27 +64,38 @@ $cdb_form_defaults = array(
 /**
  * Obtiene la lista de tipos de avisos disponibles.
  *
+ * @since 1.2.0 Soporte para bordes personalizables.
+ *
  * @return array
  */
 function cdb_form_get_tipos_color() {
     $defaults = array(
         'aviso' => array(
-            'name'  => __( 'Aviso', 'cdb-form' ),
-            'class' => 'cdb-aviso--aviso',
-            'color' => '#dc2626',
-            'text'  => '#ffffff',
+            'name'         => __( 'Aviso', 'cdb-form' ),
+            'class'        => 'cdb-aviso--aviso',
+            'bg'           => '#dc2626',
+            'text'         => '#ffffff',
+            'border_color' => '#dc2626',
+            'border_width' => '0px',
+            'border_radius'=> '4px',
         ),
         'info' => array(
-            'name'  => __( 'Info', 'cdb-form' ),
-            'class' => 'cdb-aviso--info',
-            'color' => '#2563eb',
-            'text'  => '#ffffff',
+            'name'         => __( 'Info', 'cdb-form' ),
+            'class'        => 'cdb-aviso--info',
+            'bg'           => '#2563eb',
+            'text'         => '#ffffff',
+            'border_color' => '#2563eb',
+            'border_width' => '0px',
+            'border_radius'=> '4px',
         ),
         'exito' => array(
-            'name'  => __( 'Éxito', 'cdb-form' ),
-            'class' => 'cdb-aviso--exito',
-            'color' => '#16a34a',
-            'text'  => '#ffffff',
+            'name'         => __( 'Éxito', 'cdb-form' ),
+            'class'        => 'cdb-aviso--exito',
+            'bg'           => '#16a34a',
+            'text'         => '#ffffff',
+            'border_color' => '#16a34a',
+            'border_width' => '0px',
+            'border_radius'=> '4px',
         ),
     );
 
@@ -95,13 +106,18 @@ function cdb_form_get_tipos_color() {
 
     // Asegurar claves y compatibilidad con versiones anteriores.
     foreach ( $stored as $slug => $info ) {
-        if ( empty( $info['color'] ) && isset( $defaults[ $slug ]['color'] ) ) {
-            $info['color'] = $defaults[ $slug ]['color'];
+        // Migrar clave antigua 'color' a 'bg'.
+        if ( isset( $info['color'] ) && empty( $info['bg'] ) ) {
+            $info['bg'] = $info['color'];
         }
-        if ( empty( $info['text'] ) ) {
-            $bg          = $info['color'] ?? '#000000';
-            $info['text'] = cdb_form_get_contrasting_text_color( $bg );
-        }
+
+        // Completar valores faltantes.
+        $info['bg']           = sanitize_hex_color( $info['bg'] ?? $defaults[ $slug ]['bg'] );
+        $info['text']         = sanitize_hex_color( $info['text'] ?? cdb_form_get_contrasting_text_color( $info['bg'] ) );
+        $info['border_color'] = sanitize_hex_color( $info['border_color'] ?? $info['bg'] );
+        $info['border_width'] = cdb_form_normalize_border_value( $info['border_width'] ?? '0px', '0px' );
+        $info['border_radius']= cdb_form_normalize_border_value( $info['border_radius'] ?? '4px', '4px' );
+
         $stored[ $slug ] = $info;
     }
 
@@ -127,6 +143,29 @@ function cdb_form_get_contrasting_text_color( $hex ) {
 }
 
 /**
+ * Normaliza valores de ancho o radio de borde.
+ *
+ * @since 1.2.0
+ *
+ * @param string $val      Valor a validar.
+ * @param string $fallback Valor por defecto si el valor no es válido.
+ * @return string Valor normalizado.
+ */
+function cdb_form_normalize_border_value( $val, $fallback ) {
+    $val = trim( (string) $val );
+    if ( '' === $val ) {
+        return $fallback;
+    }
+    if ( preg_match( '/^\d+(?:\.\d+)?(px|rem|em|%)$/', $val ) ) {
+        return $val;
+    }
+    if ( preg_match( '/^\d+(?:\.\d+)?$/', $val ) ) {
+        return $val . 'px';
+    }
+    return $fallback;
+}
+
+/**
  * Devuelve la clase CSS de un tipo de aviso.
  *
  * @param string $slug Identificador del tipo.
@@ -140,20 +179,25 @@ function cdb_form_get_tipo_color_class( $slug ) {
 /**
  * Registra programáticamente un nuevo tipo de aviso.
  *
+ * @since 1.2.0 Parámetros de borde añadidos.
+ *
  * @param string $slug  Identificador único.
- * @param array  $args  {name, class, color, text}
+ * @param array  $args  {name, class, bg|color, text, border_color, border_width, border_radius}
  */
 function cdb_form_register_tipo_color( $slug, $args ) {
     $tipos = cdb_form_get_tipos_color();
     $slug  = sanitize_key( $slug );
 
-    $tipos[ $slug ] = wp_parse_args(
-        array(
-            'name'  => isset( $args['name'] ) ? sanitize_text_field( $args['name'] ) : $slug,
-            'class' => isset( $args['class'] ) ? sanitize_html_class( $args['class'] ) : 'cdb-aviso--' . $slug,
-            'color' => isset( $args['color'] ) ? sanitize_hex_color( $args['color'] ) : '#000000',
-            'text'  => isset( $args['text'] ) ? sanitize_hex_color( $args['text'] ) : cdb_form_get_contrasting_text_color( $args['color'] ?? '#000000' ),
-        )
+    $bg = $args['bg'] ?? $args['color'] ?? '#000000';
+
+    $tipos[ $slug ] = array(
+        'name'         => isset( $args['name'] ) ? sanitize_text_field( $args['name'] ) : $slug,
+        'class'        => isset( $args['class'] ) ? sanitize_html_class( $args['class'] ) : 'cdb-aviso--' . $slug,
+        'bg'           => sanitize_hex_color( $bg ),
+        'text'         => isset( $args['text'] ) ? sanitize_hex_color( $args['text'] ) : cdb_form_get_contrasting_text_color( $bg ),
+        'border_color' => sanitize_hex_color( $args['border_color'] ?? $bg ),
+        'border_width' => cdb_form_normalize_border_value( $args['border_width'] ?? '0px', '0px' ),
+        'border_radius'=> cdb_form_normalize_border_value( $args['border_radius'] ?? '4px', '4px' ),
     );
 
     update_option( 'cdb_form_tipos_color', $tipos );
