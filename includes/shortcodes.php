@@ -186,72 +186,62 @@ function cdb_bienvenida_empleado_shortcode() {
             );
         }
 
-        $empleado_nombre  = get_the_title( $empleado_id );
-        $empleado_url     = get_permalink( $empleado_id );
-        $disponible       = get_post_meta( $empleado_id, 'disponible', true );
+        $empleado_nombre  = get_the_title($empleado_id);
+        $empleado_url     = get_permalink($empleado_id);
+        $disponible       = get_post_meta($empleado_id, 'disponible', true);
 
-        // Puntuaciones de gráfica por rol.
-        $scores            = cdb_form_get_grafica_scores_by_role( $empleado_id );
-        $score_empleados   = isset( $scores['empleado'] ) ? floatval( $scores['empleado'] ) : 0;
-        $score_empleadores = isset( $scores['empleador'] ) ? $scores['empleador'] : null;
-        $score_tutores     = isset( $scores['tutor'] ) ? $scores['tutor'] : null;
-
-        // Puntuación de experiencia.
-        $puntuacion_experiencia = intval( get_post_meta( $empleado_id, 'cdb_experiencia_score', true ) );
-
-        // Puntuación total combinada.
-        $puntuacion_total_final = round( $score_empleados + ( $puntuacion_experiencia / 100 ), 1 );
-
-        // Última valoración en la gráfica.
-        $ultima_val = cdb_form_get_last_grafica_rating_datetime( $empleado_id );
-        if ( $ultima_val ) {
-            $ultima_valoracion = human_time_diff( strtotime( $ultima_val ), current_time( 'timestamp' ) );
+        // Obtener la puntuación total y la fecha de la última valoración.
+        $puntuacion_total_meta = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
+        $puntuacion_experiencia = get_post_meta($empleado_id, 'cdb_experiencia_score', true);
+        $puntuacion_experiencia = intval($puntuacion_experiencia);
+        $puntuacion_total_final = 0;
+        if (!empty($puntuacion_total_meta)) {
+            $puntuacion_total_final = floatval($puntuacion_total_meta) + ($puntuacion_experiencia / 100);
+            $puntuacion_total_final = round($puntuacion_total_final, 1);
+        }
+        $ultima_val = cdb_obtener_fecha_ultima_valoracion($empleado_id);
+        if ($ultima_val) {
+            $ultima_valoracion = human_time_diff(strtotime($ultima_val), current_time('timestamp'));
         } else {
-            $ultima_valoracion = __( 'sin registros', 'cdb-form' );
+            $ultima_valoracion = __('sin registros', 'cdb-form');
         }
 
-        // Formulario para actualizar disponibilidad antes de la tarjeta.
-        $output .= '<div class="cdb-empleado-disponibilidad">'
-                 . '<form id="cdb-update-disponibilidad" method="post">'
-                 . '<label for="disponible">' . esc_html__( 'Actualizar Disponibilidad:', 'cdb-form' ) . '</label>'
-                 . '<select id="disponible" name="disponible">'
-                 . '<option value="1" ' . selected( $disponible, 1, false ) . '>' . esc_html__( 'Sí', 'cdb-form' ) . '</option>'
-                 . '<option value="0" ' . selected( $disponible, 0, false ) . '>' . esc_html__( 'No', 'cdb-form' ) . '</option>'
-                 . '</select>'
-                 . '<input type="hidden" name="empleado_id" value="' . esc_attr( $empleado_id ) . '">'
-                 . '<input type="hidden" name="security" value="' . wp_create_nonce( 'cdb_form_nonce' ) . '">'
-                 . '<button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>'
-                 . '</form>'
-                 . '</div>';
-
-        // Tarjeta con las métricas.
         $output .= '<a class="cdb-empleado-card" href="' . esc_url( $empleado_url ) . '">'
                  . '<span class="cdb-empleado-card__text">'
                  . '<span class="cdb-empleado-card__label">' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</span>'
                  . '<span class="cdb-empleado-card__name">👉 ' . esc_html( $empleado_nombre ) . '</span>'
-                 . '<span class="cdb-empleado-card__meta">'
-                 . '<span class="cdb-empleado-card__meta-item">' . esc_html__( 'Puntuación de Gráfica (empleados):', 'cdb-form' ) . ' ' . esc_html( $score_empleados ) . '</span>';
-        if ( null !== $score_empleadores ) {
-            $output .= '<span class="cdb-empleado-card__meta-item">' . esc_html__( 'Puntuación de Gráfica (empleadores):', 'cdb-form' ) . ' ' . esc_html( $score_empleadores ) . '</span>';
-        }
-        if ( null !== $score_tutores ) {
-            $output .= '<span class="cdb-empleado-card__meta-item">' . esc_html__( 'Puntuación de Gráfica (tutores):', 'cdb-form' ) . ' ' . esc_html( $score_tutores ) . '</span>';
-        }
-        $output .= '<span class="cdb-empleado-card__meta-item">' . esc_html__( 'Puntuación de Experiencia:', 'cdb-form' ) . ' ' . esc_html( $puntuacion_experiencia ) . '</span>'
-                 . '<span class="cdb-empleado-card__meta-item">' . esc_html__( 'Puntuación Total:', 'cdb-form' ) . ' ' . esc_html( $puntuacion_total_final ) . '</span>'
-                 . '<span class="cdb-empleado-card__meta-item">' . sprintf( esc_html__( 'Última valoración hace %s', 'cdb-form' ), esc_html( $ultima_valoracion ) ) . '</span>'
-                 . '</span>'
+                 . '<span class="cdb-empleado-card__meta">' . sprintf(
+                        esc_html__( 'Puntuación total %1$s · Última valoración hace %2$s', 'cdb-form' ),
+                        esc_html( $puntuacion_total_final ),
+                        esc_html( $ultima_valoracion )
+                    ) . '</span>'
                  . '</span>'
                  . '<span class="cdb-empleado-card__chev">&rsaquo;</span>'
                  . '</a>';
 
-        // Mostrar la barra de puntuación total si existe alguna valoración.
-        // Las métricas de puntuación total y experiencia se muestran en la tarjeta.
-        if ( $score_empleados > 0 ) {
-            $output .= cdb_generar_barra_progreso_simple( $puntuacion_total_final );
+        // Formulario para actualizar disponibilidad.
+        $output .= '<form id="cdb-update-disponibilidad" method="post">
+                        <label for="disponible">' . esc_html__( 'Actualizar Disponibilidad:', 'cdb-form' ) . '</label>
+                        <select id="disponible" name="disponible">
+                            <option value="1" ' . selected($disponible, 1, false) . '>' . esc_html__( 'Sí', 'cdb-form' ) . '</option>
+                            <option value="0" ' . selected($disponible, 0, false) . '>' . esc_html__( 'No', 'cdb-form' ) . '</option>
+                        </select>
+                        <input type="hidden" name="empleado_id" value="' . esc_attr($empleado_id) . '">
+                        <input type="hidden" name="security" value="' . wp_create_nonce('cdb_form_nonce') . '">
+                        <button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>
+                    </form>';
+
+        // Mostrar la barra de puntuación total si existe.
+        if (!empty($puntuacion_total_meta)) {
+            $output .= cdb_generar_barra_progreso_simple($puntuacion_total_final);
         } else {
-            $output .= cdb_form_get_mensaje( 'cdb_mensaje_puntuacion_no_disponible' );
+            $output .= cdb_form_get_mensaje(
+                'cdb_mensaje_puntuacion_no_disponible'
+            );
         }
+
+        // Mostrar la Puntuación de Experiencia.
+        $output .= '<p><strong>' . esc_html__( 'Puntuación de Experiencia:', 'cdb-form' ) . '</strong> ' . esc_html($puntuacion_experiencia) . '</p>';
     } else {
         // Mensaje para empleados que aún no han creado su perfil.
         // Configurable desde 'cdb_mensaje_bienvenida_usuario' y 'cdb_color_bienvenida_usuario'.
@@ -340,7 +330,8 @@ function cdb_generar_barra_progreso_simple($puntuacion_total) {
             <div class="cdb-progress-marker" style="left: 81%; color: #07ada8;">4</div>
         </div>
     </div>
-    <?php // La puntuación total se muestra ahora dentro de la tarjeta del empleado. ?>
+    <!-- Mostrar la puntuación total -->
+    <p><strong>Puntuación Total:</strong> <?php echo $puntuacion_total; ?>/100</p>
     <?php
     return ob_get_clean();
 }
