@@ -20,6 +20,7 @@
   transition:background .2s ease, box-shadow .2s ease, transform .15s ease;
   color:var(--cdb-text);
   max-width:520px;
+  margin-bottom:24px;
 }
 .cdb-empleado-card:hover,
 .cdb-empleado-card:focus-visible{
@@ -35,10 +36,17 @@
   text-transform:none; letter-spacing:.2px;
 }
 .cdb-empleado-card__name{
-  font-size:1.15rem; font-weight:800; color:var(--cdb-accent);
+  color:#000;
+  font-weight:800;
+  font-size:1.25rem;
+  display:block;
+  margin-bottom:6px;
 }
 .cdb-empleado-card__meta{
-  font-size:.78rem; color:#5a5a5a; margin-top:2px;
+  display:block;
+  margin-top:0;
+  font-size:.85rem;
+  color:#5a5a5a;
 }
 .cdb-empleado-card__chev{
   margin-left:auto; font-size:1.1rem; opacity:.6; transition:transform .15s ease, opacity .2s ease;
@@ -46,5 +54,5 @@
 .cdb-empleado-card:hover .cdb-empleado-card__chev{ transform:translateX(2px); opacity:.9; }
 @media (max-width:420px){
   .cdb-empleado-card{ padding:10px 12px; border-radius:10px; }
-  .cdb-empleado-card__name{ font-size:1.05rem; }
+  .cdb-empleado-card__name{ font-size:1.15rem; }
 }
