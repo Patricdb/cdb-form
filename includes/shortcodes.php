@@ -190,7 +190,10 @@ function cdb_bienvenida_empleado_shortcode() {
         $empleado_url     = get_permalink($empleado_id);
         $disponible       = get_post_meta($empleado_id, 'disponible', true);
 
-        $output .= '<p><strong>' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</strong> <a href="' . esc_url($empleado_url) . '">' . esc_html($empleado_nombre) . '</a></p>';
+        $output .= '<a class="cdb-empleado-card" href="' . esc_url( $empleado_url ) . '">'
+                 . '<span class="cdb-empleado-card__label">' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</span>'
+                 . '<span class="cdb-empleado-card__name">' . esc_html( $empleado_nombre ) . '</span>'
+                 . '</a>';
 
         // Formulario para actualizar disponibilidad.
         $output .= '<form id="cdb-update-disponibilidad" method="post">
