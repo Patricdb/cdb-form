@@ -3,26 +3,20 @@
  *
  * Esta hoja se carga tanto en el administrador como en el frontend. Proporciona
  * la estructura principal de los mensajes (<div class="cdb-aviso">) mientras que
- * los colores específicos de cada tipo (fondo y texto) se añaden dinámicamente
- * desde public/enqueue.php mediante <code>wp_add_inline_style</code>.
+ * los colores y bordes específicos de cada tipo se añaden dinámicamente desde
+ * PHP mediante wp_add_inline_style.
  */
 .cdb-aviso {
-    padding: 8px 12px;
-    margin-bottom: 8px;
-    border-left: 4px solid transparent;
+    padding: 10px 15px;
+    margin: 15px 0;
 }
-
-.cdb-mensaje-destacado,
-.cdb-mensaje-secundario {
-    display: block;
-}
-
 .cdb-mensaje-destacado {
     font-weight: 700;
+    display: block;
 }
-
 .cdb-mensaje-secundario {
-    margin-top: 0;
+    display: block;
+    font-size: .9em;
 }
 
 /* Estilos utilizados únicamente en la pantalla de Configuración de Mensajes */
@@ -31,9 +25,10 @@
 .cdb-config-mensaje.oculto .cdb-mensaje-preview { opacity:0.5; }
 .cdb-oculto-label { display:none; margin-left:8px; font-style:italic; }
 .cdb-config-mensaje.oculto .cdb-oculto-label { display:inline; }
-.cdb-mensaje-preview { padding: 8px 12px; margin-bottom: 8px; border-left: 4px solid transparent; }
+.cdb-mensaje-preview { padding:10px 15px; margin:15px 0; }
 .cdb-color-swatch { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:4px; vertical-align:middle; }
-.cdb-tipo-color-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.cdb-tipo-color-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; flex-wrap:wrap; }
 .cdb-tipo-color-row input[type="text"] { width:120px; }
 .cdb-tipo-color-row .cdb-color-swatch { width:20px; height:20px; }
 .cdb-tipo-color-row.deleting { opacity:0.5; }
+.cdb-contrast-warning { display:none; color:#d63638; font-size:11px; margin-left:4px; }

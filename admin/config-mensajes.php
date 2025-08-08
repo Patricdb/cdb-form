@@ -197,11 +197,19 @@ function cdb_form_config_mensajes_page() {
                 }
                 $nombres[] = $nombre;
                 $slug_sanit = sanitize_key( $slug );
+                $bg         = sanitize_hex_color( $datos['bg'] ?? '' );
+                $text       = sanitize_hex_color( $datos['text'] ?? '' );
+                $bcolor     = sanitize_hex_color( $datos['border_color'] ?? $bg );
+                $bwidth     = cdb_form_normalize_border_value( $datos['border_width'] ?? '0px', '0px' );
+                $bradius    = cdb_form_normalize_border_value( $datos['border_radius'] ?? '4px', '4px' );
                 $tipos_nuevos[ $slug_sanit ] = array(
-                    'name'  => $nombre,
-                    'class' => sanitize_html_class( $datos['class'] ?? '' ),
-                    'color' => sanitize_hex_color( $datos['color'] ?? '' ),
-                    'text'  => sanitize_hex_color( $datos['text'] ?? '' ),
+                    'name'         => $nombre,
+                    'class'        => sanitize_html_class( $datos['class'] ?? '' ),
+                    'bg'           => $bg,
+                    'text'         => $text,
+                    'border_color' => $bcolor,
+                    'border_width' => $bwidth,
+                    'border_radius'=> $bradius,
                 );
             }
             if ( ! $duplicado ) {
@@ -224,11 +232,18 @@ function cdb_form_config_mensajes_page() {
         <div class="notice notice-info"><p><?php esc_html_e( 'Si dejas un campo vacío se mostrará el texto por defecto', 'cdb-form' ); ?></p></div>
         <?php if ( $mensaje_guardado ) :
             $clase_notice = cdb_form_get_tipo_color_class( $tipo_mensaje );
-            $bg_notice    = $tipos_color[ $tipo_mensaje ]['color'] ?? '#000';
+            $bg_notice    = $tipos_color[ $tipo_mensaje ]['bg'] ?? '#000';
             $text_notice  = $tipos_color[ $tipo_mensaje ]['text'] ?? cdb_form_get_contrasting_text_color( $bg_notice );
+            $bcolor_n     = $tipos_color[ $tipo_mensaje ]['border_color'] ?? $bg_notice;
+            $bwidth_n     = $tipos_color[ $tipo_mensaje ]['border_width'] ?? '0px';
+            $bradius_n    = $tipos_color[ $tipo_mensaje ]['border_radius'] ?? '4px';
+            $style_notice = sprintf( 'background-color:%1$s;color:%2$s;border:%3$s solid %4$s;border-radius:%5$s;', esc_attr( $bg_notice ), esc_attr( $text_notice ), esc_attr( $bwidth_n ), esc_attr( $bcolor_n ), esc_attr( $bradius_n ) );
+            if ( preg_match( '/^0(?:px|rem|em|%)?$/', $bwidth_n ) ) {
+                $style_notice .= 'border-left:4px solid ' . esc_attr( $bcolor_n ) . ';';
+            }
             ?>
-            <div class="cdb-aviso <?php echo esc_attr( $clase_notice ); ?>" style="border-left-color: <?php echo esc_attr( $bg_notice ); ?>; background-color: <?php echo esc_attr( $bg_notice ); ?>; color: <?php echo esc_attr( $text_notice ); ?>;">
-                <p><?php echo esc_html( $mensaje_guardado ); ?></p>
+            <div class="cdb-aviso <?php echo esc_attr( $clase_notice ); ?>" style="<?php echo esc_attr( $style_notice ); ?>">
+                <strong class="cdb-mensaje-destacado"><?php echo esc_html( $mensaje_guardado ); ?></strong>
             </div>
         <?php endif; ?>
         <form method="post">
@@ -274,12 +289,19 @@ function cdb_form_config_mensajes_page() {
                 $tipo       = get_option( $datos['color_option'], 'aviso' );
                 $datos_tipo = $tipos_color[ $tipo ] ?? array();
                 $clase      = $datos_tipo['class'] ?? '';
-                $color_hex  = $datos_tipo['color'] ?? '#000';
+                $color_hex  = $datos_tipo['bg'] ?? '#000';
                 $text_hex   = $datos_tipo['text'] ?? cdb_form_get_contrasting_text_color( $color_hex );
+                $bcolor_hex = $datos_tipo['border_color'] ?? $color_hex;
+                $bwidth_val = $datos_tipo['border_width'] ?? '0px';
+                $brad_val   = $datos_tipo['border_radius'] ?? '4px';
+                $style_prev = sprintf( 'background-color:%1$s;color:%2$s;border:%3$s solid %4$s;border-radius:%5$s;', esc_attr( $color_hex ), esc_attr( $text_hex ), esc_attr( $bwidth_val ), esc_attr( $bcolor_hex ), esc_attr( $brad_val ) );
+                if ( preg_match( '/^0(?:px|rem|em|%)?$/', $bwidth_val ) ) {
+                    $style_prev .= 'border-left:4px solid ' . esc_attr( $bcolor_hex ) . ';';
+                }
                 ?>
                 <div class="cdb-config-mensaje<?php echo ( '1' !== $mostrar ) ? ' oculto' : ''; ?>" id="mensaje-<?php echo esc_attr( $id ); ?>">
                     <strong><?php echo esc_html( $datos['label'] ); ?></strong> <span class="cdb-oculto-label"><?php esc_html_e( 'Oculto', 'cdb-form' ); ?></span>
-                    <div class="cdb-mensaje-preview <?php echo esc_attr( $clase ); ?>" style="border-left-color: <?php echo esc_attr( $color_hex ); ?>; background-color: <?php echo esc_attr( $color_hex ); ?>; color: <?php echo esc_attr( $text_hex ); ?>;">
+                    <div class="cdb-aviso cdb-mensaje-preview <?php echo esc_attr( $clase ); ?>" style="<?php echo esc_attr( $style_prev ); ?>">
                         <strong class="cdb-mensaje-destacado"><?php echo wp_kses_post( $texto ); ?></strong>
                         <span class="cdb-mensaje-secundario" <?php if ( empty( $secundario ) ) echo 'style="display:none;"'; ?>><?php echo wp_kses_post( $secundario ); ?></span>
                     </div>
@@ -294,7 +316,7 @@ function cdb_form_config_mensajes_page() {
                         <label><?php esc_html_e( 'Tipo/Color', 'cdb-form' ); ?></label>
                         <select name="<?php echo esc_attr( $datos['color_option'] ); ?>">
                             <?php foreach ( $tipos_color as $slug => $info ) : ?>
-                                <option value="<?php echo esc_attr( $slug ); ?>" data-color="<?php echo esc_attr( $info['color'] ); ?>" data-text="<?php echo esc_attr( $info['text'] ); ?>" data-class="<?php echo esc_attr( $info['class'] ); ?>" style="color: <?php echo esc_attr( $info['color'] ); ?>;" <?php selected( $tipo, $slug ); ?>>&#11044; <?php echo esc_html( $info['name'] ); ?></option>
+                                <option value="<?php echo esc_attr( $slug ); ?>" data-bg="<?php echo esc_attr( $info['bg'] ); ?>" data-text="<?php echo esc_attr( $info['text'] ); ?>" data-class="<?php echo esc_attr( $info['class'] ); ?>" data-bordercolor="<?php echo esc_attr( $info['border_color'] ); ?>" data-borderwidth="<?php echo esc_attr( $info['border_width'] ); ?>" data-borderradius="<?php echo esc_attr( $info['border_radius'] ); ?>" style="color: <?php echo esc_attr( $info['bg'] ); ?>;" <?php selected( $tipo, $slug ); ?>>&#11044; <?php echo esc_html( $info['name'] ); ?></option>
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php esc_html_e( 'Clase CSS:', 'cdb-form' ); ?> <code class="cdb-clase-css"><?php echo esc_html( $clase ); ?></code></p>
@@ -308,15 +330,31 @@ function cdb_form_config_mensajes_page() {
             <div id="cdb-tipos-color">
                 <?php foreach ( $tipos_color as $slug => $info ) : ?>
                     <div class="cdb-tipo-color-row">
-                        <span class="cdb-color-swatch" style="background-color: <?php echo esc_attr( $info['color'] ); ?>"></span>
+                        <span class="cdb-color-swatch" style="background-color: <?php echo esc_attr( $info['bg'] ); ?>"></span>
                         <input type="text" name="tipos_color[<?php echo esc_attr( $slug ); ?>][name]" value="<?php echo esc_attr( $info['name'] ); ?>" />
                         <input type="text" name="tipos_color[<?php echo esc_attr( $slug ); ?>][class]" value="<?php echo esc_attr( $info['class'] ); ?>" />
-                        <input type="color" name="tipos_color[<?php echo esc_attr( $slug ); ?>][color]" value="<?php echo esc_attr( $info['color'] ); ?>" />
+                        <input type="color" name="tipos_color[<?php echo esc_attr( $slug ); ?>][bg]" value="<?php echo esc_attr( $info['bg'] ); ?>" />
                         <input type="color" name="tipos_color[<?php echo esc_attr( $slug ); ?>][text]" value="<?php echo esc_attr( $info['text'] ); ?>" />
+                        <input type="text" name="tipos_color[<?php echo esc_attr( $slug ); ?>][border_color]" class="cdb-border-color" value="<?php echo esc_attr( $info['border_color'] ); ?>" />
+                        <input type="text" name="tipos_color[<?php echo esc_attr( $slug ); ?>][border_width]" list="cdb-border-width" value="<?php echo esc_attr( $info['border_width'] ); ?>" />
+                        <input type="text" name="tipos_color[<?php echo esc_attr( $slug ); ?>][border_radius]" list="cdb-border-radius" value="<?php echo esc_attr( $info['border_radius'] ); ?>" />
                         <label><input type="checkbox" name="tipos_color[<?php echo esc_attr( $slug ); ?>][delete]" value="1" /><?php esc_html_e( 'Eliminar', 'cdb-form' ); ?></label>
+                        <span class="cdb-contrast-warning"><?php esc_html_e( 'Contraste bajo', 'cdb-form' ); ?></span>
                     </div>
                 <?php endforeach; ?>
             </div>
+            <datalist id="cdb-border-width">
+                <option value="0px"></option>
+                <option value="1px"></option>
+                <option value="2px"></option>
+                <option value="4px"></option>
+            </datalist>
+            <datalist id="cdb-border-radius">
+                <option value="0px"></option>
+                <option value="4px"></option>
+                <option value="6px"></option>
+                <option value="8px"></option>
+            </datalist>
             <p><button type="button" class="button" id="cdb-add-tipo-color"><?php esc_html_e( 'Añadir tipo/color', 'cdb-form' ); ?></button></p>
 
             <?php submit_button( __( 'Guardar cambios', 'cdb-form' ) ); ?>

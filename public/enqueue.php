@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * color de fondo como el de texto, de modo que los shortcodes que imprimen
  * avisos pueden usar clases como <code>cdb-aviso--aviso</code> o cualquier
  * otra definida en la pantalla de ajustes y mantener los colores elegidos.
+ * Desde la versión 1.2 también se soporta borde completo configurable.
  */
 function cdb_form_public_enqueue() {
     // Registrar el script sin encolarlo; se encolará condicionalmente.
@@ -38,15 +39,23 @@ function cdb_form_public_enqueue() {
     $css   = '';
     foreach ( $tipos as $info ) {
         $class = isset( $info['class'] ) ? sanitize_html_class( $info['class'] ) : '';
-        $bg    = isset( $info['color'] ) ? sanitize_hex_color( $info['color'] ) : '';
+        $bg    = isset( $info['bg'] ) ? sanitize_hex_color( $info['bg'] ) : '';
         $text  = isset( $info['text'] ) ? sanitize_hex_color( $info['text'] ) : '';
+        $bcol  = isset( $info['border_color'] ) ? sanitize_hex_color( $info['border_color'] ) : $bg;
+        $bwid  = isset( $info['border_width'] ) ? cdb_form_normalize_border_value( $info['border_width'], '0px' ) : '0px';
+        $brad  = isset( $info['border_radius'] ) ? cdb_form_normalize_border_value( $info['border_radius'], '4px' ) : '4px';
         if ( ! $class || ! $bg ) {
             continue;
         }
         if ( ! $text ) {
             $text = cdb_form_get_contrasting_text_color( $bg );
         }
-        $css .= sprintf( '.%1$s{border-left-color:%2$s;background-color:%2$s;color:%3$s;}', $class, $bg, $text );
+        $rule = sprintf( '.cdb-aviso.%1$s{background-color:%2$s;color:%3$s;border:%4$s solid %5$s;border-radius:%6$s;}', $class, $bg, $text, $bwid, $bcol, $brad );
+        // Compatibilidad retro: si no hay borde, se mantiene el acento lateral histórico.
+        if ( preg_match( '/^0(?:px|rem|em|%)?$/', $bwid ) ) {
+            $rule = sprintf( '.cdb-aviso.%1$s{background-color:%2$s;color:%3$s;border-left:4px solid %5$s;border:%4$s solid %5$s;border-radius:%6$s;}', $class, $bg, $text, $bwid, $bcol, $brad );
+        }
+        $css .= $rule;
     }
 
     if ( $css ) {
