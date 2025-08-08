@@ -13,6 +13,7 @@ if ( file_exists( WP_PLUGIN_DIR . '/cdb-bar/includes/cpt-equipo.php' ) ) {
 }
 
 // Incluir archivos esenciales del plugin
+require_once CDB_FORM_PATH . 'includes/helpers.php';
 require_once CDB_FORM_PATH . 'includes/form-handler.php';
 require_once CDB_FORM_PATH . 'includes/validations.php';
 require_once CDB_FORM_PATH . 'includes/capabilities.php';

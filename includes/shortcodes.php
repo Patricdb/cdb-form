@@ -199,12 +199,7 @@ function cdb_bienvenida_empleado_shortcode() {
             $puntuacion_total_final = floatval($puntuacion_total_meta) + ($puntuacion_experiencia / 100);
             $puntuacion_total_final = round($puntuacion_total_final, 1);
         }
-        $ultima_val = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT MAX(fecha_modificacion) FROM {$tabla_exp} WHERE empleado_id = %d",
-                $empleado_id
-            )
-        );
+        $ultima_val = cdb_obtener_fecha_ultima_valoracion($empleado_id);
         if ($ultima_val) {
             $ultima_valoracion = human_time_diff(strtotime($ultima_val), current_time('timestamp'));
         } else {
