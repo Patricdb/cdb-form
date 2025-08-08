@@ -44,15 +44,14 @@
   margin-bottom:6px;
 }
 .cdb-empleado-card__meta{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
+  display:block;
   margin-top:0;
   font-size:.85rem;
   color:#5a5a5a;
 }
 .cdb-empleado-card__meta-item{
   display:block;
+  margin-top:4px;
   font-size:.85rem;
   color:#5a5a5a;
 }
