@@ -34,6 +34,22 @@ function cdb_form_public_enqueue() {
         '1.0'
     );
 
+    // Registrar la hoja de estilos de la tarjeta de empleado.
+    wp_register_style(
+        'cdb-form-bienvenida-empleado',
+        CDB_FORM_URL . 'assets/css/bienvenida-empleado.css',
+        array(),
+        '1.0'
+    );
+
+    // Encolar la hoja de estilos solo si el contenido incluye los shortcodes relevantes.
+    if ( is_singular() ) {
+        global $post;
+        if ( has_shortcode( $post->post_content, 'cdb_bienvenida_empleado' ) || has_shortcode( $post->post_content, 'cdb_bienvenida_usuario' ) ) {
+            wp_enqueue_style( 'cdb-form-bienvenida-empleado' );
+        }
+    }
+
     // Generar las reglas CSS para cada tipo/color definido.
     $tipos = cdb_form_get_tipos_color();
     $css   = '';
