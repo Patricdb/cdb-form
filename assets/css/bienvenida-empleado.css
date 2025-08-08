@@ -48,6 +48,8 @@
   font-size:.85rem;
   color:#5a5a5a;
 }
+.cdb-empleado-card__meta-item{display:block; margin-top:2px; font-size:.84rem; color:#5a5a5a;}
+.cdb-empleado-disponibilidad{margin-bottom:24px;}
 .cdb-empleado-card__chev{
   margin-left:auto; font-size:1.1rem; opacity:.6; transition:transform .15s ease, opacity .2s ease;
 }
