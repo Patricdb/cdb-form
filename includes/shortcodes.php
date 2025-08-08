@@ -190,9 +190,38 @@ function cdb_bienvenida_empleado_shortcode() {
         $empleado_url     = get_permalink($empleado_id);
         $disponible       = get_post_meta($empleado_id, 'disponible', true);
 
+        // Obtener la puntuación total y la fecha de la última valoración.
+        $puntuacion_total_meta = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
+        $puntuacion_experiencia = get_post_meta($empleado_id, 'cdb_experiencia_score', true);
+        $puntuacion_experiencia = intval($puntuacion_experiencia);
+        $puntuacion_total_final = 0;
+        if (!empty($puntuacion_total_meta)) {
+            $puntuacion_total_final = floatval($puntuacion_total_meta) + ($puntuacion_experiencia / 100);
+            $puntuacion_total_final = round($puntuacion_total_final, 1);
+        }
+        $ultima_val = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT MAX(fecha_modificacion) FROM {$tabla_exp} WHERE empleado_id = %d",
+                $empleado_id
+            )
+        );
+        if ($ultima_val) {
+            $ultima_valoracion = human_time_diff(strtotime($ultima_val), current_time('timestamp'));
+        } else {
+            $ultima_valoracion = __('sin registros', 'cdb-form');
+        }
+
         $output .= '<a class="cdb-empleado-card" href="' . esc_url( $empleado_url ) . '">'
+                 . '<span class="cdb-empleado-card__text">'
                  . '<span class="cdb-empleado-card__label">' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</span>'
-                 . '<span class="cdb-empleado-card__name">' . esc_html( $empleado_nombre ) . '</span>'
+                 . '<span class="cdb-empleado-card__name">👉 ' . esc_html( $empleado_nombre ) . '</span>'
+                 . '<span class="cdb-empleado-card__meta">' . sprintf(
+                        esc_html__( 'Puntuación total %1$s · Última valoración hace %2$s', 'cdb-form' ),
+                        esc_html( $puntuacion_total_final ),
+                        esc_html( $ultima_valoracion )
+                    ) . '</span>'
+                 . '</span>'
+                 . '<span class="cdb-empleado-card__chev">&rsaquo;</span>'
                  . '</a>';
 
         // Formulario para actualizar disponibilidad.
@@ -207,15 +236,8 @@ function cdb_bienvenida_empleado_shortcode() {
                         <button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>
                     </form>';
 
-        // Obtener la puntuación gráfica y la de experiencia
-        $puntuacion_total_meta = get_post_meta($empleado_id, 'cdb_puntuacion_total', true);
-        $puntuacion_experiencia = get_post_meta($empleado_id, 'cdb_experiencia_score', true);
-        $puntuacion_experiencia = intval($puntuacion_experiencia);
-
-        // Sumamos la puntuación de experiencia (dividida entre 100) al total gráfico
+        // Mostrar la barra de puntuación total si existe.
         if (!empty($puntuacion_total_meta)) {
-            $puntuacion_total_final = floatval($puntuacion_total_meta) + ($puntuacion_experiencia / 100);
-            $puntuacion_total_final = round($puntuacion_total_final, 1); // Redondeamos a 1 decimal (opcional)
             $output .= cdb_generar_barra_progreso_simple($puntuacion_total_final);
         } else {
             $output .= cdb_form_get_mensaje(
