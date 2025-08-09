@@ -11,7 +11,7 @@
 /* Filas */
 .cdb-niveles__row {
   display: grid;
-  grid-template-columns: minmax(120px, 180px) 1fr;
+  grid-template-columns: minmax(130px, 200px) 1fr;
   gap: 12px;
   align-items: center;
   margin: 6px 0;
@@ -24,8 +24,13 @@
 }
 
 /* Pista y relleno */
+.cdb-niveles__bar,
+.cdb-niveles__track,
+.cdb-niveles__fill {
+  display: block;
+}
 .cdb-niveles__track { position: relative; height: 16px; border-radius: 999px; overflow: hidden; background: #eee; }
-.cdb-niveles__fill { height: 100%; transform-origin: left center; transform: scaleX(0); /* para animación */ transition: transform 0.9s ease-in-out; }
+.cdb-niveles__fill { position: relative; flex: 0 0 auto !important; max-width: 100%; width: 0; height: 100%; transform-origin: left center; transform: scaleX(0); /* para animación */ transition: transform 0.9s ease-in-out; }
 .cdb-niveles__fill.is-in { transform: scaleX(1); }
 
 /* Colores base por rol (fondo de pista y color del relleno) */
@@ -50,9 +55,16 @@
 /* Responsive */
 @media (max-width: 640px) {
   .cdb-niveles__head { grid-template-columns: 100px 1fr; }
-  .cdb-niveles__row { grid-template-columns: minmax(96px, 140px) 1fr; }
+  .cdb-niveles__row { grid-template-columns: minmax(110px, 160px) 1fr; }
   .cdb-niveles__label { font-size: 0.95rem; }
   .cdb-niveles__track { height: 14px; }
+}
+
+@media (max-width: 480px) {
+  .cdb-niveles__row {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
 }
 
 @supports (hyphens:auto){
