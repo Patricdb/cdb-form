@@ -211,15 +211,66 @@ function cdb_bienvenida_empleado_shortcode() {
 
         // Formulario para actualizar disponibilidad (ahora antes de la tarjeta).
         $output .= '<form id="cdb-update-disponibilidad" method="post">'
+                    .'<div class="cdb-disponibilidad-wrap">'
                         .'<label for="disponible">' . esc_html__( 'Actualizar Disponibilidad:', 'cdb-form' ) . '</label>'
                         .'<select id="disponible" name="disponible">'
                             .'<option value="1" ' . selected( $disponible, 1, false ) . '>' . esc_html__( 'Sí', 'cdb-form' ) . '</option>'
                             .'<option value="0" ' . selected( $disponible, 0, false ) . '>' . esc_html__( 'No', 'cdb-form' ) . '</option>'
                         .'</select>'
-                        .'<input type="hidden" name="empleado_id" value="' . esc_attr( $empleado_id ) . '">' 
-                        .'<input type="hidden" name="security" value="' . esc_attr( wp_create_nonce( 'cdb_form_nonce' ) ) . '">' 
                         .'<button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>'
+                    .'</div>'
+                    .'<input type="hidden" name="empleado_id" value="' . esc_attr( $empleado_id ) . '">'
+                    .'<input type="hidden" name="security" value="' . esc_attr( wp_create_nonce( 'cdb_form_nonce' ) ) . '">' 
                     .'</form>';
+
+        // Preparar datos de puntuaciones.
+        $scores = [
+            'empleado'    => $scores_roles['empleado'] ?? null,
+            'empleador'   => $scores_roles['empleador'] ?? null,
+            'tutor'       => $scores_roles['tutor'] ?? null,
+            'experiencia' => $puntuacion_experiencia,
+            'total'       => $puntuacion_total_final,
+        ];
+        $ultima = $ultima_rel;
+
+        // Construcción de líneas de metadatos.
+        $lineas = [];
+
+        $lineas[] = [
+            'label'   => $labels['total'] ?? __( 'Puntuación Total:', 'cdb-form' ),
+            'value'   => $scores['total'] ?? 0,
+            'classes' => 'cdb-meta--total',
+        ];
+
+        $lineas[] = [
+            'label' => $labels['empleado'] ?? __( 'Punt. de Gráfica por Empleados:', 'cdb-form' ),
+            'value' => $scores['empleado'] ?? 0,
+        ];
+
+        if ( isset( $scores['empleador'] ) && $scores['empleador'] !== null ) {
+            $lineas[] = [
+                'label' => $labels['empleador'] ?? __( 'Punt. de Gráfica por Empleadores:', 'cdb-form' ),
+                'value' => $scores['empleador'],
+            ];
+        }
+
+        if ( isset( $scores['tutor'] ) && $scores['tutor'] !== null ) {
+            $lineas[] = [
+                'label' => $labels['tutor'] ?? __( 'Punt. de Gráfica por Tutores:', 'cdb-form' ),
+                'value' => $scores['tutor'],
+            ];
+        }
+
+        $lineas[] = [
+            'label' => $labels['experiencia'] ?? __( 'Punt. de Experiencia:', 'cdb-form' ),
+            'value' => $scores['experiencia'] ?? 0,
+        ];
+
+        $ultima_line = sprintf(
+            /* translators: %s: relative time, e.g. "hace 4 horas" */
+            __( 'Última valoración: %s', 'cdb-form' ),
+            $ultima ? esc_html( $ultima ) : esc_html__( 'sin registros', 'cdb-form' )
+        );
 
         // Tarjeta del empleado con metadatos.
         $output .= '<a class="cdb-empleado-card" href="' . esc_url( $empleado_url ) . '" aria-label="' . esc_attr( sprintf( __( 'Ver perfil de %s', 'cdb-form' ), $empleado_nombre ) ) . '">' .
@@ -228,43 +279,24 @@ function cdb_bienvenida_empleado_shortcode() {
                    '<span class="cdb-empleado-card__name">👉 ' . esc_html( $empleado_nombre ) . '</span>' .
                    '<div class="cdb-empleado-card__meta">';
 
-        if ( cdb_form_card_show_role_score( 'empleado', $scores_roles['empleado'], (int) $empleado_id ) ) {
-            $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html( $labels['empleado'] ?? __( 'Puntuación de Gráfica por Empleados:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
-                esc_html( number_format_i18n( $scores_roles['empleado'], $dec ) ) . '</span>' .
-            '</div>';
+        foreach ( $lineas as $l ) {
+            $label   = esc_html( $l['label'] );
+            $valor   = number_format_i18n( floatval( $l['value'] ), $dec );
+            $classes = isset( $l['classes'] ) ? ' ' . esc_attr( $l['classes'] ) : '';
+
+            $output .= '<div class="cdb-empleado-card__meta-item' . $classes . '">' .
+                        $label . ' ' .
+                        '<strong class="cdb-num">' . esc_html( $valor ) . '</strong>' .
+                       '</div>';
         }
 
-        if ( ! is_null( $scores_roles['empleador'] ) && cdb_form_card_show_role_score( 'empleador', $scores_roles['empleador'], (int) $empleado_id ) ) {
-            $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html( $labels['empleador'] ?? __( 'Puntuación de Gráfica por Empleadores:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
-                esc_html( number_format_i18n( $scores_roles['empleador'], $dec ) ) . '</span>' .
-            '</div>';
-        }
-
-        if ( ! is_null( $scores_roles['tutor'] ) && cdb_form_card_show_role_score( 'tutor', $scores_roles['tutor'], (int) $empleado_id ) ) {
-            $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html( $labels['tutor'] ?? __( 'Puntuación de Gráfica por Tutores:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
-                esc_html( number_format_i18n( $scores_roles['tutor'], $dec ) ) . '</span>' .
-            '</div>';
-        }
-
-        $output .= '<div class="cdb-empleado-card__meta-item">' .
-            esc_html( $labels['experiencia'] ?? __( 'Puntuación de Experiencia:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
-            esc_html( number_format_i18n( $puntuacion_experiencia, $dec ) ) . '</span>' .
-        '</div>' .
-        '<div class="cdb-empleado-card__meta-item cdb-meta--total">' .
-            esc_html( $labels['total'] ?? __( 'Puntuación Total:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
-            esc_html( number_format_i18n( $puntuacion_total_final, $dec ) ) . '</span>' .
-        '</div>' .
-        '<div class="cdb-empleado-card__meta-item">' .
-            esc_html( $labels['ultima'] ?? __( 'Última valoración:', 'cdb-form' ) ) . ' ' .
-            esc_html( $ultima_rel ? sprintf( __( 'hace %s', 'cdb-form' ), $ultima_rel ) : __( 'sin registros', 'cdb-form' ) ) .
-        '</div>' .
-        '</div>' .
-        '</div>' .
-        '<span class="cdb-empleado-card__chev">&rsaquo;</span>' .
-        '</a>';
+        $output .= '<div class="cdb-empleado-card__meta-item cdb-meta--ultima">' .
+                    esc_html( $ultima_line ) .
+                   '</div>' .
+                   '</div>' .
+                   '</div>' .
+                   '<span class="cdb-empleado-card__chev">&rsaquo;</span>' .
+                   '</a>';
 
         // Mostrar la barra de puntuación total si existe.
         if ( ! empty( $puntuacion_total_meta ) ) {
