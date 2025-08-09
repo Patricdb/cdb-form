@@ -230,32 +230,32 @@ function cdb_bienvenida_empleado_shortcode() {
 
         if ( cdb_form_card_show_role_score( 'empleado', $scores_roles['empleado'], (int) $empleado_id ) ) {
             $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html( $labels['empleado'] ?? __( 'Puntuación de Gráfica por Empleados:', 'cdb-form' ) ) . ' ' .
-                esc_html( number_format_i18n( $scores_roles['empleado'], $dec ) ) .
+                esc_html( $labels['empleado'] ?? __( 'Puntuación de Gráfica por Empleados:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
+                esc_html( number_format_i18n( $scores_roles['empleado'], $dec ) ) . '</span>' .
             '</div>';
         }
 
         if ( ! is_null( $scores_roles['empleador'] ) && cdb_form_card_show_role_score( 'empleador', $scores_roles['empleador'], (int) $empleado_id ) ) {
             $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html( $labels['empleador'] ?? __( 'Puntuación de Gráfica por Empleadores:', 'cdb-form' ) ) . ' ' .
-                esc_html( number_format_i18n( $scores_roles['empleador'], $dec ) ) .
+                esc_html( $labels['empleador'] ?? __( 'Puntuación de Gráfica por Empleadores:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
+                esc_html( number_format_i18n( $scores_roles['empleador'], $dec ) ) . '</span>' .
             '</div>';
         }
 
         if ( ! is_null( $scores_roles['tutor'] ) && cdb_form_card_show_role_score( 'tutor', $scores_roles['tutor'], (int) $empleado_id ) ) {
             $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html( $labels['tutor'] ?? __( 'Puntuación de Gráfica por Tutores:', 'cdb-form' ) ) . ' ' .
-                esc_html( number_format_i18n( $scores_roles['tutor'], $dec ) ) .
+                esc_html( $labels['tutor'] ?? __( 'Puntuación de Gráfica por Tutores:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
+                esc_html( number_format_i18n( $scores_roles['tutor'], $dec ) ) . '</span>' .
             '</div>';
         }
 
         $output .= '<div class="cdb-empleado-card__meta-item">' .
-            esc_html( $labels['experiencia'] ?? __( 'Puntuación de Experiencia:', 'cdb-form' ) ) . ' ' .
-            esc_html( number_format_i18n( $puntuacion_experiencia, $dec ) ) .
+            esc_html( $labels['experiencia'] ?? __( 'Puntuación de Experiencia:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
+            esc_html( number_format_i18n( $puntuacion_experiencia, $dec ) ) . '</span>' .
         '</div>' .
-        '<div class="cdb-empleado-card__meta-item">' .
-            esc_html( $labels['total'] ?? __( 'Puntuación Total:', 'cdb-form' ) ) . ' ' .
-            esc_html( number_format_i18n( $puntuacion_total_final, $dec ) ) .
+        '<div class="cdb-empleado-card__meta-item cdb-meta--total">' .
+            esc_html( $labels['total'] ?? __( 'Puntuación Total:', 'cdb-form' ) ) . ' <span class="cdb-num">' .
+            esc_html( number_format_i18n( $puntuacion_total_final, $dec ) ) . '</span>' .
         '</div>' .
         '<div class="cdb-empleado-card__meta-item">' .
             esc_html( $labels['ultima'] ?? __( 'Última valoración:', 'cdb-form' ) ) . ' ' .
