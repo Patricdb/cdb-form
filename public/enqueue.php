@@ -42,11 +42,28 @@ function cdb_form_public_enqueue() {
         '1.0'
     );
 
+    // Registrar estilos y scripts para las barras de niveles de bienvenida.
+    wp_register_style(
+        'cdb-bienvenida-niveles',
+        CDB_FORM_URL . 'assets/css/cdb-bienvenida-niveles.css',
+        array(),
+        '1.0.0'
+    );
+    wp_register_script(
+        'cdb-bienvenida-niveles',
+        CDB_FORM_URL . 'assets/js/cdb-bienvenida-niveles.js',
+        array(),
+        '1.0.0',
+        true
+    );
+
     // Encolar la hoja de estilos solo si el contenido incluye los shortcodes relevantes.
     if ( is_singular() ) {
         global $post;
         if ( has_shortcode( $post->post_content, 'cdb_bienvenida_empleado' ) || has_shortcode( $post->post_content, 'cdb_bienvenida_usuario' ) ) {
             wp_enqueue_style( 'cdb-form-bienvenida-empleado' );
+            wp_enqueue_style( 'cdb-bienvenida-niveles' );
+            wp_enqueue_script( 'cdb-bienvenida-niveles' );
         }
     }
 
