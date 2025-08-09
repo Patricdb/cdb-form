@@ -53,3 +53,82 @@
   .cdb-empleado-card{ padding:10px 12px; border-radius:10px; }
   .cdb-empleado-card__name{ font-size:1.15rem; }
 }
+/* --- Espaciado global de la tarjeta de empleado --- */
+.cdb-empleado-card{
+  margin-top: 24px;              /* separa del bloque "Actualizar Disponibilidad" */
+  margin-bottom: 16px;           /* separa de la barra de nivel */
+  padding: 16px 18px;            /* más aire interior */
+  line-height: 1.5;              /* legibilidad entre líneas */
+}
+
+/* Meta-info dentro de la tarjeta (cada línea) */
+.cdb-empleado-card__meta,
+.cdb-empleado-card__label,
+.cdb-empleado-card__name{
+  display: block;
+}
+
+/* Jerarquía y separación de líneas meta */
+.cdb-empleado-card__label{
+  margin-bottom: 4px;
+  font-size: .9rem;
+  color: #5a5a5a;
+}
+.cdb-empleado-card__name{
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.cdb-empleado-card__meta{
+  margin-top: 4px;               /* espacio entre cada línea de métrica */
+  font-size: .92rem;
+}
+
+/* Flecha/chevron a la derecha con mejor respiro */
+.cdb-empleado-card__chev{
+  margin-left: auto;
+  padding-left: 8px;
+}
+
+/* --- Bloque "Actualizar Disponibilidad" --- */
+/* Asegura un respiro inferior antes de la tarjeta */
+.cdb-disponibilidad-wrap{        /* si no existe la clase, crea un contenedor en CSS con el selector que envuelve el select + botón */
+  margin-bottom: 12px;
+}
+
+/* Ajuste suave del botón y select (no cambia su estilo general) */
+.cdb-disponibilidad-wrap select{
+  margin-right: 8px;
+}
+
+/* --- Barra de nivel --- */
+.cdb-barra-nivel-wrap{           /* si existe un wrapper; si no, aplicar al selector actual de la barra */
+  margin-top: 8px;               /* separa de la tarjeta */
+  margin-bottom: 24px;           /* separa de la sección siguiente */
+}
+
+/* --- Inicio de tabla "Tu experiencia laboral" --- */
+.cdb-experiencia-wrap{           /* si existe wrapper; si no, apuntar al contenedor de tabla que ya tenéis */
+  margin-top: 8px;               /* respiro desde la barra */
+}
+
+/* Filas más legibles sin cambiar densidad en exceso */
+.cdb-experiencia-wrap table tr td,
+.cdb-experiencia-wrap table tr th{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* --- Responsivo --- */
+@media (max-width: 480px){
+  .cdb-empleado-card{
+    padding: 14px 14px;
+    margin-top: 20px;
+    margin-bottom: 14px;
+  }
+  .cdb-empleado-card__meta{
+    font-size: .9rem;
+  }
+  .cdb-barra-nivel-wrap{
+    margin-bottom: 20px;
+  }
+}
