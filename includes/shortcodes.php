@@ -406,21 +406,15 @@ function cdbf_render_head_niveles() {
  * @return string HTML generado.
  */
 function cdbf_render_barra_nivel( $label, $valor, $role_key ) {
-    $dec   = cdb_form_card_number_decimals();
     $empty = false;
+
     if ( $valor === null ) {
         $empty = true;
         $valor = 0;
     } else {
-        $valor = floatval( $valor );
-        if ( $valor < 0 ) {
-            $valor = 0;
-        } elseif ( $valor > 100 ) {
-            $valor = 100;
-        }
+        $valor = max( 0, min( 100, floatval( $valor ) ) );
     }
 
-    $formatted = number_format_i18n( $valor, $dec );
     $data_attr = $empty ? ' data-empty="1"' : '';
 
     ob_start();
@@ -429,10 +423,11 @@ function cdbf_render_barra_nivel( $label, $valor, $role_key ) {
       <div class="cdb-niveles__label"><?php echo esc_html( $label ); ?></div>
       <div class="cdb-niveles__bar">
         <div class="cdb-niveles__track">
-          <div class="cdb-niveles__fill" style="width:<?php echo esc_attr( $valor ); ?>%"></div>
+          <?php if ( ! $empty ) : ?>
+          <div class="cdb-niveles__fill" style="width:<?php echo esc_attr( $valor ); ?>%;"></div>
+          <?php endif; ?>
         </div>
       </div>
-      <div class="cdb-niveles__value"><?php echo esc_html( $formatted ); ?></div>
     </div>
     <?php
     return ob_get_clean();
