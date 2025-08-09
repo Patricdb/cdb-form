@@ -9,9 +9,14 @@
 .cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
 
 /* Filas */
-.cdb-niveles__row { display: grid; grid-template-columns: 120px 1fr min-content; align-items: center; gap: 12px; margin: 6px 0; }
+.cdb-niveles__row {
+  display: grid;
+  grid-template-columns: minmax(120px,160px) 1fr;
+  gap: 12px;
+  align-items: center;
+  margin: 6px 0;
+}
 .cdb-niveles__label { font-weight: 700; }
-.cdb-niveles__value { font-weight: 800; font-variant-numeric: tabular-nums; }
 
 /* Pista y relleno */
 .cdb-niveles__track { position: relative; height: 16px; border-radius: 999px; overflow: hidden; background: #eee; }
@@ -39,7 +44,7 @@
 
 /* Responsive */
 @media (max-width: 640px) {
-  .cdb-niveles__head,
-  .cdb-niveles__row { grid-template-columns: 100px 1fr min-content; }
+  .cdb-niveles__head { grid-template-columns: 100px 1fr; }
+  .cdb-niveles__row { grid-template-columns: minmax(100px,140px) 1fr; }
   .cdb-niveles__track { height: 14px; }
 }
