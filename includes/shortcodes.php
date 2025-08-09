@@ -201,9 +201,13 @@ function cdb_bienvenida_empleado_shortcode() {
             $puntuacion_total_final = round( $puntuacion_total_final, 1 );
         }
 
-        $scores_roles = cdb_form_get_graph_scores_by_role( (int) $empleado_id );
-        $fecha_ultima = cdb_form_get_graph_last_datetime( (int) $empleado_id );
+        $bypass_cache = false;
+        $scores_roles = cdb_form_get_graph_scores_by_role( (int) $empleado_id, $bypass_cache );
+        $fecha_ultima = cdb_form_get_graph_last_datetime( (int) $empleado_id, $bypass_cache );
         $ultima_rel   = $fecha_ultima ? human_time_diff( strtotime( $fecha_ultima ), current_time( 'timestamp' ) ) : null;
+
+        $dec    = cdb_form_card_number_decimals();
+        $labels = cdb_form_card_labels();
 
         // Formulario para actualizar disponibilidad (ahora antes de la tarjeta).
         $output .= '<form id="cdb-update-disponibilidad" method="post">'
@@ -218,43 +222,49 @@ function cdb_bienvenida_empleado_shortcode() {
                     .'</form>';
 
         // Tarjeta del empleado con metadatos.
-        $output .= '<a class="cdb-empleado-card" href="' . esc_url( $empleado_url ) . '">'
-                 . '<div class="cdb-empleado-card__text">'
-                 . '<span class="cdb-empleado-card__label">' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</span>'
-                 . '<span class="cdb-empleado-card__name">👉 ' . esc_html( $empleado_nombre ) . '</span>'
-                 . '<div class="cdb-empleado-card__meta">'
-                 . '<div class="cdb-empleado-card__meta-item">' .
-                        esc_html__( 'Puntuación de Gráfica (empleados):', 'cdb-form' ) . ' ' .
-                        esc_html( is_null( $scores_roles['empleado'] ) ? '0' : number_format_i18n( $scores_roles['empleado'], 1 ) ) .
-                    '</div>';
-        if ( ! is_null( $scores_roles['empleador'] ) ) {
+        $output .= '<a class="cdb-empleado-card" href="' . esc_url( $empleado_url ) . '" aria-label="' . esc_attr( sprintf( __( 'Ver perfil de %s', 'cdb-form' ), $empleado_nombre ) ) . '">' .
+                   '<div class="cdb-empleado-card__text">' .
+                   '<span class="cdb-empleado-card__label">' . esc_html__( 'Tu empleado:', 'cdb-form' ) . '</span>' .
+                   '<span class="cdb-empleado-card__name">👉 ' . esc_html( $empleado_nombre ) . '</span>' .
+                   '<div class="cdb-empleado-card__meta">';
+
+        if ( cdb_form_card_show_role_score( 'empleado', $scores_roles['empleado'], (int) $empleado_id ) ) {
             $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html__( 'Puntuación de Gráfica de Empleador:', 'cdb-form' ) . ' ' .
-                esc_html( number_format_i18n( $scores_roles['empleador'], 1 ) ) .
-                '</div>';
+                esc_html( $labels['empleado'] ?? __( 'Puntuación de Gráfica por Empleados:', 'cdb-form' ) ) . ' ' .
+                esc_html( number_format_i18n( $scores_roles['empleado'], $dec ) ) .
+            '</div>';
         }
-        if ( ! is_null( $scores_roles['tutor'] ) ) {
+
+        if ( ! is_null( $scores_roles['empleador'] ) && cdb_form_card_show_role_score( 'empleador', $scores_roles['empleador'], (int) $empleado_id ) ) {
             $output .= '<div class="cdb-empleado-card__meta-item">' .
-                esc_html__( 'Puntuación de Gráfica de Tutor:', 'cdb-form' ) . ' ' .
-                esc_html( number_format_i18n( $scores_roles['tutor'], 1 ) ) .
-                '</div>';
+                esc_html( $labels['empleador'] ?? __( 'Puntuación de Gráfica por Empleadores:', 'cdb-form' ) ) . ' ' .
+                esc_html( number_format_i18n( $scores_roles['empleador'], $dec ) ) .
+            '</div>';
         }
+
+        if ( ! is_null( $scores_roles['tutor'] ) && cdb_form_card_show_role_score( 'tutor', $scores_roles['tutor'], (int) $empleado_id ) ) {
+            $output .= '<div class="cdb-empleado-card__meta-item">' .
+                esc_html( $labels['tutor'] ?? __( 'Puntuación de Gráfica por Tutores:', 'cdb-form' ) ) . ' ' .
+                esc_html( number_format_i18n( $scores_roles['tutor'], $dec ) ) .
+            '</div>';
+        }
+
         $output .= '<div class="cdb-empleado-card__meta-item">' .
-                        esc_html__( 'Puntuación de Experiencia:', 'cdb-form' ) . ' ' .
-                        esc_html( number_format_i18n( $puntuacion_experiencia, 1 ) ) .
-                    '</div>'
-                 . '<div class="cdb-empleado-card__meta-item">' .
-                        esc_html__( 'Puntuación Total:', 'cdb-form' ) . ' ' .
-                        esc_html( number_format_i18n( $puntuacion_total_final, 1 ) ) .
-                    '</div>'
-                 . '<div class="cdb-empleado-card__meta-item">' .
-                        esc_html__( 'Última valoración:', 'cdb-form' ) . ' ' .
-                        esc_html( $ultima_rel ? sprintf( __( 'hace %s', 'cdb-form' ), $ultima_rel ) : __( 'sin registros', 'cdb-form' ) ) .
-                    '</div>'
-                 . '</div>'
-                 . '</div>'
-                 . '<span class="cdb-empleado-card__chev">&rsaquo;</span>'
-                 . '</a>';
+            esc_html( $labels['experiencia'] ?? __( 'Puntuación de Experiencia:', 'cdb-form' ) ) . ' ' .
+            esc_html( number_format_i18n( $puntuacion_experiencia, $dec ) ) .
+        '</div>' .
+        '<div class="cdb-empleado-card__meta-item">' .
+            esc_html( $labels['total'] ?? __( 'Puntuación Total:', 'cdb-form' ) ) . ' ' .
+            esc_html( number_format_i18n( $puntuacion_total_final, $dec ) ) .
+        '</div>' .
+        '<div class="cdb-empleado-card__meta-item">' .
+            esc_html( $labels['ultima'] ?? __( 'Última valoración:', 'cdb-form' ) ) . ' ' .
+            esc_html( $ultima_rel ? sprintf( __( 'hace %s', 'cdb-form' ), $ultima_rel ) : __( 'sin registros', 'cdb-form' ) ) .
+        '</div>' .
+        '</div>' .
+        '</div>' .
+        '<span class="cdb-empleado-card__chev">&rsaquo;</span>' .
+        '</a>';
 
         // Mostrar la barra de puntuación total si existe.
         if ( ! empty( $puntuacion_total_meta ) ) {

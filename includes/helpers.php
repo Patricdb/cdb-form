@@ -31,29 +31,82 @@ function cdb_obtener_fecha_ultima_valoracion( $empleado_id ) {
 /**
  * Wrapper for cdb_grafica_get_scores_by_role().
  *
- * @param int $empleado_id Employee ID.
- * @return array Scores by role: ['empleado'=>?float,'empleador'=>?float,'tutor'=>?float]
+ * @param int  $empleado_id  Employee ID.
+ * @param bool $bypass_cache Whether to bypass any cache layer.
+ * @return array Scores by role: ['empleado'=>float,'empleador'=>?float,'tutor'=>?float]
  */
-function cdb_form_get_graph_scores_by_role( int $empleado_id ): array {
-    $out = [ 'empleado' => null, 'empleador' => null, 'tutor' => null ];
+function cdb_form_get_graph_scores_by_role( int $empleado_id, bool $bypass_cache = false ): array {
+    $out = [ 'empleado' => 0.0, 'empleador' => null, 'tutor' => null ];
+
     if ( function_exists( 'cdb_grafica_get_scores_by_role' ) && $empleado_id > 0 ) {
-        $data = cdb_grafica_get_scores_by_role( $empleado_id, [] );
+        $data = cdb_grafica_get_scores_by_role( $empleado_id, [ 'bypass_cache' => $bypass_cache ] );
         foreach ( [ 'empleado', 'empleador', 'tutor' ] as $k ) {
-            $out[ $k ] = isset( $data[ $k ] ) ? ( is_null( $data[ $k ] ) ? null : (float) $data[ $k ] ) : null;
+            if ( isset( $data[ $k ] ) ) {
+                $out[ $k ] = is_null( $data[ $k ] ) ? null : (float) $data[ $k ];
+            }
         }
     }
+
     return $out;
 }
 
 /**
  * Wrapper for cdb_grafica_get_last_rating_datetime().
  *
- * @param int $empleado_id Employee ID.
+ * @param int  $empleado_id  Employee ID.
+ * @param bool $bypass_cache Whether to bypass any cache layer.
  * @return string|null Datetime string or null.
  */
-function cdb_form_get_graph_last_datetime( int $empleado_id ): ?string {
+function cdb_form_get_graph_last_datetime( int $empleado_id, bool $bypass_cache = false ): ?string {
     if ( function_exists( 'cdb_grafica_get_last_rating_datetime' ) && $empleado_id > 0 ) {
-        return cdb_grafica_get_last_rating_datetime( $empleado_id );
+        return cdb_grafica_get_last_rating_datetime( $empleado_id, [ 'bypass_cache' => $bypass_cache ] );
     }
+
     return null;
+}
+
+/**
+ * Decide whether a role score line should be displayed.
+ *
+ * @param string     $role        Role slug.
+ * @param float|null $score       Score for the role.
+ * @param int        $empleado_id Employee ID.
+ * @return bool
+ */
+function cdb_form_card_show_role_score( string $role, ?float $score, int $empleado_id ): bool {
+    return (bool) apply_filters( 'cdb_form_card_show_role_score', true, $role, $score, $empleado_id );
+}
+
+/**
+ * Get number of decimals for card scores.
+ *
+ * @return int
+ */
+function cdb_form_card_number_decimals(): int {
+    return (int) apply_filters( 'cdb_form_card_number_decimals', 1 );
+}
+
+/**
+ * Default labels for employee card lines.
+ *
+ * @return array
+ */
+function cdb_form_card_default_labels(): array {
+    return [
+        'empleado'    => __( 'Puntuación de Gráfica por Empleados:', 'cdb-form' ),
+        'empleador'   => __( 'Puntuación de Gráfica por Empleadores:', 'cdb-form' ),
+        'tutor'       => __( 'Puntuación de Gráfica por Tutores:', 'cdb-form' ),
+        'experiencia' => __( 'Puntuación de Experiencia:', 'cdb-form' ),
+        'total'       => __( 'Puntuación Total:', 'cdb-form' ),
+        'ultima'      => __( 'Última valoración:', 'cdb-form' ),
+    ];
+}
+
+/**
+ * Retrieve labels for employee card lines allowing customization.
+ *
+ * @return array
+ */
+function cdb_form_card_labels(): array {
+    return (array) apply_filters( 'cdb_form_card_labels', cdb_form_card_default_labels() );
 }

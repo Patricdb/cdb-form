@@ -9,7 +9,7 @@
   --cdb-shadow:  0 1px 3px rgba(0,0,0,.08);
   --cdb-shadow-2:0 3px 10px rgba(0,0,0,.12);
 }
-.cdb-empleado-card{
+.cdb-empleado-card{ 
   display:flex; align-items:center; gap:.75rem;
   padding:12px 16px;
   border:1px solid var(--cdb-border);
@@ -20,7 +20,7 @@
   transition:background .2s ease, box-shadow .2s ease, transform .15s ease;
   color:var(--cdb-text);
   max-width:520px;
-  margin-top:24px;
+  margin-top:24px; /* mantener el margin-top:24px entre el formulario de disponibilidad y la tarjeta */
 }
 .cdb-empleado-card:hover,
 .cdb-empleado-card:focus-visible{
@@ -43,11 +43,12 @@
   margin-bottom:6px;
 }
 .cdb-empleado-card__meta{ display:block; }
-.cdb-empleado-card__meta-item{ display:block; margin-top:2px; font-size:.85rem; color:#5a5a5a; }
+.cdb-empleado-card__meta-item{ display:block; margin-top:2px; font-size:.85rem; line-height:1.25; color:#5a5a5a; }
 .cdb-empleado-card__chev{
   margin-left:auto; font-size:1.1rem; opacity:.6; transition:transform .15s ease, opacity .2s ease;
 }
 .cdb-empleado-card:hover .cdb-empleado-card__chev{ transform:translateX(2px); opacity:.9; }
+@media (max-width:480px){ .cdb-empleado-card__meta-item{ font-size:.9rem; } }
 @media (max-width:420px){
   .cdb-empleado-card{ padding:10px 12px; border-radius:10px; }
   .cdb-empleado-card__name{ font-size:1.15rem; }
