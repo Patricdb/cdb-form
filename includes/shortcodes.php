@@ -300,9 +300,21 @@ function cdb_bienvenida_empleado_shortcode() {
 
         // Mostrar las barras de niveles si existe la puntuación total.
         if ( ! empty( $puntuacion_total_meta ) ) {
-            $punt_empleados   = $scores['empleado'] ?? null;
-            $punt_empleadores = $scores['empleador'] ?? null;
-            $punt_tutores     = $scores['tutor'] ?? null;
+            $punt_empleados_raw   = $scores['empleado'] ?? null;
+            $punt_empleadores_raw = $scores['empleador'] ?? null;
+            $punt_tutores_raw     = $scores['tutor'] ?? null;
+
+            $sin_valoraciones_empleados   = ( $punt_empleados_raw === null );
+            $sin_valoraciones_empleadores = ( $punt_empleadores_raw === null );
+            $sin_valoraciones_tutores     = ( $punt_tutores_raw === null );
+
+            $punt_empleados   = cdbf_to_float( $punt_empleados_raw );
+            $punt_empleadores = cdbf_to_float( $punt_empleadores_raw );
+            $punt_tutores     = cdbf_to_float( $punt_tutores_raw );
+
+            $w_emp  = cdbf_width_pct_from_score( $punt_empleados );
+            $w_empd = cdbf_width_pct_from_score( $punt_empleadores );
+            $w_tut  = cdbf_width_pct_from_score( $punt_tutores );
 
             $color_empleado_fill   = '';
             $color_empleador_fill  = '';
@@ -329,9 +341,9 @@ function cdb_bienvenida_empleado_shortcode() {
 
             $output .= '<section class="cdb-niveles cdb-niveles--bienvenida">'
                     .  cdbf_render_head_niveles()
-                    .  cdbf_render_barra_nivel( 'Empleados', $punt_empleados, 'empleados' )
-                    .  cdbf_render_barra_nivel( 'Empleadores', $punt_empleadores, 'empleadores' )
-                    .  cdbf_render_barra_nivel( 'Tutores', $punt_tutores, 'tutores' )
+                    .  cdbf_render_barra_nivel( 'Empleados', $punt_empleados, 'empleados', $w_emp, $sin_valoraciones_empleados )
+                    .  cdbf_render_barra_nivel( 'Empleadores', $punt_empleadores, 'empleadores', $w_empd, $sin_valoraciones_empleadores )
+                    .  cdbf_render_barra_nivel( 'Tutores', $punt_tutores, 'tutores', $w_tut, $sin_valoraciones_tutores )
                     .  '</section>';
         } else {
             $output .= cdb_form_get_mensaje(
@@ -405,14 +417,23 @@ function cdbf_render_head_niveles() {
  * @param string     $role_key Identificador de rol (empleados|empleadores|tutores).
  * @return string HTML generado.
  */
-function cdbf_render_barra_nivel( $label, $valor, $role_key ) {
-    $empty = false;
+function cdbf_to_float( $v ) {
+    if ( is_string( $v ) ) {
+        $v = str_replace( [ '.', ' ' ], [ '', '' ], $v );
+        $v = str_replace( ',', '.', $v );
+    }
+    return floatval( $v );
+}
 
-    if ( $valor === null ) {
-        $empty = true;
-        $valor = 0;
-    } else {
-        $valor = max( 0, min( 100, floatval( $valor ) ) );
+function cdbf_width_pct_from_score( $score ) {
+    return max( 0, min( 100, floatval( $score ) ) );
+}
+
+function cdbf_render_barra_nivel( $label, $score, $role_key, $width_pct = null, $empty = false ) {
+    if ( $empty ) {
+        $width_pct = 0;
+    } elseif ( $width_pct === null ) {
+        $width_pct = cdbf_width_pct_from_score( $score );
     }
 
     $data_attr = $empty ? ' data-empty="1"' : '';
@@ -424,7 +445,7 @@ function cdbf_render_barra_nivel( $label, $valor, $role_key ) {
       <div class="cdb-niveles__bar">
         <div class="cdb-niveles__track">
           <?php if ( ! $empty ) : ?>
-          <div class="cdb-niveles__fill" style="width:<?php echo esc_attr( $valor ); ?>%;"></div>
+          <div class="cdb-niveles__fill" style="width:<?php echo esc_attr( $width_pct ); ?>%;"></div>
           <?php endif; ?>
         </div>
       </div>
