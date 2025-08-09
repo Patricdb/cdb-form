@@ -36,7 +36,7 @@ function cdb_obtener_fecha_ultima_valoracion( $empleado_id ) {
  * @return array Scores by role: ['empleado'=>float,'empleador'=>?float,'tutor'=>?float]
  */
 function cdb_form_get_graph_scores_by_role( int $empleado_id, bool $bypass_cache = false ): array {
-    $out = [ 'empleado' => 0.0, 'empleador' => null, 'tutor' => null ];
+    $out = [ 'empleado' => 0.0, 'empleador' => 0.0, 'tutor' => 0.0 ];
 
     if ( function_exists( 'cdb_grafica_get_scores_by_role' ) && $empleado_id > 0 ) {
         $data = cdb_grafica_get_scores_by_role( $empleado_id, [ 'bypass_cache' => $bypass_cache ] );
