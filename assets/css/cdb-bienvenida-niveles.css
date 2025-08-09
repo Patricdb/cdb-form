@@ -11,12 +11,17 @@
 /* Filas */
 .cdb-niveles__row {
   display: grid;
-  grid-template-columns: minmax(120px,160px) 1fr;
+  grid-template-columns: minmax(120px, 180px) 1fr;
   gap: 12px;
   align-items: center;
   margin: 6px 0;
 }
-.cdb-niveles__label { font-weight: 700; }
+.cdb-niveles__label {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* Pista y relleno */
 .cdb-niveles__track { position: relative; height: 16px; border-radius: 999px; overflow: hidden; background: #eee; }
@@ -45,6 +50,11 @@
 /* Responsive */
 @media (max-width: 640px) {
   .cdb-niveles__head { grid-template-columns: 100px 1fr; }
-  .cdb-niveles__row { grid-template-columns: minmax(100px,140px) 1fr; }
+  .cdb-niveles__row { grid-template-columns: minmax(96px, 140px) 1fr; }
+  .cdb-niveles__label { font-size: 0.95rem; }
   .cdb-niveles__track { height: 14px; }
+}
+
+@supports (hyphens:auto){
+  .cdb-niveles__label { white-space: normal; hyphens:auto; }
 }
