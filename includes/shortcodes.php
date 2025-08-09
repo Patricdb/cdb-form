@@ -426,6 +426,11 @@ function cdbf_to_float( $v ) {
 }
 
 function cdbf_width_pct_from_score( $score ) {
+    // Reutiliza la normalización de la barra original si está disponible.
+    if ( function_exists( 'cdb_grafica_get_width_pct_from_score' ) ) {
+        return (float) cdb_grafica_get_width_pct_from_score( $score );
+    }
+
     return max( 0, min( 100, floatval( $score ) ) );
 }
 
@@ -444,7 +449,9 @@ function cdbf_render_barra_nivel( $label, $score, $role_key, $width_pct = null, 
       <div class="cdb-niveles__label"><?php echo esc_html( $label ); ?></div>
       <div class="cdb-niveles__bar">
         <div class="cdb-niveles__track">
+          <?php if ( ! $empty ) : ?>
           <div class="cdb-niveles__fill" style="width:<?php echo esc_attr( $width_pct ); ?>%;"></div>
+          <?php endif; ?>
         </div>
       </div>
     </div>
