@@ -444,9 +444,7 @@ function cdbf_render_barra_nivel( $label, $score, $role_key, $width_pct = null, 
       <div class="cdb-niveles__label"><?php echo esc_html( $label ); ?></div>
       <div class="cdb-niveles__bar">
         <div class="cdb-niveles__track">
-          <?php if ( ! $empty ) : ?>
           <div class="cdb-niveles__fill" style="width:<?php echo esc_attr( $width_pct ); ?>%;"></div>
-          <?php endif; ?>
         </div>
       </div>
     </div>
