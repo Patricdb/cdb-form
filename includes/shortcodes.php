@@ -298,9 +298,41 @@ function cdb_bienvenida_empleado_shortcode() {
                    '<span class="cdb-empleado-card__chev">&rsaquo;</span>' .
                    '</a>';
 
-        // Mostrar la barra de puntuación total si existe.
+        // Mostrar las barras de niveles si existe la puntuación total.
         if ( ! empty( $puntuacion_total_meta ) ) {
-            $output .= cdb_generar_barra_progreso_simple( $puntuacion_total_final );
+            $punt_empleados   = $scores['empleado'] ?? null;
+            $punt_empleadores = $scores['empleador'] ?? null;
+            $punt_tutores     = $scores['tutor'] ?? null;
+
+            $color_empleado_fill   = '';
+            $color_empleador_fill  = '';
+            $color_tutor_fill      = '';
+            if ( function_exists( 'cdb_grafica_get_color_by_role' ) ) {
+                $color_empleado_fill  = cdb_grafica_get_color_by_role( 'empleado' );
+                $color_empleador_fill = cdb_grafica_get_color_by_role( 'empleador' );
+                $color_tutor_fill     = cdb_grafica_get_color_by_role( 'tutor' );
+            }
+
+            if ( $color_empleado_fill || $color_empleador_fill || $color_tutor_fill ) {
+                $output .= '<style class="cdb-niveles-inline-vars">.cdb-niveles--bienvenida{';
+                if ( $color_empleado_fill ) {
+                    $output .= '--cdb-color-empleado-fill:' . esc_attr( $color_empleado_fill ) . ';';
+                }
+                if ( $color_empleador_fill ) {
+                    $output .= '--cdb-color-empleador-fill:' . esc_attr( $color_empleador_fill ) . ';';
+                }
+                if ( $color_tutor_fill ) {
+                    $output .= '--cdb-color-tutor-fill:' . esc_attr( $color_tutor_fill ) . ';';
+                }
+                $output .= '}</style>';
+            }
+
+            $output .= '<section class="cdb-niveles cdb-niveles--bienvenida">'
+                    .  cdbf_render_head_niveles()
+                    .  cdbf_render_barra_nivel( 'Empleados', $punt_empleados, 'empleados' )
+                    .  cdbf_render_barra_nivel( 'Empleadores', $punt_empleadores, 'empleadores' )
+                    .  cdbf_render_barra_nivel( 'Tutores', $punt_tutores, 'tutores' )
+                    .  '</section>';
         } else {
             $output .= cdb_form_get_mensaje(
                 'cdb_mensaje_puntuacion_no_disponible'
@@ -326,9 +358,9 @@ function cdb_bienvenida_empleado_shortcode() {
 add_shortcode('cdb_bienvenida_empleado', 'cdb_bienvenida_empleado_shortcode');
 
 /**
- * Función para generar la barra de progreso simple con indicadores.
+ * Componentes para renderizar barras de niveles reutilizables.
  *
- * Se muestra una barra de 0 a 100 con indicadores en:
+ * Mantienen la misma escala que la barra original con indicadores en:
  *  Nivel 0 (≤10, color negro),
  *  Nivel 1 (11-20, color negro),
  *  Nivel 1.1 (21-30, color cobre),
@@ -338,71 +370,70 @@ add_shortcode('cdb_bienvenida_empleado', 'cdb_bienvenida_empleado_shortcode');
  *  Nivel 3 (61-70, color oro),
  *  Nivel 3.1 (71-80, color oro) y
  *  Nivel 4 (81-100, color diamante).
- *
- * @param int|float $puntuacion_total Puntuación total (0-100)
- * @return string HTML generado
  */
-function cdb_generar_barra_progreso_simple($puntuacion_total) {
-    // Asegurarse de que la puntuación no supere 100.
-    $puntuacion_total = floatval($puntuacion_total);
-    if ($puntuacion_total > 100) {
-        $puntuacion_total = 100;
-    }
-    
+
+/**
+ * Renderiza la cabecera de niveles con las marcas de escala.
+ *
+ * @return string HTML generado.
+ */
+function cdbf_render_head_niveles() {
     ob_start();
     ?>
-    <!-- Inline CSS para la barra de progreso y los indicadores -->
-    <style>
-      .cdb-progress-container {
-          position: relative;
-          width: 100%;
-          height: 30px;
-          background-color: #e0e0e0;
-          border-radius: 5px;
-          margin: 20px 0;
-      }
-      .cdb-progress-filled {
-          height: 100%;
-          background-color: #969696; /* Color fijo de la barra */
-          width: 0;
-          border-radius: 5px;
-          transition: width 0.5s ease;
-      }
-      .cdb-progress-markers {
-          position: absolute;
-          top: -20px;
-          left: 0;
-          width: 100%;
-      }
-      .cdb-progress-marker {
-          position: absolute;
-          transform: translateX(-50%);
-          font-size: 12px;
-          font-weight: bold;
-      }
-    </style>
-
-    <!-- Barra de progreso -->
-    <div class="cdb-progress-container">
-        <!-- Relleno proporcional a la puntuación total -->
-        <div class="cdb-progress-filled" style="width: <?php echo intval($puntuacion_total); ?>%;"></div>
-        <!-- Indicadores en la parte superior de la barra -->
-        <div class="cdb-progress-markers">
-            <div class="cdb-progress-marker" style="left: 5%; color: #c0c0c0;">Nivel</div>
-            <div class="cdb-progress-marker" style="left: 11%; color: #c0c0c0;">0</div>
-            <div class="cdb-progress-marker" style="left: 21%; color: #c0c0c0;">1</div>
-            <div class="cdb-progress-marker" style="left: 31%; color: #c0c0c0;">1.1</div>
-            <div class="cdb-progress-marker" style="left: 41%; color: #000;">2</div>
-            <div class="cdb-progress-marker" style="left: 51%; color: #000;">2.1</div>
-            <div class="cdb-progress-marker" style="left: 61%; color: #dbc63d;">3</div>
-            <div class="cdb-progress-marker" style="left: 71%; color: #dbc63d;">3.1</div>
-            <div class="cdb-progress-marker" style="left: 81%; color: #07ada8;">4</div>
-        </div>
+    <div class="cdb-niveles__head">
+      <div class="cdb-niveles__head-label"><?php esc_html_e( 'Nivel', 'cdb-form' ); ?></div>
+      <div class="cdb-niveles__scale">
+        <div class="cdb-progress-marker" style="left: 11%; color: #c0c0c0;">0</div>
+        <div class="cdb-progress-marker" style="left: 21%; color: #c0c0c0;">1</div>
+        <div class="cdb-progress-marker" style="left: 31%; color: #c0c0c0;">1.1</div>
+        <div class="cdb-progress-marker" style="left: 41%; color: #000;">2</div>
+        <div class="cdb-progress-marker" style="left: 51%; color: #000;">2.1</div>
+        <div class="cdb-progress-marker" style="left: 61%; color: #dbc63d;">3</div>
+        <div class="cdb-progress-marker" style="left: 71%; color: #dbc63d;">3.1</div>
+        <div class="cdb-progress-marker" style="left: 81%; color: #07ada8;">4</div>
+      </div>
     </div>
-    <!-- Mostrar la puntuación total -->
-    <?php if ( false ) { // Puntuación Total ya se muestra en la tarjeta ?>
-    <p><strong><?php echo esc_html__( 'Puntuación Total:', 'cdb-form' ); ?></strong> <?php echo $puntuacion_total; ?>/100</p>
-    <?php } ?>
+    <?php
+    return ob_get_clean();
+}
+
+/**
+ * Renderiza una fila de barra de nivel.
+ *
+ * @param string     $label    Etiqueta para la fila.
+ * @param float|null $valor    Valor numérico de la puntuación (0-100) o null si no hay registros.
+ * @param string     $role_key Identificador de rol (empleados|empleadores|tutores).
+ * @return string HTML generado.
+ */
+function cdbf_render_barra_nivel( $label, $valor, $role_key ) {
+    $dec   = cdb_form_card_number_decimals();
+    $empty = false;
+    if ( $valor === null ) {
+        $empty = true;
+        $valor = 0;
+    } else {
+        $valor = floatval( $valor );
+        if ( $valor < 0 ) {
+            $valor = 0;
+        } elseif ( $valor > 100 ) {
+            $valor = 100;
+        }
+    }
+
+    $formatted = number_format_i18n( $valor, $dec );
+    $data_attr = $empty ? ' data-empty="1"' : '';
+
+    ob_start();
+    ?>
+    <div class="cdb-niveles__row cdb-niveles__row--<?php echo esc_attr( $role_key ); ?>"<?php echo $data_attr; ?>>
+      <div class="cdb-niveles__label"><?php echo esc_html( $label ); ?></div>
+      <div class="cdb-niveles__bar">
+        <div class="cdb-niveles__track">
+          <div class="cdb-niveles__fill" style="width:<?php echo esc_attr( $valor ); ?>%"></div>
+        </div>
+      </div>
+      <div class="cdb-niveles__value"><?php echo esc_html( $formatted ); ?></div>
+    </div>
     <?php
     return ob_get_clean();
 }
