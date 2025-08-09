@@ -132,3 +132,35 @@
     margin-bottom: 20px;
   }
 }
+
+/* Espacio entre el <select> de disponibilidad y el botón */
+.cdb-disponibilidad-wrap select {
+  margin-right: 14px; /* antes 8px; da más respiro */
+}
+
+/* Más espacio entre la tarjeta y la barra de nivel */
+.cdb-empleado-card {
+  margin-bottom: 24px; /* antes ~16px; separa de la barra */
+}
+
+/* Si tienes wrapper de la barra, mantenemos separación inferior coherente */
+.cdb-barra-nivel-wrap {
+  margin-top: 8px;        /* desde la tarjeta */
+  margin-bottom: 28px;    /* hacia la tabla */
+}
+
+/* Negrita para números de métricas en la tarjeta */
+.cdb-empleado-card .cdb-num {
+  font-weight: 700;
+}
+
+/* “Puntuación Total” y su valor: negrita explícita */
+.cdb-empleado-card .cdb-meta--total,
+.cdb-empleado-card .cdb-meta--total .cdb-num {
+  font-weight: 800;
+}
+
+/* Opcional: un pelín más de interlínea para legibilidad en meta */
+.cdb-empleado-card__meta {
+  line-height: 1.45;
+}
