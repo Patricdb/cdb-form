@@ -93,12 +93,12 @@ function cdb_form_card_number_decimals(): int {
  */
 function cdb_form_card_default_labels(): array {
     return [
-        'empleado'    => __( 'Puntuación de Gráfica por Empleados:', 'cdb-form' ),
-        'empleador'   => __( 'Puntuación de Gráfica por Empleadores:', 'cdb-form' ),
-        'tutor'       => __( 'Puntuación de Gráfica por Tutores:', 'cdb-form' ),
-        'experiencia' => __( 'Puntuación de Experiencia:', 'cdb-form' ),
-        'total'       => __( 'Puntuación Total:', 'cdb-form' ),
-        'ultima'      => __( 'Última valoración:', 'cdb-form' ),
+        'empleado'    => apply_filters( 'cdb_form_label_empleado', __( 'Punt. de Gráfica por Empleados:', 'cdb-form' ) ),
+        'empleador'   => apply_filters( 'cdb_form_label_empleador', __( 'Punt. de Gráfica por Empleadores:', 'cdb-form' ) ),
+        'tutor'       => apply_filters( 'cdb_form_label_tutor', __( 'Punt. de Gráfica por Tutores:', 'cdb-form' ) ),
+        'experiencia' => apply_filters( 'cdb_form_label_experiencia', __( 'Punt. de Experiencia:', 'cdb-form' ) ),
+        'total'       => apply_filters( 'cdb_form_label_total', __( 'Puntuación Total:', 'cdb-form' ) ),
+        'ultima'      => apply_filters( 'cdb_form_label_ultima', __( 'Última valoración:', 'cdb-form' ) ),
     ];
 }
 

@@ -161,3 +161,12 @@
   display:block;
   margin-top:3px;
 }
+
+@media (max-width: 480px) {
+  .cdb-bienvenida-actualizar-btn {
+    font-size: 0.9rem;
+    padding: 0.4em 0.8em;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+}

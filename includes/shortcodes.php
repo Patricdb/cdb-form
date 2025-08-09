@@ -217,7 +217,7 @@ function cdb_bienvenida_empleado_shortcode() {
                             .'<option value="1" ' . selected( $disponible, 1, false ) . '>' . esc_html__( 'Sí', 'cdb-form' ) . '</option>'
                             .'<option value="0" ' . selected( $disponible, 0, false ) . '>' . esc_html__( 'No', 'cdb-form' ) . '</option>'
                         .'</select>'
-                        .'<button type="submit">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>'
+                        .'<button type="submit" class="cdb-bienvenida-actualizar-btn">' . esc_html__( 'Actualizar', 'cdb-form' ) . '</button>'
                     .'</div>'
                     .'<input type="hidden" name="empleado_id" value="' . esc_attr( $empleado_id ) . '">'
                     .'<input type="hidden" name="security" value="' . esc_attr( wp_create_nonce( 'cdb_form_nonce' ) ) . '">' 
@@ -286,7 +286,7 @@ function cdb_bienvenida_empleado_shortcode() {
 
             $output .= '<div class="cdb-empleado-card__meta-item' . $classes . '">' .
                         $label . ' ' .
-                        '<strong class="cdb-num">' . esc_html( $valor ) . '</strong>' .
+                        '<span class="cdb-num">' . esc_html( $valor ) . '</span>' .
                        '</div>';
         }
 
