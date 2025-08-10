@@ -400,17 +400,6 @@ function cdbf_render_head_niveles() {
         '3.1' => 80,
         '4'   => 100,
     ] );
-    $colors = [
-        '0'   => '#c0c0c0',
-        '1'   => '#c0c0c0',
-        '1.1' => '#c0c0c0',
-        '2'   => '#000',
-        '2.1' => '#000',
-        '3'   => '#dbc63d',
-        '3.1' => '#dbc63d',
-        '4'   => '#07ada8',
-    ];
-
     $primaries = apply_filters( 'cdb_form_niveles_primary_labels', [ '0', '1', '2', '3', '4' ] );
 
     ob_start();
@@ -418,25 +407,22 @@ function cdbf_render_head_niveles() {
     <div class="cdb-niveles__head">
       <div class="cdb-niveles__head-label"><?php esc_html_e( 'Nivel', 'cdb-form' ); ?></div>
       <div class="cdb-niveles__scale">
-        <?php foreach ( $map as $label => $pct ) :
-            $extra_classes = [];
-            if ( ! in_array( $label, $primaries, true ) ) {
-                $extra_classes[] = 'cdb-progress-marker--secondary';
+        <?php foreach ( $map as $label => $pct ) {
+            $extra = [];
+            if ( ! in_array( (string) $label, $primaries, true ) ) {
+                $extra[] = 'cdb-progress-marker--secondary';
+            } else {
+                $extra[] = 'cdb-progress-marker--primary';
             }
-            if ( $pct <= 0 ) {
-                $extra_classes[] = 'is-start';
-            }
-            if ( $pct >= 100 ) {
-                $extra_classes[] = 'is-end';
-            }
-            $extra_classes = implode( ' ', $extra_classes );
+            if ( $pct <= 0 )  { $extra[] = 'is-start'; }
+            if ( $pct >= 100 ) { $extra[] = 'is-end'; }
         ?>
-        <div class="cdb-progress-marker <?php echo esc_attr( $extra_classes ); ?>"
-             data-label="<?php echo esc_attr( $label ); ?>"
-             style="left: <?php echo esc_attr( $pct ); ?>%; color: <?php echo esc_attr( $colors[ $label ] ?? '#000' ); ?>;">
-            <?php echo esc_html( $label ); ?>
+        <div class="cdb-progress-marker <?php echo esc_attr( implode( ' ', $extra ) ); ?>"
+             data-label="<?php echo esc_attr( (string) $label ); ?>"
+             style="left: <?php echo esc_attr( (string) $pct ); ?>%;">
+            <?php echo esc_html( (string) $label ); ?>
         </div>
-        <?php endforeach; ?>
+        <?php } ?>
       </div>
     </div>
     <?php

@@ -32,7 +32,7 @@
 }
 .cdb-progress-marker.is-start{ transform: translateX(0); }
 .cdb-progress-marker.is-end{ transform: translateX(-100%); }
-.cdb-progress-marker--secondary{ top:16px; opacity:.9; font-size:11px; }
+.cdb-progress-marker--secondary{ top:16px; font-size:11px; opacity:.9; }
 
 /* 3) Etiquetas sin negrita y más ceñidas */
 .cdb-niveles__head-label,
@@ -87,11 +87,11 @@
   .cdb-niveles--bienvenida{ --cdb-label-col: 100px; --cdb-gap: 5px; }
   .cdb-niveles__label{ font-size: 0.85rem; }
   .cdb-progress-marker--secondary{ display:none; }
+  .cdb-niveles__scale{ height:20px; }
   .cdb-progress-marker{ font-size:11px; }
-  .cdb-niveles__scale{ height: 20px; }
 }
 
-@media (max-width: 380px){
+@media (max-width: 400px){
   .cdb-progress-marker{ display:none; }
   .cdb-progress-marker[data-label="0"],
   .cdb-progress-marker[data-label="2"],
