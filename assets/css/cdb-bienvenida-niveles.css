@@ -1,79 +1,103 @@
 /* Contenedor general */
-.cdb-niveles--bienvenida { display: block; margin-top: 12px; }
+.cdb-niveles--bienvenida {
+  display: block;
+  margin-top: 12px;
+  --cdb-label-col-min: 130px;
+  --cdb-label-col-max: 200px;
+  --cdb-gap: 12px;
+}
 
-/* Cabecera */
-.cdb-niveles__head { display: grid; grid-template-columns: 120px 1fr; align-items: end; gap: 12px; margin-bottom: 8px; }
-.cdb-niveles__head-label { font-weight: 600; color: #222; }
+/* Cabecera y filas */
+.cdb-niveles__head,
+.cdb-niveles__row {
+  display: grid;
+  grid-template-columns: minmax(var(--cdb-label-col-min), var(--cdb-label-col-max)) 1fr;
+  gap: var(--cdb-gap);
+  align-items: center;
+}
+
+.cdb-niveles__head { margin-bottom: 8px; }
+.cdb-niveles__row { margin: 6px 0; }
+.cdb-niveles__head-label { font-weight: 600; }
 .cdb-niveles__scale { position: relative; height: 24px; }
 /* Reutiliza las marcas existentes de la barra original. Si no existen como clases sueltas, clónalas dentro de este contenedor. */
 .cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
 
-/* Filas */
-.cdb-niveles__row {
-  display: grid;
-  grid-template-columns: minmax(130px, 200px) 1fr;
-  gap: 12px;
-  align-items: center;
-  margin: 6px 0;
-}
-.cdb-niveles__label {
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+/* Etiquetas */
+.cdb-niveles__label { font-weight: 700; }
 
-/* Pista y relleno */
-.cdb-niveles__bar,
-.cdb-niveles__track,
+/* Barra, pista y relleno */
+.cdb-niveles__bar { display: block; }
+.cdb-niveles__track {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+}
 .cdb-niveles__fill {
   display: block;
+  height: 100%;
+  width: 0;
+  max-width: 100%;
+  flex: 0 0 auto !important;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform .9s ease-in-out;
 }
-.cdb-niveles__track { position: relative; height: 16px; border-radius: 999px; overflow: hidden; background: #eee; }
-.cdb-niveles__fill { position: relative; flex: 0 0 auto !important; max-width: 100%; width: 0; height: 100%; transform-origin: left center; transform: scaleX(0); /* para animación */ transition: transform 0.9s ease-in-out; }
 .cdb-niveles__fill.is-in { transform: scaleX(1); }
 
-/* Colores base por rol (fondo de pista y color del relleno) */
-.cdb-niveles__row--empleados .cdb-niveles__track { background: #e0e0e0; }
-.cdb-niveles__row--empleados .cdb-niveles__fill  { background: var(--cdb-color-empleado-fill, #9aa0a6); }
+/* Colores de pista y relleno */
+.cdb-niveles__row--empleados .cdb-niveles__track   { background: #e0e0e0; }
+.cdb-niveles__row--empleados .cdb-niveles__fill    { background: var(--cdb-color-empleado-fill, #9aa0a6); }
 
 .cdb-niveles__row--empleadores .cdb-niveles__track { background: #555555; }
 .cdb-niveles__row--empleadores .cdb-niveles__fill  { background: var(--cdb-color-empleador-fill, #777777); }
 
-.cdb-niveles__row--tutores .cdb-niveles__track { background: #cdb888; }
-.cdb-niveles__row--tutores .cdb-niveles__fill  { background: var(--cdb-color-tutor-fill, #cdb888); }
+.cdb-niveles__row--tutores .cdb-niveles__track     { background: #cdb888; }
+.cdb-niveles__row--tutores .cdb-niveles__fill      { background: var(--cdb-color-tutor-fill, #cdb888); }
 
 /* Estado sin valoraciones */
+.cdb-niveles__row[data-empty="1"] .cdb-niveles__track {
+  background: #eeeeee;
+  position: relative;
+}
 .cdb-niveles__row[data-empty="1"] .cdb-niveles__fill { display: none; }
-.cdb-niveles__row[data-empty="1"] .cdb-niveles__track { background: #eeeeee; position: relative; }
 .cdb-niveles__row[data-empty="1"] .cdb-niveles__track::after {
   content: "Sin valoraciones";
-  position: absolute; inset: 0; display: grid; place-items: center;
-  font-size: 12px; color: #333; opacity: .9;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: #333;
+  opacity: .9;
 }
 
 /* Responsive */
 @media (max-width: 640px) {
-  .cdb-niveles__head { grid-template-columns: 100px 1fr; }
-  .cdb-niveles__row { grid-template-columns: minmax(110px, 160px) 1fr; }
+  .cdb-niveles--bienvenida {
+    --cdb-label-col-min: 110px;
+    --cdb-label-col-max: 160px;
+    --cdb-gap: 10px;
+  }
   .cdb-niveles__label {
     font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .cdb-niveles__track { height: 14px; }
 }
 
 @media (max-width: 480px) {
+  .cdb-niveles__head,
   .cdb-niveles__row {
     grid-template-columns: 1fr;
-    grid-auto-rows: auto;
     gap: 6px;
   }
-  .cdb-niveles__label {
-    font-size: 0.9rem;
-  }
+  .cdb-niveles__label { white-space: normal; }
+  .cdb-niveles__scale { height: 22px; }
 }
 
 @supports (hyphens:auto){
@@ -86,4 +110,8 @@
       text-overflow: ellipsis;
     }
   }
+  @media (max-width: 480px) {
+    .cdb-niveles__label { white-space: normal; }
+  }
 }
+
