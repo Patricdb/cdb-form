@@ -110,3 +110,8 @@ function cdb_form_card_default_labels(): array {
 function cdb_form_card_labels(): array {
     return (array) apply_filters( 'cdb_form_card_labels', cdb_form_card_default_labels() );
 }
+
+// Tratar el score de entrada como porcentaje 0–100 para las barras de nivel.
+add_filter( 'cdb_form_niveles_max_score', function( $max ) {
+    return 100;
+} );
