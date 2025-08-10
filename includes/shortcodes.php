@@ -395,14 +395,26 @@ function cdbf_render_head_niveles() {
     <div class="cdb-niveles__head">
       <div class="cdb-niveles__head-label"><?php esc_html_e( 'Nivel', 'cdb-form' ); ?></div>
       <div class="cdb-niveles__scale">
-        <div class="cdb-progress-marker" style="left: 11%; color: #c0c0c0;">0</div>
-        <div class="cdb-progress-marker" style="left: 21%; color: #c0c0c0;">1</div>
-        <div class="cdb-progress-marker" style="left: 31%; color: #c0c0c0;">1.1</div>
-        <div class="cdb-progress-marker" style="left: 41%; color: #000;">2</div>
-        <div class="cdb-progress-marker" style="left: 51%; color: #000;">2.1</div>
-        <div class="cdb-progress-marker" style="left: 61%; color: #dbc63d;">3</div>
-        <div class="cdb-progress-marker" style="left: 71%; color: #dbc63d;">3.1</div>
-        <div class="cdb-progress-marker" style="left: 81%; color: #07ada8;">4</div>
+        <?php
+        $map = apply_filters(
+            'cdb_form_niveles_scale_map',
+            [
+                '0'   => 10,
+                '1'   => 20,
+                '1.1' => 30,
+                '2'   => 40,
+                '2.1' => 50,
+                '3'   => 70,
+                '4'   => 100,
+            ]
+        );
+
+        foreach ( $map as $label => $pct ) :
+            ?>
+            <div class="cdb-progress-marker" style="left: <?php echo esc_attr( $pct ); ?>%;"><?php echo esc_html( $label ); ?></div>
+            <?php
+        endforeach;
+        ?>
       </div>
     </div>
     <?php
