@@ -17,14 +17,16 @@
 
 .cdb-niveles__head { margin-bottom: 8px; }
 .cdb-niveles__row { margin: 4px 0; }
-.cdb-niveles__head-label { font-weight: 600; }
+.cdb-niveles__head-label { font-size: 0.85rem; font-weight: normal; color: #a5a5a5; }
 .cdb-niveles__scale { position: relative; height: 24px; }
 /* Reutiliza las marcas existentes de la barra original. Si no existen como clases sueltas, clónalas dentro de este contenedor. */
 .cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
 
 /* Etiquetas */
 .cdb-niveles__label {
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: normal;
+  color: #a5a5a5;
   margin: 0;
   padding: 0;
   line-height: 1.15;
@@ -93,7 +95,7 @@
 
 @media (max-width: 640px) {
   .cdb-niveles--bienvenida { --cdb-label-col: 112px; --cdb-gap: 6px; }
-  .cdb-niveles__label { font-size: 0.95rem; }
+  .cdb-niveles__label { font-size: 0.85rem; }
 }
 
 @media (max-width: 480px) {
