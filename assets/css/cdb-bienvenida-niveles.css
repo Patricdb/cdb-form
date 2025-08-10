@@ -9,10 +9,24 @@
 /* 2) Cabecera y filas comparten EXACTAMENTE el mismo grid */
 .cdb-niveles__head,
 .cdb-niveles__row{
-  display: grid;
+  display:grid;
   grid-template-columns: var(--cdb-label-col) 1fr; /* pista fija y estrecha */
+  align-items:center;
   gap: var(--cdb-gap);
-  align-items: center;
+}
+
+.cdb-niveles__head-label{ grid-column:1; }
+.cdb-niveles__scale{
+  grid-column:2;
+  position:relative;  /* referencia para left:% */
+  width:100%;
+  height:18px;       /* similar a la pista */
+}
+.cdb-progress-marker{
+  position:absolute;
+  top:0;
+  transform:translateX(-50%); /* centrar texto en el punto */
+  font-size:12px;
 }
 
 /* 3) Etiquetas sin negrita y más ceñidas */
@@ -39,9 +53,7 @@
 .cdb-niveles__fill.is-in{ transform:scaleX(1); }
 
 /* Escala y marcas */
-.cdb-niveles__scale { position: relative; height: 24px; }
 /* Reutiliza las marcas existentes de la barra original. Si no existen como clases sueltas, clónalas dentro de este contenedor. */
-.cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
 
 /* Colores de pista y relleno */
 .cdb-niveles__row--empleados .cdb-niveles__fill{ background:var(--cdb-color-empleado-fill,#9aa0a6); }

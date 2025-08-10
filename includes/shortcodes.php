@@ -451,14 +451,24 @@ function cdbf_to_float( $v ) {
  * @param float|int $score Puntuación total por rol (≈0–40).
  * @return float Porcentaje de anchura (0–100).
  */
+/**
+ * Devuelve el ancho (%) de la barra a partir de un valor que ya es 0–100.
+ * Se puede desactivar el forzado vía el filtro 'cdb_form_niveles_force_pct'.
+ */
 function cdbf_width_pct_from_score( $score ) {
-    // Reutiliza la normalización de la barra original si está disponible.
-    if ( function_exists( 'cdb_grafica_get_width_pct_from_score' ) ) {
-        return (float) cdb_grafica_get_width_pct_from_score( $score );
+    $force_pct = apply_filters( 'cdb_form_niveles_force_pct', true ); // forzar por defecto
+    $val       = (float) $score;
+
+    if ( $force_pct ) {
+        return max( 0, min( 100, round( $val, 2 ) ) );
     }
 
-    $max = (float) apply_filters( 'cdb_form_niveles_max_score', 40 ); // total esperado por rol (≈10 grupos * 4)
-    $pct = ( $max > 0 ) ? ( $score / $max ) * 100 : 0;
+    // Compatibilidad (si se desactiva el forzado):
+    if ( function_exists( 'cdb_grafica_get_width_pct_from_score' ) ) {
+        return (float) cdb_grafica_get_width_pct_from_score( $val );
+    }
+    $max = (float) apply_filters( 'cdb_form_niveles_max_score', 40 );
+    $pct = ( $max > 0 ) ? ( $val / $max ) * 100 : 0;
     return max( 0, min( 100, round( $pct, 2 ) ) );
 }
 
