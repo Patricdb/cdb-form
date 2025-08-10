@@ -1,32 +1,26 @@
-/* Contenedor general */
-.cdb-niveles--bienvenida {
+/* 1) Variables de layout más compactas */
+.cdb-niveles--bienvenida{
   display: block;
   margin-top: 12px;
-  --cdb-label-col: 140px;   /* desktop base */
-  --cdb-gap: 8px;           /* más ceñido */
+  --cdb-label-col: 112px;   /* antes 130–140: reduce el “hueco” */
+  --cdb-gap: 6px;           /* antes 8–12 */
 }
 
-/* Cabecera y filas */
+/* 2) Cabecera y filas comparten EXACTAMENTE el mismo grid */
 .cdb-niveles__head,
-.cdb-niveles__row {
+.cdb-niveles__row{
   display: grid;
-  grid-template-columns: var(--cdb-label-col) 1fr; /* pista fija */
+  grid-template-columns: var(--cdb-label-col) 1fr; /* pista fija y estrecha */
   gap: var(--cdb-gap);
   align-items: center;
 }
 
-.cdb-niveles__head { margin-bottom: 8px; }
-.cdb-niveles__row { margin: 4px 0; }
-.cdb-niveles__head-label { font-size: 0.85rem; font-weight: normal; color: #a5a5a5; }
-.cdb-niveles__scale { position: relative; height: 24px; }
-/* Reutiliza las marcas existentes de la barra original. Si no existen como clases sueltas, clónalas dentro de este contenedor. */
-.cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
-
-/* Etiquetas */
-.cdb-niveles__label {
-  font-size: 0.85rem;
-  font-weight: normal;
-  color: #a5a5a5;
+/* 3) Etiquetas sin negrita y más ceñidas */
+.cdb-niveles__head-label,
+.cdb-niveles__label{
+  font-weight: 400;          /* sin negrita */
+  font-size: 0.85rem;        /* como meta de la tarjeta */
+  color: #a5a5a5;            /* como meta de la tarjeta */
   margin: 0;
   padding: 0;
   line-height: 1.15;
@@ -35,31 +29,19 @@
   text-overflow: ellipsis;
 }
 
-/* Barra, pista y relleno */
-.cdb-niveles__bar {
-  display: block;
-  margin: 0;
-  padding: 0;
-}
-.cdb-niveles__track {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 16px;
-  border-radius: 999px;
-  overflow: hidden;
-}
-.cdb-niveles__fill {
-  display: block;
-  height: 100%;
-  width: 0;
-  max-width: 100%;
-  flex: 0 0 auto !important;
-  transform-origin: left center;
-  transform: scaleX(0);
-  transition: transform .9s ease-in-out;
-}
-.cdb-niveles__fill.is-in { transform: scaleX(1); }
+/* 4) Compactar verticalmente las filas */
+.cdb-niveles__row{ margin: 4px 0; }
+
+/* 5) Blindaje: nada de flex que ensanche la barra/fill */
+.cdb-niveles__bar{ display:block; margin:0; padding:0; }
+.cdb-niveles__track{ display:block; position:relative; width:100%; height:16px; border-radius:999px; overflow:hidden; }
+.cdb-niveles__fill{ display:block; height:100%; width:0; max-width:100%; flex:0 0 auto !important; transform-origin:left center; transform:scaleX(0); transition:transform .9s ease-in-out; }
+.cdb-niveles__fill.is-in{ transform:scaleX(1); }
+
+/* Escala y marcas */
+.cdb-niveles__scale { position: relative; height: 24px; }
+/* Reutiliza las marcas existentes de la barra original. Si no existen como clases sueltas, clónalas dentro de este contenedor. */
+.cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
 
 /* Colores de pista y relleno */
 .cdb-niveles__row--empleados .cdb-niveles__track   { background: #e0e0e0; }
@@ -88,38 +70,18 @@
   opacity: .9;
 }
 
-/* Responsive */
-@media (max-width: 1024px){
-  .cdb-niveles--bienvenida{ --cdb-label-col: 128px; --cdb-gap: 8px; }
+/* 6) Responsive: aún más ceñido en móvil, manteniendo 2 columnas */
+@media (max-width: 640px){
+  .cdb-niveles--bienvenida{ --cdb-label-col: 100px; --cdb-gap: 5px; }
+  .cdb-niveles__label{ font-size: 0.85rem; }
 }
 
-@media (max-width: 640px) {
-  .cdb-niveles--bienvenida { --cdb-label-col: 112px; --cdb-gap: 6px; }
-  .cdb-niveles__label { font-size: 0.85rem; }
-}
-
-@media (max-width: 480px) {
+/* 7) Móvil muy estrecho: 1 columna en cabecera y filas (evita desajustes) */
+@media (max-width: 480px){
   .cdb-niveles__head,
-  .cdb-niveles__row {
-    grid-template-columns: 1fr;
+  .cdb-niveles__row{
+    grid-template-columns: 1fr;  /* etiqueta/“Nivel” arriba, barra/escala abajo */
     gap: 6px;
-  }
-  .cdb-niveles__label { white-space: normal; }
-  .cdb-niveles__scale { height: 22px; }
-}
-
-@supports (hyphens:auto){
-  .cdb-niveles__label { white-space: normal; hyphens: auto; overflow: visible; text-overflow: initial; }
-  @media (max-width: 640px) {
-    .cdb-niveles__label {
-      white-space: nowrap;
-      hyphens: none;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  @media (max-width: 480px) {
-    .cdb-niveles__label { white-space: normal; }
   }
 }
 
