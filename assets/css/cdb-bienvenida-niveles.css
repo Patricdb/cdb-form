@@ -2,9 +2,9 @@
 .cdb-niveles--bienvenida {
   display: block;
   margin-top: 12px;
-  --cdb-label-col-min: 130px;
-  --cdb-label-col-max: 200px;
-  --cdb-gap: 12px;
+  --cdb-label-col-min: 120px;
+  --cdb-label-col-max: 180px;
+  --cdb-gap: 8px;
 }
 
 /* Cabecera y filas */
@@ -17,17 +17,28 @@
 }
 
 .cdb-niveles__head { margin-bottom: 8px; }
-.cdb-niveles__row { margin: 6px 0; }
+.cdb-niveles__row { margin: 4px 0; }
 .cdb-niveles__head-label { font-weight: 600; }
 .cdb-niveles__scale { position: relative; height: 24px; }
 /* Reutiliza las marcas existentes de la barra original. Si no existen como clases sueltas, clónalas dentro de este contenedor. */
 .cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
 
 /* Etiquetas */
-.cdb-niveles__label { font-weight: 700; }
+.cdb-niveles__label {
+  font-weight: 700;
+  margin: 0;
+  padding-right: 4px;
+  line-height: 1.15;
+  align-self: center;
+}
 
 /* Barra, pista y relleno */
-.cdb-niveles__bar { display: block; }
+.cdb-niveles__bar {
+  display: block;
+  margin: 0;
+  padding: 0;
+  align-self: center;
+}
 .cdb-niveles__track {
   display: block;
   position: relative;
@@ -78,12 +89,13 @@
 /* Responsive */
 @media (max-width: 640px) {
   .cdb-niveles--bienvenida {
-    --cdb-label-col-min: 110px;
-    --cdb-label-col-max: 160px;
-    --cdb-gap: 10px;
+    --cdb-label-col-min: 105px;
+    --cdb-label-col-max: 150px;
+    --cdb-gap: 6px;
   }
   .cdb-niveles__label {
     font-size: 0.95rem;
+    padding-right: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -108,10 +120,18 @@
       hyphens: none;
       overflow: hidden;
       text-overflow: ellipsis;
+      padding-right: 2px;
     }
   }
   @media (max-width: 480px) {
     .cdb-niveles__label { white-space: normal; }
   }
 }
+
+/* Blindaje extra para evitar márgenes globales */
+.cdb-niveles__head-label,
+.cdb-niveles__scale,
+.cdb-niveles__label,
+.cdb-niveles__bar,
+.cdb-niveles__track{ margin-block: 0; }
 
