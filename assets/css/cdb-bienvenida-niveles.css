@@ -20,14 +20,19 @@
   grid-column:2;
   position:relative;  /* referencia para left:% */
   width:100%;
-  height:18px;       /* similar a la pista */
+  height:30px;       /* espacio para 2 filas de marcadores */
 }
 .cdb-progress-marker{
   position:absolute;
   top:0;
-  transform:translateX(-50%); /* centrar texto en el punto */
+  transform: translateX(-50%); /* centrar texto en el punto */
+  line-height:1;
   font-size:12px;
+  white-space:nowrap;
 }
+.cdb-progress-marker.is-start{ transform: translateX(0); }
+.cdb-progress-marker.is-end{ transform: translateX(-100%); }
+.cdb-progress-marker--secondary{ top:16px; opacity:.9; font-size:11px; }
 
 /* 3) Etiquetas sin negrita y más ceñidas */
 .cdb-niveles__head-label,
@@ -81,15 +86,21 @@
 @media (max-width: 640px){
   .cdb-niveles--bienvenida{ --cdb-label-col: 100px; --cdb-gap: 5px; }
   .cdb-niveles__label{ font-size: 0.85rem; }
+  .cdb-progress-marker--secondary{ display:none; }
+  .cdb-progress-marker{ font-size:11px; }
+  .cdb-niveles__scale{ height: 20px; }
 }
 
-/* 7) Móvil muy estrecho: 1 columna en cabecera y filas (evita desajustes) */
+@media (max-width: 380px){
+  .cdb-progress-marker{ display:none; }
+  .cdb-progress-marker[data-label="0"],
+  .cdb-progress-marker[data-label="2"],
+  .cdb-progress-marker[data-label="4"]{ display:block; }
+  .cdb-progress-marker{ font-size:10px; }
+}
+
 @media (max-width: 480px){
-  .cdb-niveles__head,
-  .cdb-niveles__row{
-    grid-template-columns: 1fr;  /* etiqueta/“Nivel” arriba, barra/escala abajo */
-    gap: 6px;
-  }
+  .cdb-niveles--bienvenida{ --cdb-label-col: 88px; }
 }
 
 /* Blindaje extra para evitar márgenes globales */

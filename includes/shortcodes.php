@@ -411,19 +411,38 @@ function cdbf_render_head_niveles() {
         '4'   => '#07ada8',
     ];
 
+    $primaries = apply_filters( 'cdb_form_niveles_primary_labels', [ '0', '1', '2', '3', '4' ] );
+
     ob_start();
     ?>
     <div class="cdb-niveles__head">
       <div class="cdb-niveles__head-label"><?php esc_html_e( 'Nivel', 'cdb-form' ); ?></div>
       <div class="cdb-niveles__scale">
-        <?php foreach ( $map as $label => $pct ) : ?>
-        <div class="cdb-progress-marker" style="left: <?php echo esc_attr( $pct ); ?>%; color: <?php echo esc_attr( $colors[ $label ] ?? '#000' ); ?>;"><?php echo esc_html( $label ); ?></div>
+        <?php foreach ( $map as $label => $pct ) :
+            $extra_classes = [];
+            if ( ! in_array( $label, $primaries, true ) ) {
+                $extra_classes[] = 'cdb-progress-marker--secondary';
+            }
+            if ( $pct <= 0 ) {
+                $extra_classes[] = 'is-start';
+            }
+            if ( $pct >= 100 ) {
+                $extra_classes[] = 'is-end';
+            }
+            $extra_classes = implode( ' ', $extra_classes );
+        ?>
+        <div class="cdb-progress-marker <?php echo esc_attr( $extra_classes ); ?>"
+             data-label="<?php echo esc_attr( $label ); ?>"
+             style="left: <?php echo esc_attr( $pct ); ?>%; color: <?php echo esc_attr( $colors[ $label ] ?? '#000' ); ?>;">
+            <?php echo esc_html( $label ); ?>
+        </div>
         <?php endforeach; ?>
       </div>
     </div>
     <?php
     return ob_get_clean();
 }
+
 
 /**
  * Renderiza una fila de barra de nivel.
