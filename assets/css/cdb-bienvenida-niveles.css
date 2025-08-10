@@ -2,16 +2,15 @@
 .cdb-niveles--bienvenida {
   display: block;
   margin-top: 12px;
-  --cdb-label-col-min: 120px;
-  --cdb-label-col-max: 180px;
-  --cdb-gap: 8px;
+  --cdb-label-col: 140px;   /* desktop base */
+  --cdb-gap: 8px;           /* más ceñido */
 }
 
 /* Cabecera y filas */
 .cdb-niveles__head,
 .cdb-niveles__row {
   display: grid;
-  grid-template-columns: minmax(var(--cdb-label-col-min), var(--cdb-label-col-max)) 1fr;
+  grid-template-columns: var(--cdb-label-col) 1fr; /* pista fija */
   gap: var(--cdb-gap);
   align-items: center;
 }
@@ -27,9 +26,11 @@
 .cdb-niveles__label {
   font-weight: 700;
   margin: 0;
-  padding-right: 4px;
+  padding: 0;
   line-height: 1.15;
-  align-self: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Barra, pista y relleno */
@@ -37,7 +38,6 @@
   display: block;
   margin: 0;
   padding: 0;
-  align-self: center;
 }
 .cdb-niveles__track {
   display: block;
@@ -87,19 +87,13 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px){
+  .cdb-niveles--bienvenida{ --cdb-label-col: 128px; --cdb-gap: 8px; }
+}
+
 @media (max-width: 640px) {
-  .cdb-niveles--bienvenida {
-    --cdb-label-col-min: 105px;
-    --cdb-label-col-max: 150px;
-    --cdb-gap: 6px;
-  }
-  .cdb-niveles__label {
-    font-size: 0.95rem;
-    padding-right: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .cdb-niveles--bienvenida { --cdb-label-col: 112px; --cdb-gap: 6px; }
+  .cdb-niveles__label { font-size: 0.95rem; }
 }
 
 @media (max-width: 480px) {
@@ -120,7 +114,6 @@
       hyphens: none;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding-right: 2px;
     }
   }
   @media (max-width: 480px) {
