@@ -111,7 +111,19 @@ function cdb_form_card_labels(): array {
     return (array) apply_filters( 'cdb_form_card_labels', cdb_form_card_default_labels() );
 }
 
-// Tratar el score de entrada como porcentaje 0–100 para las barras de nivel.
-add_filter( 'cdb_form_niveles_max_score', function( $max ) {
-    return 100;
+// Fuerza que las barras interpreten el score como porcentaje 0–100.
+add_filter( 'cdb_form_niveles_force_pct', '__return_true' );
+
+// Mapa de marcadores 0–100.
+add_filter( 'cdb_form_niveles_scale_map', function( $map ) {
+    return [
+        '0'   => 20,
+        '1'   => 30,
+        '1.1' => 40,
+        '2'   => 50,
+        '2.1' => 60,
+        '3'   => 70,
+        '3.1' => 80,
+        '4'   => 100,
+    ];
 } );
