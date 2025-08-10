@@ -390,19 +390,35 @@ add_shortcode('cdb_bienvenida_empleado', 'cdb_bienvenida_empleado_shortcode');
  * @return string HTML generado.
  */
 function cdbf_render_head_niveles() {
+    $map = apply_filters( 'cdb_form_niveles_scale_map', [
+        '0'   => 20,
+        '1'   => 30,
+        '1.1' => 40,
+        '2'   => 50,
+        '2.1' => 60,
+        '3'   => 70,
+        '3.1' => 80,
+        '4'   => 100,
+    ] );
+    $colors = [
+        '0'   => '#c0c0c0',
+        '1'   => '#c0c0c0',
+        '1.1' => '#c0c0c0',
+        '2'   => '#000',
+        '2.1' => '#000',
+        '3'   => '#dbc63d',
+        '3.1' => '#dbc63d',
+        '4'   => '#07ada8',
+    ];
+
     ob_start();
     ?>
     <div class="cdb-niveles__head">
       <div class="cdb-niveles__head-label"><?php esc_html_e( 'Nivel', 'cdb-form' ); ?></div>
       <div class="cdb-niveles__scale">
-        <div class="cdb-progress-marker" style="left: 11%; color: #c0c0c0;">0</div>
-        <div class="cdb-progress-marker" style="left: 21%; color: #c0c0c0;">1</div>
-        <div class="cdb-progress-marker" style="left: 31%; color: #c0c0c0;">1.1</div>
-        <div class="cdb-progress-marker" style="left: 41%; color: #000;">2</div>
-        <div class="cdb-progress-marker" style="left: 51%; color: #000;">2.1</div>
-        <div class="cdb-progress-marker" style="left: 61%; color: #dbc63d;">3</div>
-        <div class="cdb-progress-marker" style="left: 71%; color: #dbc63d;">3.1</div>
-        <div class="cdb-progress-marker" style="left: 81%; color: #07ada8;">4</div>
+        <?php foreach ( $map as $label => $pct ) : ?>
+        <div class="cdb-progress-marker" style="left: <?php echo esc_attr( $pct ); ?>%; color: <?php echo esc_attr( $colors[ $label ] ?? '#000' ); ?>;"><?php echo esc_html( $label ); ?></div>
+        <?php endforeach; ?>
       </div>
     </div>
     <?php
@@ -446,6 +462,40 @@ function cdbf_width_pct_from_score( $score ) {
     return max( 0, min( 100, round( $pct, 2 ) ) );
 }
 
+/**
+ * Devuelve el nivel (texto) a partir de un porcentaje 0–100.
+ *
+ * @since 1.0.0
+ *
+ * @param float $pct Porcentaje (0–100).
+ * @return string Nivel.
+ */
+function cdbf_level_from_pct( float $pct ): string {
+    $p = (int) floor( max( 0, min( 100, $pct ) ) );
+    if ( $p <= 20 ) {
+        return '0';
+    }
+    if ( $p <= 30 ) {
+        return '1';
+    }
+    if ( $p <= 40 ) {
+        return '1.1';
+    }
+    if ( $p <= 50 ) {
+        return '2';
+    }
+    if ( $p <= 60 ) {
+        return '2.1';
+    }
+    if ( $p <= 70 ) {
+        return '3';
+    }
+    if ( $p <= 80 ) {
+        return '3.1';
+    }
+    return '4'; // 81–100
+}
+
 function cdbf_render_barra_nivel( $label, $score, $role_key, $width_pct = null, $empty = false ) {
     if ( $empty ) {
         $width_pct = 0;
@@ -453,11 +503,12 @@ function cdbf_render_barra_nivel( $label, $score, $role_key, $width_pct = null, 
         $width_pct = cdbf_width_pct_from_score( $score );
     }
 
-    $data_attr = $empty ? ' data-empty="1"' : '';
+    $level_label = cdbf_level_from_pct( $width_pct );
+    $data_attr   = $empty ? ' data-empty="1"' : '';
 
     ob_start();
     ?>
-    <div class="cdb-niveles__row cdb-niveles__row--<?php echo esc_attr( $role_key ); ?>"<?php echo $data_attr; ?>>
+    <div class="cdb-niveles__row cdb-niveles__row--<?php echo esc_attr( $role_key ); ?>" data-level="<?php echo esc_attr( $level_label ); ?>" data-pct="<?php echo esc_attr( $width_pct ); ?>"<?php echo $data_attr; ?>>
       <div class="cdb-niveles__label"><?php echo esc_html( $label ); ?></div>
       <div class="cdb-niveles__bar">
         <div class="cdb-niveles__track">
