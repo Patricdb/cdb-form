@@ -34,7 +34,7 @@
 
 /* 5) Blindaje: nada de flex que ensanche la barra/fill */
 .cdb-niveles__bar{ display:block; margin:0; padding:0; }
-.cdb-niveles__track{ display:block; position:relative; width:100%; height:16px; border-radius:999px; overflow:hidden; }
+.cdb-niveles__track{ display:block; position:relative; width:100%; height:16px; border-radius:999px; overflow:hidden; background:#e9e9e9; }
 .cdb-niveles__fill{ display:block; height:100%; width:0; max-width:100%; flex:0 0 auto !important; transform-origin:left center; transform:scaleX(0); transition:transform .9s ease-in-out; }
 .cdb-niveles__fill.is-in{ transform:scaleX(1); }
 
@@ -44,14 +44,9 @@
 .cdb-niveles__scale .cdb-progress-marker { position: absolute; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
 
 /* Colores de pista y relleno */
-.cdb-niveles__row--empleados .cdb-niveles__track   { background: #e0e0e0; }
-.cdb-niveles__row--empleados .cdb-niveles__fill    { background: var(--cdb-color-empleado-fill, #9aa0a6); }
-
-.cdb-niveles__row--empleadores .cdb-niveles__track { background: #555555; }
-.cdb-niveles__row--empleadores .cdb-niveles__fill  { background: var(--cdb-color-empleador-fill, #777777); }
-
-.cdb-niveles__row--tutores .cdb-niveles__track     { background: #cdb888; }
-.cdb-niveles__row--tutores .cdb-niveles__fill      { background: var(--cdb-color-tutor-fill, #cdb888); }
+.cdb-niveles__row--empleados .cdb-niveles__fill{ background:var(--cdb-color-empleado-fill,#9aa0a6); }
+.cdb-niveles__row--empleadores .cdb-niveles__fill{ background:var(--cdb-color-empleador-fill,#777777); }
+.cdb-niveles__row--tutores .cdb-niveles__fill{ background:var(--cdb-color-tutor-fill,#cdb888); }
 
 /* Estado sin valoraciones */
 .cdb-niveles__row[data-empty="1"] .cdb-niveles__track {

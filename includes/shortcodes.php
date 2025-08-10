@@ -320,9 +320,9 @@ function cdb_bienvenida_empleado_shortcode() {
             $color_empleador_fill  = '';
             $color_tutor_fill      = '';
             if ( function_exists( 'cdb_grafica_get_color_by_role' ) ) {
-                $color_empleado_fill  = cdb_grafica_get_color_by_role( 'empleado' );
-                $color_empleador_fill = cdb_grafica_get_color_by_role( 'empleador' );
-                $color_tutor_fill     = cdb_grafica_get_color_by_role( 'tutor' );
+                $color_empleado_fill  = cdb_grafica_get_color_by_role( 'empleado', 'background' );
+                $color_empleador_fill = cdb_grafica_get_color_by_role( 'empleador', 'background' );
+                $color_tutor_fill     = cdb_grafica_get_color_by_role( 'tutor', 'background' );
             }
 
             if ( $color_empleado_fill || $color_empleador_fill || $color_tutor_fill ) {
@@ -425,13 +425,25 @@ function cdbf_to_float( $v ) {
     return floatval( $v );
 }
 
+/**
+ * Convierte la puntuación total por rol en un porcentaje de anchura.
+ *
+ * El valor de entrada representa el total obtenido por un rol específico
+ * (aproximadamente entre 0 y 40). El resultado es un porcentaje entre 0 y 100
+ * que se utiliza para ajustar la anchura de la barra correspondiente.
+ *
+ * @param float|int $score Puntuación total por rol (≈0–40).
+ * @return float Porcentaje de anchura (0–100).
+ */
 function cdbf_width_pct_from_score( $score ) {
     // Reutiliza la normalización de la barra original si está disponible.
     if ( function_exists( 'cdb_grafica_get_width_pct_from_score' ) ) {
         return (float) cdb_grafica_get_width_pct_from_score( $score );
     }
 
-    return max( 0, min( 100, floatval( $score ) ) );
+    $max = (float) apply_filters( 'cdb_form_niveles_max_score', 40 ); // total esperado por rol (≈10 grupos * 4)
+    $pct = ( $max > 0 ) ? ( $score / $max ) * 100 : 0;
+    return max( 0, min( 100, round( $pct, 2 ) ) );
 }
 
 function cdbf_render_barra_nivel( $label, $score, $role_key, $width_pct = null, $empty = false ) {
