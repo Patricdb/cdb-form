@@ -665,18 +665,17 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
     // 1) Determinar si el usuario es administrador
     $usuario_es_admin = current_user_can('administrator');
 
-    // 2) Ver si en la URL está ?disponible=1, solo aplicable si es admin
-    $filtrar_disponibles = false;
-    if ($usuario_es_admin && isset($_GET['disponible']) && $_GET['disponible'] === '1') {
-        $filtrar_disponibles = true;
-    }
+    // 2) Leer y sanitizar ?disponible=si/no, solo aplicable si es admin
+    $raw_disponible = isset($_GET['disponible']) ? $_GET['disponible'] : '';
+    $disponible     = sanitize_text_field($raw_disponible);
+    $disponible     = in_array($disponible, array('si','no'), true) ? $disponible : '';
 
     // 3) Construir la meta_query si se filtra por disponibilidad
     $meta_query = [];
-    if ($filtrar_disponibles) {
+    if ($usuario_es_admin && $disponible !== '') {
         $meta_query[] = [
             'key'     => 'disponible',
-            'value'   => '1',
+            'value'   => ($disponible === 'si') ? '1' : '0',
             'compare' => '=',
         ];
     }
@@ -739,9 +738,8 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
         $output .= '<form method="get" style="margin-top: 1em;">';
         $output .= '    <label for="disponible">Mostrar solo disponibles:</label> ';
         $output .= '    <select name="disponible" onchange="this.form.submit()">';
-        // <option value="0"> => no filtrar, <option value="1"> => filtrar
-        $output .= '        <option value="0" ' . selected($filtrar_disponibles, false, false) . '>No</option>';
-        $output .= '        <option value="1" ' . selected($filtrar_disponibles, true, false) . '>Sí</option>';
+        $output .= '        <option value="" ' . selected($disponible, '', false) . '>No</option>';
+        $output .= '        <option value="si" ' . selected($disponible, 'si', false) . '>Sí</option>';
         $output .= '    </select>';
         $output .= '</form>';
     }
@@ -767,17 +765,17 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
 
     // 2) Tomar de GET si se quiere filtrar ?disponible=1
     //    y aplicar el filtro solo si es admin.
-    $filtrar_disponibles = false;
-    if ($usuario_es_admin && isset($_GET['disponible']) && $_GET['disponible'] === '1') {
-        $filtrar_disponibles = true;
-    }
+    // 2) Leer y sanitizar ?disponible=si/no y aplicar el filtro solo si es admin.
+    $raw_disponible = isset($_GET['disponible']) ? $_GET['disponible'] : '';
+    $disponible     = sanitize_text_field($raw_disponible);
+    $disponible     = in_array($disponible, array('si','no'), true) ? $disponible : '';
 
     // 3) Construir la meta_query si se filtra por disponibilidad.
     $meta_query = [];
-    if ($filtrar_disponibles) {
+    if ($usuario_es_admin && $disponible !== '') {
         $meta_query[] = [
             'key'     => 'disponible',
-            'value'   => '1',
+            'value'   => ($disponible === 'si') ? '1' : '0',
             'compare' => '=',
         ];
     }
@@ -839,12 +837,11 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
 
     // 8) Mostrar el formulario de filtrado SOLO si es admin
     if ($usuario_es_admin) {
-        // Mantenemos el valor 'disponible' en el select: 0 => No, 1 => Sí
         $output .= '<form method="get" style="margin-top: 1em;">';
         $output .= '    <label for="disponible">Mostrar solo disponibles:</label> ';
         $output .= '    <select name="disponible" onchange="this.form.submit()">';
-        $output .= '        <option value="0" ' . selected($filtrar_disponibles, false, false) . '>No</option>';
-        $output .= '        <option value="1" ' . selected($filtrar_disponibles, true, false) . '>Sí</option>';
+        $output .= '        <option value="" ' . selected($disponible, '', false) . '>No</option>';
+        $output .= '        <option value="si" ' . selected($disponible, 'si', false) . '>Sí</option>';
         $output .= '    </select>';
         $output .= '</form>';
     }
@@ -894,11 +891,17 @@ function cdb_posiciones_empleados_shortcode($atts) {
         $posicion_title = 'Desconocida';
     }
 
-    // 3) Determinar si se filtra por disponibilidad
-    //    (solo se aplica si se pasa disponible=1, sea por GET o shortcode)
-    $disponible_from_get    = (isset($_GET['disponible']) && $_GET['disponible'] === '1');
-    $disponible_from_shortcode = (isset($atts['disponible']) && $atts['disponible'] === '1');
-    $filtrar_disponibles   = $disponible_from_get || $disponible_from_shortcode;
+    // 3) Determinar si se filtra por disponibilidad (acepta 'si' o 'no')
+    $raw_disponible_get = isset($_GET['disponible']) ? $_GET['disponible'] : '';
+    $disponible_get     = sanitize_text_field($raw_disponible_get);
+    $disponible_get     = in_array($disponible_get, array('si','no'), true) ? $disponible_get : '';
+
+    $raw_disponible_shortcode = isset($atts['disponible']) ? $atts['disponible'] : '';
+    $disponible_shortcode     = sanitize_text_field($raw_disponible_shortcode);
+    $disponible_shortcode     = in_array($disponible_shortcode, array('si','no'), true) ? $disponible_shortcode : '';
+
+    $disponible = $disponible_get ? $disponible_get : $disponible_shortcode;
+    $filtrar_disponibles = ($disponible !== '');
 
     // 4) Consultar la tabla cdb_experiencia para esta posicion
     $tabla_exp = $wpdb->prefix . 'cdb_experiencia';
@@ -921,7 +924,7 @@ function cdb_posiciones_empleados_shortcode($atts) {
             // Si 'filtrar_disponibles' es true, comprobar la meta 'disponible'
             if ($filtrar_disponibles) {
                 $dispo = get_post_meta($empleado_id, 'disponible', true);
-                if ($dispo !== '1') {
+                if (($disponible === 'si' && $dispo !== '1') || ($disponible === 'no' && $dispo !== '0')) {
                     continue;
                 }
             }
@@ -1024,8 +1027,8 @@ function cdb_posiciones_empleados_shortcode($atts) {
         echo '    <input type="hidden" name="posicion_id" value="' . esc_attr($posicion_id) . '"/>';
         echo '    <label for="disponible">Mostrar solo disponibles:</label> ';
         echo '    <select name="disponible" onchange="this.form.submit()">';
-        echo '        <option value="0" ' . selected($filtrar_disponibles, false, false) . '>No</option>';
-        echo '        <option value="1" ' . selected($filtrar_disponibles, true, false) . '>Sí</option>';
+        echo '        <option value="" ' . selected($disponible, '', false) . '>No</option>';
+        echo '        <option value="si" ' . selected($disponible, 'si', false) . '>Sí</option>';
         echo '    </select>';
         echo '</form>';
     }
