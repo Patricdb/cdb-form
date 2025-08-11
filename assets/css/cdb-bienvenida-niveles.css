@@ -110,3 +110,62 @@
 .cdb-niveles__bar,
 .cdb-niveles__track{ margin-block: 0; }
 
+
+/* ---------- Niveles: marcadores en una sola línea ---------- */
+.cdb-niveles__head{
+  display:grid;
+  grid-template-columns: var(--cdb-label-col) 1fr;
+  align-items:center;
+  gap: var(--cdb-gap);
+}
+.cdb-niveles__head-label{ grid-column:1; }
+.cdb-niveles__scale{
+  grid-column:2;
+  position:relative;
+  width:100%;
+  height:22px;
+}
+
+.cdb-progress-marker{
+  position:absolute;
+  top:0;
+  line-height:1;
+  white-space:nowrap;
+  font-variant-numeric: tabular-nums;
+  --marker-scale:1;
+  --tx:-50%;
+  transform: translateX(var(--tx)) scale(var(--marker-scale));
+  transform-origin: top center;
+  font-size:12px;
+}
+.cdb-progress-marker.is-start{
+  --tx:0;
+  transform-origin: top left;
+}
+.cdb-progress-marker.is-end{
+  --tx:-100%;
+  transform-origin: top right;
+}
+
+/* Todos los marcadores en la misma línea */
+.cdb-progress-marker--secondary{ top:0; font-size:inherit; }
+
+@media (max-width: 640px){
+  .cdb-niveles--bienvenida{ --cdb-label-col: 88px; }
+  .cdb-progress-marker{
+    display:block;
+    font-size:11px;
+    --marker-scale: clamp(0.70, 100vw / 640, 0.95);
+    letter-spacing:.02em;
+  }
+  .cdb-progress-marker--secondary{ display:block; }
+}
+
+@media (max-width: 400px){
+  .cdb-progress-marker{
+    display:block;
+    font-size:10px;
+    --marker-scale: clamp(0.60, 100vw / 400, 0.85);
+  }
+}
+
