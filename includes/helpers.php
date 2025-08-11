@@ -118,12 +118,12 @@ add_filter( 'cdb_form_niveles_force_pct', '__return_true' );
 add_filter( 'cdb_form_niveles_scale_map', function( $map ) {
     return [
         '0'   => 0,
-        '1'   => 20,
-        '1.1' => 30,
-        '2'   => 40,
-        '2.1' => 50,
-        '3'   => 60,
-        '3.1' => 70,
-        '4'   => 80,
+        '1'   => 15,
+        '1.1' => 20,
+        '2'   => 30,
+        '2.1' => 35,
+        '3'   => 45,
+        '3.1' => 50,
+        '4'   => 70,
     ];
 } );
