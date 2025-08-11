@@ -117,13 +117,13 @@ add_filter( 'cdb_form_niveles_force_pct', '__return_true' );
 // Mapa de marcadores 0–100.
 add_filter( 'cdb_form_niveles_scale_map', function( $map ) {
     return [
-        '0'   => 20,
-        '1'   => 30,
-        '1.1' => 40,
-        '2'   => 50,
-        '2.1' => 60,
-        '3'   => 70,
-        '3.1' => 80,
-        '4'   => 100,
+        '0'   => 0,
+        '1'   => 20,
+        '1.1' => 30,
+        '2'   => 40,
+        '2.1' => 50,
+        '3'   => 60,
+        '3.1' => 70,
+        '4'   => 80,
     ];
 } );
