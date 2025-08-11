@@ -59,7 +59,7 @@
 /* 5) Blindaje: nada de flex que ensanche la barra/fill */
 .cdb-niveles__bar{ display:block; margin:0; padding:0; }
 .cdb-niveles__track{ display:block; position:relative; width:100%; height:16px; border-radius:999px; overflow:hidden; background:#e9e9e9; }
-.cdb-niveles__fill{ display:block; height:100%; width:0; max-width:100%; flex:0 0 auto !important; transform-origin:left center; transform:scaleX(0); transition:transform .9s ease-in-out; }
+.cdb-niveles__fill{ display:block; height:100%; width:0; max-width:100%; flex:0 0 auto !important; transform-origin:left center; transform:scaleX(0); transition:transform 1.5s ease-in-out; }
 .cdb-niveles__fill.is-in{ transform:scaleX(1); }
 
 /* Escala y marcas */
