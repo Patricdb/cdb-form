@@ -4,6 +4,11 @@
   margin-top: 12px;
   --cdb-label-col: 112px;   /* antes 130–140: reduce el “hueco” */
   --cdb-gap: 6px;           /* antes 8–12 */
+  /* Colores de marcadores de nivel */
+  --niv-low:  #c0c0c0;  /* 0, 1, 1.1 */
+  --niv-mid:  #000000;  /* 2, 2.1   */
+  --niv-high: #dbc63d;  /* 3, 3.1   */
+  --niv-max:  #07ada8;  /* 4        */
 }
 
 /* 2) Cabecera y filas comparten EXACTAMENTE el mismo grid */
@@ -145,6 +150,34 @@
 .cdb-progress-marker.is-end{
   --tx:-100%;
   transform-origin: top right;
+}
+
+/* Mapeo de colores por etiqueta */
+.cdb-progress-marker[data-label="0"],
+.cdb-progress-marker[data-label="1"],
+.cdb-progress-marker[data-label="1.1"]{ color: var(--niv-low); }
+
+.cdb-progress-marker[data-label="2"],
+.cdb-progress-marker[data-label="2.1"]{ color: var(--niv-mid); }
+
+.cdb-progress-marker[data-label="3"],
+.cdb-progress-marker[data-label="3.1"]{ color: var(--niv-high); }
+
+.cdb-progress-marker[data-label="4"]{ color: var(--niv-max); }
+
+.cdb-progress-marker::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:-6px;
+  width:6px; height:6px; border-radius:50%;
+  background: currentColor;   /* usa el color del marcador */
+  opacity:.9;
+}
+
+@media (max-width:640px){
+  .cdb-progress-marker::after{ width:5px; height:5px; bottom:-5px; }
 }
 
 /* Todos los marcadores en la misma línea */
