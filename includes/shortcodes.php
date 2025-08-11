@@ -75,6 +75,54 @@ function cdb_calcular_puntuacion_experiencia_dinamica($empleado_id) {
     return $total;
 }
 
+/**
+ * Construye el HTML de la tabla de clasificación según contexto y tipo.
+ *
+ * @param string $context Contexto de la clasificación: 'empleado' o 'bar'.
+ * @param array  $args    Argumentos adicionales.
+ *
+ * @return string HTML generado.
+ */
+function cdb_form_build_clasificacion_html( string $context = 'empleado', array $args = [] ): string {
+    $defaults = array(
+        'tipo'       => 'puntuacion_total', // 'experiencia_precalculada' | 'puntuacion_total'
+        'limit'      => 21,
+        'disponible' => null,               // 'si'|'no'|null
+        'id_suffix'  => 'content',
+    );
+    $args = wp_parse_args( $args, $defaults );
+
+    // Mapear $args a los atts de los shortcodes existentes
+    $atts = array(
+        'limit'      => (int) $args['limit'],
+        'disponible' => is_string( $args['disponible'] ) ? $args['disponible'] : '',
+        'id_suffix'  => (string) $args['id_suffix'],
+    );
+
+    if ( $context === 'empleado' && $args['tipo'] === 'puntuacion_total' ) {
+        return cdb_top_empleados_puntuacion_total_shortcode( $atts );
+    }
+    if ( $context === 'empleado' && $args['tipo'] === 'experiencia_precalculada' ) {
+        return cdb_top_empleados_experiencia_precalculada_shortcode( $atts );
+    }
+    if ( $context === 'bar' && $args['tipo'] === 'puntuacion_total' ) {
+        return cdb_top_bares_puntuacion_total_shortcode( $atts );
+    }
+    return '';
+}
+
+add_filter(
+    'cdb_form_clasificacion_html',
+    function( $html, $context, $args = [] ) {
+        if ( '' !== $html ) {
+            return $html;
+        }
+        return cdb_form_build_clasificacion_html( (string) $context, (array) $args );
+    },
+    10,
+    3
+);
+
 /*---------------------------------------------------------------
  * 2. SHORTCODE [cdb_bienvenida_usuario]
  *---------------------------------------------------------------
@@ -691,10 +739,23 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
         'meta_query'     => $meta_query,
     ];
 
+    $args = apply_filters(
+        'cdb_form_clasificacion_query_args',
+        $args,
+        'empleado',
+        array( 'tipo' => 'experiencia_precalculada' )
+    );
+
     $query = new WP_Query($args);
+    $rows  = apply_filters(
+        'cdb_form_clasificacion_results',
+        $query->posts,
+        'empleado',
+        $args
+    );
 
     // 5) Si no hay empleados, avisar
-    if (!$query->have_posts()) {
+    if ( empty( $rows ) ) {
         return cdb_form_get_mensaje(
             'cdb_mensaje_sin_empleados'
         );
@@ -713,18 +774,18 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
     $output .= '<tbody>';
 
     $posicion = 1;
-    while ($query->have_posts()) {
-        $query->the_post();
-        $score = get_post_meta(get_the_ID(), 'cdb_experiencia_score', true);
+    foreach ( $rows as $post ) {
+        setup_postdata( $post );
+        $score = get_post_meta( get_the_ID(), 'cdb_experiencia_score', true );
 
         $output .= '<tr>';
         $output .= '  <td style="border: 1px solid #ddd; padding: 8px;">' . $posicion . '</td>';
         $output .= '  <td style="border: 1px solid #ddd; padding: 8px;">';
-        $output .= '    <a href="' . esc_url(get_permalink()) . '">';
-        $output .=          esc_html(get_the_title());
+        $output .= '    <a href="' . esc_url( get_permalink() ) . '">';
+        $output .=          esc_html( get_the_title() );
         $output .= '    </a>';
         $output .= '  </td>';
-        $output .= '  <td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($score) . '</td>';
+        $output .= '  <td style="border: 1px solid #ddd; padding: 8px;">' . esc_html( $score ) . '</td>';
         $output .= '</tr>';
 
         $posicion++;
@@ -734,15 +795,17 @@ function cdb_top_empleados_experiencia_precalculada_shortcode() {
     $output .= '</tbody></table>';
 
     // 7) Mostrar formulario para filtrar disponibles SOLO si es admin
-    if ($usuario_es_admin) {
+    if ( $usuario_es_admin ) {
         $output .= '<form method="get" style="margin-top: 1em;">';
         $output .= '    <label for="disponible">Mostrar solo disponibles:</label> ';
         $output .= '    <select name="disponible" onchange="this.form.submit()">';
-        $output .= '        <option value="" ' . selected($disponible, '', false) . '>No</option>';
-        $output .= '        <option value="si" ' . selected($disponible, 'si', false) . '>Sí</option>';
+        $output .= '        <option value="" ' . selected( $disponible, '', false ) . '>No</option>';
+        $output .= '        <option value="si" ' . selected( $disponible, 'si', false ) . '>Sí</option>';
         $output .= '    </select>';
         $output .= '</form>';
     }
+
+    $output = apply_filters( 'cdb_form_clasificacion_html', $output, 'empleado', $args );
 
     return $output;
 }
@@ -792,10 +855,23 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
         'meta_query'     => $meta_query,
     ];
 
+    $args = apply_filters(
+        'cdb_form_clasificacion_query_args',
+        $args,
+        'empleado',
+        array( 'tipo' => 'puntuacion_total' )
+    );
+
     $query = new WP_Query($args);
+    $rows  = apply_filters(
+        'cdb_form_clasificacion_results',
+        $query->posts,
+        'empleado',
+        $args
+    );
 
     // 5) Si no hay empleados, salimos.
-    if (!$query->have_posts()) {
+    if ( empty( $rows ) ) {
         return cdb_form_get_mensaje(
             'cdb_mensaje_sin_empleados'
         );
@@ -816,17 +892,17 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
 
     // 7) Mostrar cada empleado, con su ranking en la tabla
     $posicion = 1;
-    while ($query->have_posts()) {
-        $query->the_post();
-        $puntuacion_total = get_post_meta(get_the_ID(), 'cdb_puntuacion_total', true);
+    foreach ( $rows as $post ) {
+        setup_postdata( $post );
+        $puntuacion_total = get_post_meta( get_the_ID(), 'cdb_puntuacion_total', true );
 
         $output .= '<tr>';
         $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . $posicion . '</td>';
         $output .= '<td style="border: 1px solid #ddd; padding: 8px;">';
-        $output .= '<a href="' . esc_url(get_permalink()) . '">';
-        $output .= esc_html(get_the_title());
+        $output .= '<a href="' . esc_url( get_permalink() ) . '">';
+        $output .= esc_html( get_the_title() );
         $output .= '</a></td>';
-        $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($puntuacion_total) . '</td>';
+        $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html( $puntuacion_total ) . '</td>';
         $output .= '</tr>';
 
         $posicion++;
@@ -836,15 +912,17 @@ function cdb_top_empleados_puntuacion_total_shortcode() {
     $output .= '</tbody></table>';
 
     // 8) Mostrar el formulario de filtrado SOLO si es admin
-    if ($usuario_es_admin) {
+    if ( $usuario_es_admin ) {
         $output .= '<form method="get" style="margin-top: 1em;">';
         $output .= '    <label for="disponible">Mostrar solo disponibles:</label> ';
         $output .= '    <select name="disponible" onchange="this.form.submit()">';
-        $output .= '        <option value="" ' . selected($disponible, '', false) . '>No</option>';
-        $output .= '        <option value="si" ' . selected($disponible, 'si', false) . '>Sí</option>';
+        $output .= '        <option value="" ' . selected( $disponible, '', false ) . '>No</option>';
+        $output .= '        <option value="si" ' . selected( $disponible, 'si', false ) . '>Sí</option>';
         $output .= '    </select>';
         $output .= '</form>';
     }
+
+    $output = apply_filters( 'cdb_form_clasificacion_html', $output, 'empleado', $args );
 
     return $output;
 }
@@ -1055,9 +1133,23 @@ function cdb_top_bares_puntuacion_total_shortcode() {
         'order'          => 'DESC',
         'posts_per_page' => 21,
     );
-    $query = new WP_Query($args);
 
-    if (!$query->have_posts()) {
+    $args = apply_filters(
+        'cdb_form_clasificacion_query_args',
+        $args,
+        'bar',
+        array( 'tipo' => 'puntuacion_total' )
+    );
+
+    $query = new WP_Query($args);
+    $rows  = apply_filters(
+        'cdb_form_clasificacion_results',
+        $query->posts,
+        'bar',
+        $args
+    );
+
+    if ( empty( $rows ) ) {
         return cdb_form_render_mensaje(
             'cdb_mensaje_busqueda_sin_bares',
             'cdb_color_busqueda_sin_bares',
@@ -1077,17 +1169,17 @@ function cdb_top_bares_puntuacion_total_shortcode() {
     $output .= '<tbody>';
 
     $posicion = 1;
-    while ($query->have_posts()) {
-        $query->the_post();
-        $puntuacion_total = get_post_meta(get_the_ID(), 'cdb_puntuacion_total', true);
+    foreach ( $rows as $post ) {
+        setup_postdata( $post );
+        $puntuacion_total = get_post_meta( get_the_ID(), 'cdb_puntuacion_total', true );
 
         $output .= '<tr>';
         $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . $posicion . '</td>';
         $output .= '<td style="border: 1px solid #ddd; padding: 8px;">';
-        $output .= '<a href="' . esc_url(get_permalink()) . '">';
-        $output .= esc_html(get_the_title());
+        $output .= '<a href="' . esc_url( get_permalink() ) . '">';
+        $output .= esc_html( get_the_title() );
         $output .= '</a></td>';
-        $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($puntuacion_total) . '</td>';
+        $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html( $puntuacion_total ) . '</td>';
         $output .= '</tr>';
 
         $posicion++;
@@ -1096,6 +1188,7 @@ function cdb_top_bares_puntuacion_total_shortcode() {
 
     $output .= '</tbody>';
     $output .= '</table>';
+    $output = apply_filters( 'cdb_form_clasificacion_html', $output, 'bar', $args );
     return $output;
 }
 add_shortcode('cdb_top_bares_puntuacion_total', 'cdb_top_bares_puntuacion_total_shortcode');
