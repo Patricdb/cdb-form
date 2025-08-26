@@ -59,6 +59,41 @@ function cdb_form_admin_page() {
         }
     }
     echo '</div>';
+    $shortcodes = array(
+        '[cdb_form_bar]'                             => __( 'Formulario para crear o editar un bar asociado al usuario.', 'cdb-form' ),
+        '[cdb_form_empleado]'                        => __( 'Formulario para crear o actualizar el perfil de empleado.', 'cdb-form' ),
+        '[cdb_experiencia]'                          => __( 'Formulario de experiencia laboral con listado de entradas guardadas.', 'cdb-form' ),
+        '[cdb_bienvenida_usuario]'                   => __( 'Muestra un saludo y contenido adaptado al usuario autenticado.', 'cdb-form' ),
+        '[cdb_bienvenida_empleado]'                  => __( 'Panel de empleado con disponibilidad y puntuaciones.', 'cdb-form' ),
+        '[cdb_puntuacion_total]'                     => __( 'Muestra la puntuación gráfica del empleado.', 'cdb-form' ),
+        '[cdb_top_empleados_experiencia_precalculada]' => __( 'Ranking de empleados por puntuación de experiencia.', 'cdb-form' ),
+        '[cdb_top_empleados_puntuacion_total]'       => __( 'Ranking de empleados por puntuación gráfica.', 'cdb-form' ),
+        '[cdb_posiciones_empleados]'                 => __( 'Listado de empleados destacados para una posición.', 'cdb-form' ),
+        '[cdb_top_bares_puntuacion_total]'           => __( 'Ranking de bares por puntuación total.', 'cdb-form' ),
+        '[cdb_top_bares_gmaps]'                      => __( 'Ranking de bares según valoración en Google Maps.', 'cdb-form' ),
+        '[cdb_top_bares_tripadvisor]'                => __( 'Ranking de bares según valoración en TripAdvisor.', 'cdb-form' ),
+        '[cdb_top_bares_instagram]'                  => __( 'Ranking de bares por seguidores en Instagram.', 'cdb-form' ),
+        '[cdb_busqueda_empleados]'                   => __( 'Buscador avanzado de empleados.', 'cdb-form' ),
+        '[cdb_busqueda_bares]'                       => __( 'Buscador avanzado de bares.', 'cdb-form' ),
+        '[form-empleado]'                            => __( 'Formulario rápido para actualizar disponibilidad del empleado.', 'cdb-form' ),
+        '[form-bar]'                                 => __( 'Formulario rápido para actualizar el estado del bar.', 'cdb-form' ),
+    );
+
+    echo '<table class="widefat"><thead><tr><th>' . esc_html__( 'Shortcode', 'cdb-form' ) . '</th><th>' . esc_html__( 'Descripción', 'cdb-form' ) . '</th></tr></thead><tbody>';
+    foreach ( $shortcodes as $code => $desc ) {
+        echo '<tr><td><code>' . esc_html( $code ) . '</code> <button type="button" class="button cdb-copy-shortcode" data-shortcode="' . esc_attr( $code ) . '">' . esc_html__( 'Copiar', 'cdb-form' ) . '</button></td><td>' . esc_html( $desc ) . '</td></tr>';
+    }
+    echo '</tbody></table>';
+
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".cdb-copy-shortcode").forEach(function(btn) {
+            btn.addEventListener("click", function() {
+                navigator.clipboard.writeText(btn.getAttribute("data-shortcode"));
+            });
+        });
+    });
+    </script>';
 
     echo '<ul>';
     echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-disenio-empleado' ) ) . '">' . esc_html__( 'Configuración Crear Empleado', 'cdb-form' ) . '</a> - ' . esc_html__( 'Formulario para crear o actualizar el perfil de empleado.', 'cdb-form' ) . '</li>';
