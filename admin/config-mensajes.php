@@ -16,7 +16,7 @@ function cdb_form_mensajes_admin_menu() {
         'cdb-form',
         __( 'Configuración de Mensajes y Avisos', 'cdb-form' ),
         __( 'Configuración de Mensajes y Avisos', 'cdb-form' ),
-        'manage_options',
+        'manage_cdb_forms',
         'cdb-form-config-mensajes',
         'cdb_form_config_mensajes_page'
     );
@@ -27,7 +27,7 @@ add_action( 'admin_menu', 'cdb_form_mensajes_admin_menu' );
  * Renderiza la página de opciones y guarda los valores.
  */
 function cdb_form_config_mensajes_page() {
-    if ( ! current_user_can( 'manage_options' ) ) {
+    if ( ! current_user_can( 'manage_cdb_forms' ) ) {
         return;
     }
 
