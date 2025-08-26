@@ -5,41 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Add main admin menu and submenus.
- */
-function cdb_form_admin_menu() {
-    add_menu_page(
-        __( 'CdB Form', 'cdb-form' ),
-        __( 'CdB Form', 'cdb-form' ),
-        'manage_cdb_forms',
-        'cdb-form',
-        'cdb_form_admin_page',
-        'dashicons-forms'
-    );
-
-    remove_submenu_page( 'cdb-form', 'cdb-form' );
-
-    add_submenu_page(
-        'cdb-form',
-        __( 'CdB Form', 'cdb-form' ),
-        __( 'CdB Form', 'cdb-form' ),
-        'manage_cdb_forms',
-        'cdb-form',
-        'cdb_form_admin_page'
-    );
-
-    add_submenu_page(
-        'cdb-form',
-        __( 'Configuración Crear Empleado', 'cdb-form' ),
-        __( 'Configuración Crear Empleado', 'cdb-form' ),
-        'manage_cdb_forms',
-        'cdb-form-disenio-empleado',
-        'cdb_form_disenio_empleado_page'
-    );
-}
-add_action( 'admin_menu', 'cdb_form_admin_menu' );
-
-/**
  * Callback for the main CdB Form page.
  */
 function cdb_form_admin_page() {
