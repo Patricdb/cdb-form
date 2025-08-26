@@ -11,7 +11,7 @@ function cdb_form_admin_menu() {
     add_menu_page(
         __( 'CdB Form', 'cdb-form' ),
         __( 'CdB Form', 'cdb-form' ),
-        'manage_options',
+        'manage_cdb_forms',
         'cdb-form',
         'cdb_form_admin_page',
         'dashicons-forms'
@@ -21,7 +21,7 @@ function cdb_form_admin_menu() {
         'cdb-form',
         __( 'Configuración Crear Empleado', 'cdb-form' ),
         __( 'Configuración Crear Empleado', 'cdb-form' ),
-        'manage_options',
+        'manage_cdb_forms',
         'cdb-form-disenio-empleado',
         'cdb_form_disenio_empleado_page'
     );
@@ -39,7 +39,7 @@ function cdb_form_admin_page() {
  * Render admin page and handle form submission.
  */
 function cdb_form_disenio_empleado_page() {
-    if ( ! current_user_can( 'manage_options' ) ) {
+    if ( ! current_user_can( 'manage_cdb_forms' ) ) {
         return;
     }
 
