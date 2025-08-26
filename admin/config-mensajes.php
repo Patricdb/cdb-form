@@ -108,6 +108,23 @@ function cdb_form_config_mensajes_page() {
         ),
     );
 
+    $screen = get_current_screen();
+    if ( $screen ) {
+        $help_content  = '<p>' . esc_html__( 'Mensajes configurables y su uso:', 'cdb-form' ) . '</p><ul>';
+        foreach ( $mensajes as $datos ) {
+            $help_content .= '<li><strong>' . esc_html( $datos['label'] ) . ':</strong> ' . esc_html( $datos['description'] ) . '</li>';
+        }
+        $help_content .= '</ul><p>' . esc_html__( 'Cada bloque permite definir texto principal, secundario, color y visibilidad.', 'cdb-form' ) . '</p>';
+        $help_content .= '<p><a href="' . esc_url( CDB_FORM_URL . 'docs/' ) . '" target="_blank">' . esc_html__( 'Documentación completa', 'cdb-form' ) . '</a></p>';
+        $screen->add_help_tab(
+            array(
+                'id'      => 'cdb_form_config_mensajes_help',
+                'title'   => __( 'Ayuda', 'cdb-form' ),
+                'content' => $help_content,
+            )
+        );
+    }
+
     global $cdb_form_defaults;
     $placeholder_map = array(
         'cdb_mensaje_puntuacion_no_disponible' => 'cdb_aviso_sin_puntuacion',
