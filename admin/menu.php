@@ -15,7 +15,7 @@ function cdb_form_register_menus() {
         'cdb-form',
         'cdb_form_admin_page',
         'dashicons-forms',
-        26
+        3
     );
 
     // Remove duplicate link to top-level page.
