@@ -13,9 +13,11 @@ function cdb_form_admin_menu() {
         __( 'CdB Form', 'cdb-form' ),
         'manage_cdb_forms',
         'cdb-form',
-        'cdb_form_admin_page',
+        'cdb_form_disenio_empleado_page',
         'dashicons-forms'
     );
+
+    remove_submenu_page( 'cdb-form', 'cdb-form' );
 
     add_submenu_page(
         'cdb-form',
@@ -32,7 +34,16 @@ add_action( 'admin_menu', 'cdb_form_admin_menu' );
  * Callback for the main CdB Form page.
  */
 function cdb_form_admin_page() {
-    echo '<div class="wrap"><h1>' . esc_html__( 'CdB Form', 'cdb-form' ) . '</h1></div>';
+    if ( ! current_user_can( 'manage_cdb_forms' ) ) {
+        return;
+    }
+
+    echo '<div class="wrap"><h1>' . esc_html__( 'CdB Form', 'cdb-form' ) . '</h1>';
+    echo '<p>' . esc_html__( 'Accede rápidamente a las siguientes secciones:', 'cdb-form' ) . '</p>';
+    echo '<ul>';
+    echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-disenio-empleado' ) ) . '">' . esc_html__( 'Configuración Crear Empleado', 'cdb-form' ) . '</a></li>';
+    echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-config-mensajes' ) ) . '">' . esc_html__( 'Configuración de Mensajes y Avisos', 'cdb-form' ) . '</a></li>';
+    echo '</ul></div>';
 }
 
 /**
