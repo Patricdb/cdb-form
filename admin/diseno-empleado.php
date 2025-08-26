@@ -12,6 +12,11 @@ function cdb_form_admin_page() {
         return;
     }
 
+    if ( ! function_exists( 'get_plugin_data' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+    $plugin_data = get_plugin_data( CDB_FORM_PATH . 'cdb-form.php' );
+
     $intro = '';
     $readme_path = CDB_FORM_PATH . 'README.md';
     if ( file_exists( $readme_path ) ) {
@@ -29,6 +34,32 @@ function cdb_form_admin_page() {
     if ( $intro ) {
         echo wp_kses_post( $intro );
     }
+    echo '<div class="cdb-form-info">';
+    if ( ! empty( $plugin_data['Version'] ) ) {
+        echo '<p><strong>' . esc_html__( 'Versión:', 'cdb-form' ) . '</strong> ' . esc_html( $plugin_data['Version'] ) . '</p>';
+    }
+    if ( ! empty( $plugin_data['Author'] ) ) {
+        echo '<p><strong>' . esc_html__( 'Autor:', 'cdb-form' ) . '</strong> ' . esc_html( $plugin_data['Author'] ) . '</p>';
+    }
+    if ( ! empty( $plugin_data['PluginURI'] ) ) {
+        echo '<p><strong>URL:</strong> <a href="' . esc_url( $plugin_data['PluginURI'] ) . '" target="_blank">' . esc_html( $plugin_data['PluginURI'] ) . '</a></p>';
+    }
+    echo '<p><a href="' . esc_url( CDB_FORM_URL . 'docs/' ) . '" target="_blank">' . esc_html__( 'Documentación', 'cdb-form' ) . '</a> | <a href="' . esc_url( $plugin_data['PluginURI'] ) . '" target="_blank">' . esc_html__( 'Soporte', 'cdb-form' ) . '</a></p>';
+
+    $changelog_path = CDB_FORM_PATH . 'CHANGELOG.md';
+    if ( file_exists( $changelog_path ) ) {
+        $changelog_content = file_get_contents( $changelog_path );
+        if ( false !== $changelog_content ) {
+            $lines   = preg_split( '/\R/', trim( $changelog_content ) );
+            $snippet = array_slice( $lines, 0, 5 );
+            if ( ! empty( $snippet ) ) {
+                echo '<h2>' . esc_html__( 'Novedades', 'cdb-form' ) . '</h2>';
+                echo '<div class="cdb-changelog">' . wpautop( esc_html( implode( "\n", $snippet ) ) ) . '</div>';
+            }
+        }
+    }
+    echo '</div>';
+
     echo '<ul>';
     echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-disenio-empleado' ) ) . '">' . esc_html__( 'Configuración Crear Empleado', 'cdb-form' ) . '</a> - ' . esc_html__( 'Formulario para crear o actualizar el perfil de empleado.', 'cdb-form' ) . '</li>';
     echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-config-mensajes' ) ) . '">' . esc_html__( 'Configuración de Mensajes y Avisos', 'cdb-form' ) . '</a> - ' . esc_html__( 'Personaliza los avisos, errores e instrucciones mostrados por los shortcodes.', 'cdb-form' ) . '</li>';
