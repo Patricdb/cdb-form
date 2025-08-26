@@ -18,18 +18,6 @@ function cdb_form_register_menus() {
         3
     );
 
-    // Remove duplicate link to top-level page.
-    remove_submenu_page( 'cdb-form', 'cdb-form' );
-
-    add_submenu_page(
-        'cdb-form',
-        __( 'CdB Form', 'cdb-form' ),
-        __( 'CdB Form', 'cdb-form' ),
-        'manage_cdb_forms',
-        'cdb-form',
-        'cdb_form_admin_page'
-    );
-
     add_submenu_page(
         'cdb-form',
         __( 'Configuración Crear Empleado', 'cdb-form' ),
