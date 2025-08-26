@@ -85,6 +85,13 @@ function cdb_form_admin_page() {
     }
     echo '</tbody></table>';
 
+    echo '<h2>' . esc_html__( 'Primeros pasos', 'cdb-form' ) . '</h2>';
+    echo '<ol>';
+    echo '<li>' . esc_html__( 'Activa los shortcodes en tus páginas o entradas.', 'cdb-form' ) . '</li>';
+    echo '<li>' . esc_html__( 'Configura el diseño de los formularios.', 'cdb-form' ) . '</li>';
+    echo '<li>' . esc_html__( 'Personaliza los mensajes y avisos.', 'cdb-form' ) . '</li>';
+    echo '</ol>';
+
     echo '<script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".cdb-copy-shortcode").forEach(function(btn) {
@@ -128,6 +135,35 @@ function cdb_form_disenio_empleado_page() {
         'margin_left'               => 0,
         'alignment'                 => 'center',
     );
+
+    $screen = get_current_screen();
+    if ( $screen ) {
+        $help_content  = '<p>' . esc_html__( 'Explicación de los campos disponibles:', 'cdb-form' ) . '</p><ul>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color de fondo del contenedor', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Color exterior del área del formulario.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color de fondo del formulario', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Color interno del formulario.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color del borde del formulario', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Tonalidad del borde que rodea al formulario.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color de texto', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Color de las etiquetas y campos.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color de fondo del botón', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Color de la zona del botón de envío.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color de texto del botón', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Color del texto dentro del botón.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Tamaño de fuente', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Tamaño de la tipografía en píxeles.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Relleno interno', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Espacio interior del formulario en píxeles.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Espaciado entre campos', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Separación vertical entre los campos del formulario.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color de mensajes de éxito', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Color usado para los avisos correctos.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Color de mensajes de error', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Color usado para los avisos de error.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Margen superior', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Separación exterior superior.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Margen derecho', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Separación exterior derecha.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Margen inferior', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Separación exterior inferior.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Margen izquierdo', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Separación exterior izquierda.', 'cdb-form' ) . '</li>';
+        $help_content .= '<li><strong>' . esc_html__( 'Alineación', 'cdb-form' ) . ':</strong> ' . esc_html__( 'Posición del formulario dentro de la página.', 'cdb-form' ) . '</li>';
+        $help_content .= '</ul><p><a href="' . esc_url( CDB_FORM_URL . 'docs/' ) . '" target="_blank">' . esc_html__( 'Documentación completa', 'cdb-form' ) . '</a></p>';
+        $screen->add_help_tab(
+            array(
+                'id'      => 'cdb_form_disenio_empleado_help',
+                'title'   => __( 'Ayuda', 'cdb-form' ),
+                'content' => $help_content,
+            )
+        );
+    }
 
     // Handle save
     if ( isset( $_POST['cdb_form_disenio_empleado_nonce'] ) &&
