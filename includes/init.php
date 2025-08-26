@@ -23,6 +23,7 @@ require_once CDB_FORM_PATH . 'includes/messages.php';
 
 // Cargar scripts y estilos para el admin y frontend
 require_once CDB_FORM_PATH . 'admin/enqueue.php';
+require_once CDB_FORM_PATH . 'admin/menu.php';
 require_once CDB_FORM_PATH . 'admin/diseno-empleado.php';
 require_once CDB_FORM_PATH . 'admin/config-mensajes.php';
 require_once CDB_FORM_PATH . 'public/enqueue.php';

@@ -11,17 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * en la experiencia de usuario de CdB. Está preparado para añadidos
  * futuros mediante una estructura dinámica basada en arrays.
  */
-function cdb_form_mensajes_admin_menu() {
-    add_submenu_page(
-        'cdb-form',
-        __( 'Configuración de Mensajes y Avisos', 'cdb-form' ),
-        __( 'Configuración de Mensajes y Avisos', 'cdb-form' ),
-        'manage_cdb_forms',
-        'cdb-form-config-mensajes',
-        'cdb_form_config_mensajes_page'
-    );
-}
-add_action( 'admin_menu', 'cdb_form_mensajes_admin_menu' );
 
 /**
  * Renderiza la página de opciones y guarda los valores.
