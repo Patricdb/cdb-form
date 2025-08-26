@@ -13,11 +13,20 @@ function cdb_form_admin_menu() {
         __( 'CdB Form', 'cdb-form' ),
         'manage_cdb_forms',
         'cdb-form',
-        'cdb_form_disenio_empleado_page',
+        'cdb_form_admin_page',
         'dashicons-forms'
     );
 
     remove_submenu_page( 'cdb-form', 'cdb-form' );
+
+    add_submenu_page(
+        'cdb-form',
+        __( 'CdB Form', 'cdb-form' ),
+        __( 'CdB Form', 'cdb-form' ),
+        'manage_cdb_forms',
+        'cdb-form',
+        'cdb_form_admin_page'
+    );
 
     add_submenu_page(
         'cdb-form',
@@ -38,11 +47,26 @@ function cdb_form_admin_page() {
         return;
     }
 
+    $intro = '';
+    $readme_path = CDB_FORM_PATH . 'README.md';
+    if ( file_exists( $readme_path ) ) {
+        $readme_content = file_get_contents( $readme_path );
+        if ( false !== $readme_content ) {
+            $readme_content = preg_replace( '/^#.*\R+/', '', $readme_content );
+            $parts         = preg_split( "/\R\R+/", trim( $readme_content ) );
+            if ( ! empty( $parts[0] ) ) {
+                $intro = wpautop( trim( $parts[0] ) );
+            }
+        }
+    }
+
     echo '<div class="wrap"><h1>' . esc_html__( 'CdB Form', 'cdb-form' ) . '</h1>';
-    echo '<p>' . esc_html__( 'Accede rápidamente a las siguientes secciones:', 'cdb-form' ) . '</p>';
+    if ( $intro ) {
+        echo wp_kses_post( $intro );
+    }
     echo '<ul>';
-    echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-disenio-empleado' ) ) . '">' . esc_html__( 'Configuración Crear Empleado', 'cdb-form' ) . '</a></li>';
-    echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-config-mensajes' ) ) . '">' . esc_html__( 'Configuración de Mensajes y Avisos', 'cdb-form' ) . '</a></li>';
+    echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-disenio-empleado' ) ) . '">' . esc_html__( 'Configuración Crear Empleado', 'cdb-form' ) . '</a> - ' . esc_html__( 'Formulario para crear o actualizar el perfil de empleado.', 'cdb-form' ) . '</li>';
+    echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=cdb-form-config-mensajes' ) ) . '">' . esc_html__( 'Configuración de Mensajes y Avisos', 'cdb-form' ) . '</a> - ' . esc_html__( 'Personaliza los avisos, errores e instrucciones mostrados por los shortcodes.', 'cdb-form' ) . '</li>';
     echo '</ul></div>';
 }
 
