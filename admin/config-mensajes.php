@@ -231,9 +231,16 @@ function cdb_form_config_mensajes_page() {
             $mensaje_guardado = __( 'Opciones guardadas.', 'cdb-form' );
         }
     }
+    $current_page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
+    $disenio_url  = admin_url( 'admin.php?page=cdb-form-disenio-empleado' );
+    $mensajes_url = admin_url( 'admin.php?page=cdb-form-config-mensajes' );
     ?>
     <div class="wrap">
         <h1><?php esc_html_e( 'Configuración de Mensajes y Avisos', 'cdb-form' ); ?></h1>
+        <h2 class="nav-tab-wrapper">
+            <a href="<?php echo esc_url( $disenio_url ); ?>" class="nav-tab<?php echo ( 'cdb-form-disenio-empleado' === $current_page ) ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Diseño del formulario', 'cdb-form' ); ?></a>
+            <a href="<?php echo esc_url( $mensajes_url ); ?>" class="nav-tab<?php echo ( 'cdb-form-config-mensajes' === $current_page ) ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Mensajes y avisos', 'cdb-form' ); ?></a>
+        </h2>
         <p><?php esc_html_e( 'Este panel centraliza la gestión de mensajes/avisos de la experiencia de usuario CdB.', 'cdb-form' ); ?></p>
         <div class="notice notice-info"><p><?php esc_html_e( 'Si dejas un campo vacío se mostrará el texto por defecto', 'cdb-form' ); ?></p></div>
         <?php if ( $mensaje_guardado ) :

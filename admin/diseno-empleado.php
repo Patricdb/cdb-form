@@ -192,10 +192,17 @@ function cdb_form_disenio_empleado_page() {
         echo '<div class="updated"><p>' . esc_html__( 'Opciones guardadas.', 'cdb-form' ) . '</p></div>';
     }
 
-    $values = wp_parse_args( get_option( 'cdb_form_disenio_empleado' ), $defaults );
+    $values       = wp_parse_args( get_option( 'cdb_form_disenio_empleado' ), $defaults );
+    $current_page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
+    $disenio_url  = admin_url( 'admin.php?page=cdb-form-disenio-empleado' );
+    $mensajes_url = admin_url( 'admin.php?page=cdb-form-config-mensajes' );
     ?>
     <div class="wrap">
         <h1><?php esc_html_e( 'Configuración Crear Empleado', 'cdb-form' ); ?></h1>
+        <h2 class="nav-tab-wrapper">
+            <a href="<?php echo esc_url( $disenio_url ); ?>" class="nav-tab<?php echo ( 'cdb-form-disenio-empleado' === $current_page ) ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Diseño del formulario', 'cdb-form' ); ?></a>
+            <a href="<?php echo esc_url( $mensajes_url ); ?>" class="nav-tab<?php echo ( 'cdb-form-config-mensajes' === $current_page ) ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Mensajes y avisos', 'cdb-form' ); ?></a>
+        </h2>
         <p><?php esc_html_e( 'Configura los estilos del formulario de empleado mostrado en el frontend. Estos cambios no afectan a otros formularios.', 'cdb-form' ); ?></p>
         <form method="post">
             <?php wp_nonce_field( 'cdb_form_disenio_empleado_save', 'cdb_form_disenio_empleado_nonce' ); ?>
