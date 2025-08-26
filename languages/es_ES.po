@@ -889,3 +889,11 @@ msgstr "Oculto"
 #: admin/config-mensajes.php:295
 msgid "Mostrar aviso"
 msgstr "Mostrar aviso"
+
+#: admin/menu.php:36
+msgid "Diseño del formulario"
+msgstr "Diseño del formulario"
+
+#: admin/menu.php:45
+msgid "Mensajes y avisos"
+msgstr "Mensajes y avisos"
